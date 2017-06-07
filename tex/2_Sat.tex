@@ -1,0 +1,40 @@
+The problem of determining whether a boolean formula is satisfiable has the
+historical honor of being the first problem ever shown to be
+NP-Complete~\cite{Cook}. Great theoretical and practical efforts are directed
+in improving the efficiency of solvers for this problem, known as \emph{Boolean
+Satisfiability Solvers}, or just \emph{SAT solvers}. Despite the worst-case
+exponential run time of all the algorithms known, satisfiability solvers are
+increasingly leaving their mark as a general purpose tool in the most diverse
+areas~\cite{satchapter}. In essence, SAT solvers provide a generic combinatorial
+reasoning and search tool. 
+
+The underlying represenational formalism is propositional logic. A propositional
+or Boolean formula is a logic expression defined over variables (or atomic
+expressions), that take value in any binary set whose values oppose each other,
+usually $\{\textbf{true}, \textbf{false}\}$ or just $\{0,1\}$, and boolean
+connectives, any unary or binary function with one output, such as
+$\land$ (conjunction), $\lor$ (disjunction), $\neg$ (negation), $\then$
+(implication), $\iff$ (equivalence). Parentheses can be used to avoid ambiguous.
+A \emph{truth assignment} to a set $V$ of Boolean variables is a map $\sigma : V
+\rightarrow \{\textbf{true}, \textbf{false}\}$. A \emph{satisfying assignment}
+for a formula $F$ is a truth assignment $\sigma$ such that $F$ evaluates to
+\textbf{true}~\cite{satchapter}.
+
+In the context of SAT solvers, we are interested in propositional formulae in
+\emph{Conjuctive Normal Form} (CNF): $F$ is in CNF if it is a conjunction of
+\emph{clauses}, where each clause is a disjunction of \emph{literals}, and each
+literal is either a variable or its negation. For example, $F = (p \lor \neg q)
+\land (\neg p \lor r \lor s) \land (q \lor r)$ is a CNF formula with four variables and
+three clauses.
+
+Therefore, the Boolean Satisfiability Problem (SAT) can be expressed as: Given a
+CNF formula $F$, does $F$ have a satisfying assignment? One can be interested
+not only in this decision problem, but also in finding an actual satisfying
+assignment when it exists. All practical SAT solvers do produce such an
+assignment if there exists one.
+
+\section{The DPLL Procedure}
+\label{sec:dpll}
+
+\section{Conflict Driven Clause Learning}
+\label{sec:cdcl}

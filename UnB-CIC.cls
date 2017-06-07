@@ -138,7 +138,7 @@
 %%
 
 
-\RequirePackage[brazil,american]{babel}% Idiomas
+\RequirePackage[american]{babel}% Idiomas
 \RequirePackage[fixlanguage]{babelbib}%  Idioma das referências
 \RequirePackage[utf8]{inputenc}%         Arquivos na codificação UTF-8
 \RequirePackage[T1]{fontenc}%            Habilita busca com caracteres latinos
@@ -295,8 +295,6 @@
 \expandafter\let\expandafter\@bibliography\csname bibliography\endcsname%
 \renewcommand{\bibliography}[1]{%
 	%renomeia a seção após influência maligna do Babel
-	\renewcommand*{\bibname}
-		{\@ifundefined{XeTeXversion}{Refer\^encias}{Referências}}
 	\addtocchapter{\bibname}
 	\singlespacing\@bibliography{#1}\defaultspacing}
 
@@ -740,31 +738,6 @@
 		\fi
 	}
 
-	%traducoes para glossaries.sty
-	\@ifpackageloaded{glossaries}{%
-		\@ifundefined{XeTeXversion}{
-			\addto\captionsbrazil{%
-			\renewcommand*{\glossaryname}{Gloss\'ario}%
-			\renewcommand*{\acronymname}{Lista de Abreviaturas e Siglas}%
-			\renewcommand*{\entryname}{Entrada}%
-			\renewcommand*{\descriptionname}{Descri\c{c}\~ao}%
-			\renewcommand*{\symbolname}{S\'\imbolo}%
-			\renewcommand*{\pagelistname}{Lista de p\'aginas}%
-			\renewcommand*{\glssymbolsgroupname}{S\'imbolos}%
-			\renewcommand*{\glsnumbersgroupname}{N\'umeros}}
-		}{
-			\addto\captionsbrazil{%
-			\renewcommand*{\glossaryname}{Glossário}%
-			\renewcommand*{\acronymname}{Lista de Abreviaturas e Siglas}%
-			\renewcommand*{\entryname}{Entrada}%
-			\renewcommand*{\descriptionname}{Descrição}%
-			\renewcommand*{\symbolname}{Símbolo}%
-			\renewcommand*{\pagelistname}{Lista de páginas}%
-			\renewcommand*{\glssymbolsgroupname}{Símbolos}%
-			\renewcommand*{\glsnumbersgroupname}{Números}}
-		}
-	}{}
-
 	\@ifundefined{XeTeXversion}%
 	{%suporte para fonte Adobe Minion Pro - pacote LaTeX
 		\@ifpackageloaded{MinionPro}{}{%
@@ -896,12 +869,7 @@
 		\@IncluirSecao{dedicatoria}%
 		\@IncluirSecao{agradecimentos}%
 	\fi%
-	\@IncluirSecao{resumo}%
-	\selectlanguage{american}%
 	\@IncluirSecao{abstract}%
-	\selectlanguage{brazil}%
-    \selectbiblanguage{brazil}%
-	\@erroSeNaoExiste{bibliografia.bib}%
 
 	\tableofcontents%
 	\iftotalfigures\listoffigures\fi%
@@ -915,7 +883,7 @@
 	\@PosTextualNaoInclusofalse%
     \postextual%
 	\bibliographystyle{babunsrt}%
-    \bibliography{bibliografia}%
+    \bibliography{bib/logic,bib/algorithms,bib/preliminaries,bib/proof}%
 }%
 
 

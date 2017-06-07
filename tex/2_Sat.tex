@@ -36,5 +36,23 @@ assignment if there exists one.
 \section{The DPLL Procedure}
 \label{sec:dpll}
 
+\begin{algorithm}
+    \SetKwInOut{Input}{Input}
+    \SetKwInOut{Output}{Output}
+    \Input{Two nonnegative integers $a$ and $b$}
+    \Output{$\gcd(a,b)$}
+
+    \underline{function Euclid} $(a,b)$
+
+    \eIf{$b=0$}
+    {
+        return $a$\;
+    }
+    {
+        return Euclid$(b,a\mod b)$\;
+    }
+\caption{Euclid's algorithm for finding the greatest common divisor of two nonnegative integers}
+\end{algorithm}
+
 \section{Conflict Driven Clause Learning}
 \label{sec:cdcl}

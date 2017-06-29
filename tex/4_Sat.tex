@@ -1,12 +1,12 @@
 The problem of determining whether a boolean formula is satisfiable has the
 historical honor of being the first problem ever shown to be
-NP-Complete~\cite{Cook}. Great theoretical and practical efforts are directed
+NP-Complete~\cite{Cook}. Great theoretical and practical efforts have been directed
 in improving the efficiency of solvers for this problem, known as \emph{Boolean
 Satisfiability Solvers}, or just \emph{SAT solvers}. Despite the worst-case
 exponential run time of all the algorithms known, satisfiability solvers are
 increasingly leaving their mark as a general purpose tool in the most diverse
 areas~\cite{satchapter}. In essence, SAT solvers provide a generic combinatorial
-reasoning and search tool. 
+reasoning and search platform. 
 
 The underlying represenational formalism is propositional logic. A propositional
 or Boolean formula is a logic expression defined over variables (or atomic
@@ -36,23 +36,54 @@ assignment if there exists one.
 \section{The DPLL Procedure}
 \label{sec:dpll}
 
-\begin{algorithm}
+\begin{algorithm}[!ht]
+\label{alg:dpll}
     \SetKwInOut{Input}{Input}
     \SetKwInOut{Output}{Output}
-    \Input{Two nonnegative integers $a$ and $b$}
-    \Output{$\gcd(a,b)$}
+    \Input{A CNF formula $F$ and an initially empty partial assignment $\rho$}
+    \Output{UNSAT, or an assignment satisfying $F$}
 
-    \underline{function Euclid} $(a,b)$
+    %\underline{function Euclid} $(a,b)$
 
-    \eIf{$b=0$}
-    {
-        return $a$\;
+    $(F, \rho) \leftarrow$ UnitPropagate$(F,\rho)$
+
+    \If{$F$ contains the empty clause}
+    {\Return~UNSAT}
+    \If{$F$ has no clauses left}
+    {Output $\rho$\\
+    \Return{SAT}
     }
-    {
-        return Euclid$(b,a\mod b)$\;
-    }
-\caption{Euclid's algorithm for finding the greatest common divisor of two nonnegative integers}
+    $l \leftarrow$ a literal not assigned by $\rho$
+
+    \If{DPLL-recursive$(F|_l, \rho \cup \{l\}) = $ SAT} 
+    {\Return{SAT}}
+    \Return{DPLL-recursive$(F|_{\neg l}, \rho \cup \{\neg l\})$}
+\caption{DPLL-recursive$(F, \rho$)}
 \end{algorithm}
 
 \section{Conflict Driven Clause Learning}
 \label{sec:cdcl}
+
+\begin{algorithm}[!ht]
+\label{alg:cdcl}
+    \SetKwInOut{Input}{Input}
+    \SetKwInOut{Output}{Output}
+    \Input{}
+    \Output{}
+
+    \If{UnitPropagate$(F, \nu) == $ CONFLICT}
+    {\Return{UNSAT}}
+
+    $dl \leftarrow 0$
+
+    \While{\textbf{not} AllVariablesAssigned$(F, \nu)$}
+    {$(x, \nu) \leftarrow$ PickBranchingVariable$(F,\nu)$}
+
+    \Return{SAT}
+    
+    \caption{CDCL$(F, \nu)$}
+\end{algorithm}
+
+\section{MiniSat}
+\label{sec:minisat}
+

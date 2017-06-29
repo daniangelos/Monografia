@@ -883,7 +883,7 @@
 	\@PosTextualNaoInclusofalse%
     \postextual%
 	\bibliographystyle{babunsrt}%
-    \bibliography{bib/logic,bib/algorithms,bib/preliminaries,bib/proof}%
+    \bibliography{bib/logic,bib/algorithms,bib/preliminaries,bib/proof,bib/complexity}%
 }%
 
 

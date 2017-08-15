@@ -15,25 +15,39 @@
 \usepackage[linesnumbered,ruled]{algorithm2e}
 \usepackage{amsmath, amssymb}
 
+%tikz packages
+\usepackage{tikz}
+\usetikzlibrary{trees,er,matrix,mindmap,backgrounds}
+\usetikzlibrary{shadings,intersections,calc}
+\usetikzlibrary{shapes,arrows,patterns,snakes}
+\usetikzlibrary{automata,shadows,fit,fadings,matrix,positioning}
+\usepackage{pgfplots}
+\usepackage{pgfkeys}
+\usepackage{mathrsfs}
+\usepackage{multirow}
+\usepgfplotslibrary{units}
+\pgfdeclarelayer{nodelayer}
+\pgfdeclarelayer{edgelayer}
+\pgfsetlayers{edgelayer,nodelayer,main}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Informações do Trabalho
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\orientador{\prof \dr Guilherme Novaes Ramos}{CIC/UnB}%
+\orientador[a]{\prof[a] \dr[a] Cl\'audia Nalon}{CIC/UnB}%
 %\coorientador{\prof \dr José Ralha}{CIC/UnB}
-\coordenador[a]{\prof[a] \dr[a] Ada Lovelace}{Bibliothèque universelle de Genève}%
-\diamesano{24}{dezembro}{2014}%
+\coordenador{\prof \dr Bruno Luiggi Macchiavello Espinoza}{CIC/UnB}%
+\diamesano{}{}{2017}%
 
-\membrobanca{\prof \dr Donald Knuth}{Stanford University}%
-\membrobanca{\dr Leslie Lamport}{Microsoft Research}%
+\membrobanca{\prof \dr }{}%
+\membrobanca{\dr }{}%
 
-\autor{Guilherme N.}{Ramos}%
+\autor{Daniella}{Angelos}%
 
-\titulo{UnB-CIC: Uma classe em LaTeX para textos do Departamento de Ciência da Computação}%
+\titulo{Combined Proof Methods for Multimodal Logic}%
 
-\palavraschave{LaTeX, metodologia científica, trabalho de conclusão de curso}%
-\keywords{LaTeX, scientific method, thesis}%
+\palavraschave{l\'ogicas modais, resolução, sat-solvers}%
+\keywords{modal logics, resolution, sat-solvers}%
 
 \newcommand{\unbcic}{\texttt{UnB-CIC}}%
 

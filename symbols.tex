@@ -4,7 +4,7 @@
 \newcommand{\agent}{\ensuremath{a}}
 \newcommand{\Agents}{\ensuremath{{\mathcal{A}}}}
 \newcommand{\Prop}{\ensuremath{{\mathcal{P}}}}
-\newcommand{\wff}{\ensuremath{WFF}\raisebox{-.8ex}{\system{K}{n}{}}}
+\newcommand{\wff}{\ifmmode\text{WFF\raisebox{-.8ex}{\system{K}{n}{}}}\else WFF\raisebox{-.8ex}{\system{K}{n}{}}\fi}
 \newcommand{\sat}[3]{\ensuremath{\langle #1, #2 \rangle \models #3}}
 \newcommand{\Model}{\ensuremath{\mathcal{M}}}
 \newcommand{\formula}{\ensuremath{\varphi}}
@@ -31,25 +31,29 @@
 %\newenvironment{remark}[1][Remark]{\begin{trivlist}
 %\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
 
+\newcounter{example}[section]
+\newenvironment{example}[1][]{\refstepcounter{example}\par\medskip
+   \noindent \textbf{Example~\theexample #1} \rmfamily}{\medskip}
+
 
 \ifx\fmtname\@psfmtname \else \def\cmsy@{2}\fi % make sure we get cmsy
 \def\sometime{\mathord{\hbox{\normalsize$\mathchar"0\cmsy@7D$}}}
 
 
 \newcommand{\always}{\raisebox{-.2ex}{
-			   \mbox{\unitlength=0.9ex
-			   \begin{picture}(2.3,2.3)
-			   \linethickness{0.06ex}
-			   \put(0,0){\line(1,0){2.3}}
-			   \put(0,2.3){\line(1,0){2.3}}
-			   \put(0,0){\line(0,1){2.3}}
-			   \put(2.3,0){\line(0,1){2.3}}
-			   \end{picture}}}
-		      \,}
+           \mbox{\unitlength=0.9ex
+           \begin{picture}(2.3,2.3)
+           \linethickness{0.06ex}
+           \put(0,0){\line(1,0){2.3}}
+           \put(0,2.3){\line(1,0){2.3}}
+           \put(0,0){\line(0,1){2.3}}
+           \put(2.3,0){\line(0,1){2.3}}
+           \end{picture}}}
+          \,}
 
 \newcommand{\alwaysi}[1]{\raisebox{-.2ex}{
-			   \mbox{\unitlength=0.9ex
-			   \begin{picture}(2,2)
+           \mbox{\unitlength=0.9ex
+           \begin{picture}(2,2)
 			   \linethickness{0.06ex}
 			   \put(0,0){\line(1,0){2}}
 			   \put(0,2){\line(1,0){2}}

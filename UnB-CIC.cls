@@ -264,7 +264,7 @@
 	{\end{singlespace}\old@endverse}
 
 %novo ambiente definition
-\newcommand{\definitioname}{Defini\c{c}\~ao}
+\newcommand{\definitioname}{Definition}
 \newcounter{definition}
 \newenvironment{definition}
 	{\refstepcounter{definition}%
@@ -882,7 +882,8 @@
 \newcommand{\@conteudoPosTextual}{%
 	\@PosTextualNaoInclusofalse%
     \postextual%
-	\bibliographystyle{babunsrt}%
+	%\bibliographystyle{babunsrt}%
+	\bibliographystyle{abbrv}%
     \bibliography{bib/logic,bib/algorithms,bib/preliminaries,bib/proof,bib/complexity}%
 }%
 

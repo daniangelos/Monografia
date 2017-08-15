@@ -1,0 +1,51 @@
+\begin{center}
+
+
+\begin{figure}[tbh!]
+\label{example_semantics}
+\begin{center}
+%\begin{tabular}{|cc|}
+%\hline
+%\begin{tikzpicture}[->,rectangle,draw,node distance=1.5cm,
+                    %every state/.style={draw=green!30!black!50!,fill=green!10,shape=rectangle,rounded corners,drop shadow,minimum width=3cm}
+                   %]
+\begin{tikzpicture}[->,circle,draw,node distance=5cm
+                   ]
+
+    \node[circle,label=180:$\st_0$,draw,thick](w0){$
+        \begin{array}{c}       
+            p\\
+        \end{array}
+    $};
+    \node[circle,label=180:$\st_1$,below right of=w0,draw,thick](w1) {$
+        \begin{array}{c}       
+            \neg p\\
+        \end{array}
+    $};
+    \node[circle,label=0:$\st_2$,below left of=w0,draw,thick](w2) {$
+        \begin{array}{c}       
+            \neg p\\
+        \end{array}
+    $};
+    \node[circle,label=0:$\st_3$,below left of=w1,draw,thick](w3) {$
+        \begin{array}{c}       
+             q\\
+        \end{array}
+    $};
+    \path[thick] (w0) edge [below] node {2} (w1)
+    (w1) edge [above,loop right] node {1} (w1)
+    (w2) edge [above,loop left] node {1} (w2)
+    (w0) edge [above,loop] node {1} (w0)
+    (w1) edge [above] node {1} (w3)
+    (w2) edge [above] node {1} (w3)
+    (w0) edge [below] node {2} (w2);
+
+\end{tikzpicture} 
+\end{center}
+
+%\hline
+%\end{tabular}
+    \caption{Example of a Kripke model for \system{K}{n}{}}
+\end{figure}
+\end{center}
+

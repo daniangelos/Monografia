@@ -93,13 +93,12 @@ p$, and denote by \Literals~the set of all literals. A \emph{modal literal} is a
 formula of the form $\nec{a} l$ or $\pos{a} l$, with $l \in \Literals$ and $a
 \in \Agents$.
 
-The following function definitions based on formulae' syntax will be helpful
-when we introduce the proof system we make use in this work:
+The following function definitions are based on formulae' syntax. The
+\emph{modal depth} of a formula is recursively defined as follows:
 
 \begin{definition}
-    The \emph{modal depth} of a formula, $mdepth : \wff \longrightarrow \Nat$,
-    represents the maximal number of nesting modal operators in this formula.
-    Inductively, we have:
+    We define $mdepth : \wff \longrightarrow \Nat$ to represent the
+    maximal number of nesting modal operators in a formula. Inductively:
     \begin{enumerate}
         \item $mdepth(p) = 0$ 
         \item $mdepth(\neg \formula) = mdepth(\formula)$
@@ -109,13 +108,42 @@ when we introduce the proof system we make use in this work:
     With $p \in \Prop$ and $\formula, \psi \in \wff$.
 \end{definition}
 
+For instance, if $\formula = \nec{a}\pos{a} p$ then $mdepth(\formula) = 2$ but $mdepth(p) = 0$.
+
+The \emph{modal level} of a formula (or a subformula) is given relative to its position in the
+\emph{annotated syntactic tree}.
+
 \begin{definition}
-    The \emph{modal level} function, $ml : \wff \longrightarrow \Nat$,
-    represents the maximal number of modal operators in which scope the formula
-    occurs. 
+    Let $\Sigma$ be the alphabet $\{1, 2, .\}$ and $\Sigma^*$ the set of all
+    finite sequences over $\Sigma$. Denote by $\varepsilon$ the empty sequence.
+    We define $\tau : \wff \times \Sigma^* \times \Nat \longrightarrow
+    \mathscr{P}(\wff \times \Sigma^* \times \Nat)$ as the partial function
+    inductively defined as follows:
+    \begin{enumerate}
+        \item $\tau(p, \lambda, ml) = \{(p, \lambda, ml)\}$
+        \item $\tau(\neg \formula, \lambda, ml) = \{(\neg \formula, \lambda, ml)\} \cup \tau(\formula, \lambda.1, ml)$
+        \item $\tau(\nec{a} \formula, \lambda, ml) = \{(\nec{a} \formula, \lambda, ml)\} \cup \tau(\formula, \lambda.1, ml + 1)$
+        \item $\tau(\formula \lor \psi, \lambda, ml) = \{(\formula \lor \psi, \lambda, ml)\} \cup \tau(\formula, \lambda.1, ml) \cup \tau(\psi, \lambda.2, ml)$
+    \end{enumerate}
+    With $p \in \Prop, \lambda \in \Sigma^*, ml \in \Nat$ and $\formula, \psi
+    \in \wff$.
 \end{definition}
 
-For instance, in $\nec{a}\pos{a} p$, $mdepth(p) = 0$ and $ml(p) = 2$.
+The function $\tau$ applied to $(\formula, \varepsilon, 0)$ returns the
+annotated syntactic tree for \formula, where each node is uniquely identified by
+a subformula, its position in the tree (or path order) and its modal level. For
+instance, $p$ occurs twice in the formula $\nec{a}\pos{a}(p \land \nec{a} p)$,
+at the position 1.1.1, with modal level 2, and again at position
+1.1.2.1, with modal level 3.
+
+\begin{definition}
+    We define $mlevel : \wff \times \wff \times \Sigma^* \longrightarrow \Nat$,
+    to represent the maximal number of modal operators in which scope a subformula
+    occurs. Let \formula~be a formula and let $\tau(\formula, \varepsilon, 0)$
+    be its annotated syntactic tree. If $(\formula', \lambda, ml)\in
+    \tau(\formula, \varepsilon, 0)$ then $mlevel(\formula, \formula', \lambda) =
+    ml$.
+\end{definition}
 
 \section{Semantics}
 \label{semantics}
@@ -156,23 +184,86 @@ Satisfiability is defined with respect to the root of a model. A formula $\varph
 \in \wff$ is said to be \emph{satisfiable} if there exists a Kripke model
 $\Model = (\St, \st_0, R_1, \ldots, R_n, \pi)$ such that
 \sat{\Model}{\st_0}{\varphi}. A formula is said to be \emph{valid} if it is
-satisfiable in all models.
+satisfiable in all models. We say that a set $\mathcal{F}$ is satisfiable if
+every $\formula \in \mathcal{F}$ is satisfiable. Validity of sets is defined
+analogously. 
 
 The satisfiability problem for \system{K}{n}{} corresponds to determining the
 existence of a model in which a formula is satisfied. This problem is proven to be
 PSPACE-complete~\cite{Spaan:coml}.
 
 \begin{example}
-    In Figure~\ref{example_semantics}.    
+    Consider the model illustrated in Figure~\ref{example_semantics}, let's call
+    it \Model. Take $\Model = (W, \st_0, R, \pi)$, for $\Prop = \{p\}$ and
+    $\Agents = \{1\}$, where 
+    \begin{enumerate}
+        \item[$(i)$] $W = \{\st_0, \st_1, \st_2\}$
+        \item[$(ii)$] $R = \{(\st_1, \st_1), (\st_2, \st_2),
+            (\st_0, \st_1), (\st_0, \st_2)\}$
+        \item[$(iii)$] $ \pi(\st, p) = 
+            \begin{cases} 
+                \text{\textbf{true}}    & \quad if \st = \st_0\\
+                \text{\textbf{false}}   & \quad otherwise
+            \end{cases}
+                       $
+    \end{enumerate}
+
+    Note that both $p$ and $\nec{} \neg p$ are satisfied in \Model. This is a
+    rather simple example to illustrate that, even though some sentence
+    evaluates to true in the current context, one can see the same sentence
+    occurring with the opposite valuation through an accessibility relation.
+    This kind of reasoning is not possible in classical logic. Other examples of
+    formulae satisfied by this model: $p \land \pos{} \neg p$, $\nec{}\nec{}
+    \neg p$ and $\nec{} \nec {} \nec{} \neg p$.
 \end{example}
 
 \input{tex/multimodal}
 
+\begin{example}
+    (\emph{Tree-like} model) 
+    Finite trees are ubiquitous in linguistics. For example, the tree
+    illustrated in Figure~\ref{example_tree-like} represents some simple facts
+    about phrase-structure, namely that a sentence $(S)$ can consist of a noun
+    phrase $(NP)$ and a verb phrase $(VP)$; an $(NP)$ can consist of a proper
+    noun $(PN)$; and a $(VP)$ can consist of a transitive verb $(TV)$ and a
+    $(NP)$.
+
+    For this example, consider $\Model = (W, S, R, \pi)$ to be the tree-like
+    model illustrated in~Figure~\ref{example_tree-like}. Where $W = \{S, NP, VP,
+    PN, TV, NP', PN'\}$ and $R$ is easily implied by the figured.
+    Take $loves, Pete, Anna \in \Prop$.
+\end{example}
+
+\input{tex/treemodel}
+
 \section{Normal Form}
 
 Normal forms can provide elegant and constructive proofs of many standard
-results. They can also provide proofs of results that are not readily proved by
-standard means~\cite{fine1975}.
+results~\cite{fine1975}. This happens because once you translated a set of
+formulae into a normal form, you have all your formulae in a specific structure
+and possibly less operators to work with, which may implicate into a smaller number
+of rules for a proof system. One can even add information into formulae in a
+specific normal form. That is the case of the normal form we use in this work.
 
 Formulae in \system{K}{n}{} can be transformed into a layered normal form called
-\emph{Separated Normal Form for Normal Logics}~\cite{journals/jal/NalonD07}. 
+\emph{Separated Normal Form with Modal Levels}, denoted by
+\snf{$ml$}~\cite{journals/jal/NalonD07}. A formula in \snf{$ml$} is a
+conjunction of \emph{clauses} labelled by the modal level in which they occur.
+
+We write $ml: \formula$ to denote that \formula~occurs at modal level $ml\in
+\Nat \cup \{*\}$. By $*: \formula$ we mean that \formula~is true at
+all modal levels. Formally, let $\wffml$ denote the set of formulae with
+the modal level annotation, $ml : \formula$ such that $ml \in \Nat \cup \{*\}$
+and $\formula \in \wff$. Let $\Model^* = (W, \st_0, R_1, \ldots, R_n, R_*, \pi)$
+be a model and take $\formula \in \wff$. 
+
+\begin{definition}
+Satisfiability of labelled formulae is given by:
+
+\begin{enumerate}
+    \item \sat{\Model^*}{\st_0}{ml : \formula} if, and only if, for all worlds
+        $\st \in W$ such that $depth(\st) = ml$, we have
+        \sat{\Model^*}{\st}{\formula} 
+\end{enumerate}
+    
+\end{definition}

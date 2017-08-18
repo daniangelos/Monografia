@@ -4,7 +4,8 @@
 \newcommand{\agent}{\ensuremath{a}}
 \newcommand{\Agents}{\ensuremath{{\mathcal{A}}}}
 \newcommand{\Prop}{\ensuremath{{\mathcal{P}}}}
-\newcommand{\wff}{\ifmmode\text{WFF\raisebox{-.8ex}{\system{K}{n}{}}}\else WFF\raisebox{-.8ex}{\system{K}{n}{}}\fi}
+\newcommand{\wff}{\WFF{\system{K}{n}{}}{}}
+\newcommand{\wffml}{\ifmmode\text{WFF}^{\scriptsize ml}_{\scriptsize \system{K}{n}{}}}
 \newcommand{\sat}[3]{\ensuremath{\langle #1, #2 \rangle \models #3}}
 \newcommand{\Model}{\ensuremath{\mathcal{M}}}
 \newcommand{\formula}{\ensuremath{\varphi}}
@@ -92,7 +93,7 @@
 \newcommand{\system}[3]{\raisebox{.2ex}[1.2ex]{\raisebox{-.2ex}{{\sf #1}}{$_{#2}^{#3}$}}}
 %\newcommand{\system}[3]{{\sf #1}$_{#2}^{#3}$}
 \newcommand{\set}[1]{\mbox{$\mathcal{#1}$}}
-\newcommand{\WFF}[2]{{\sf WFF}{\mbox{$_{\mbox{\small\sf #1}_{#2}}$}}}
+\newcommand{\WFF}[2]{{\sf WFF}{\mbox{$_{\mbox{\small\sf #1}^{#2}}$}}}
 \newcommand{\know}[1]{\mbox{K$_{#1}\,$}}
 \newcommand{\knownot}[1]{\mbox{$\nec{#1}\neg\,$}}
 \newcommand{\believe}[1]{\mbox{B$_{#1}\,$}}

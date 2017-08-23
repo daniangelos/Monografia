@@ -162,6 +162,17 @@ The semantics of \system{K}{n}{} is presented in terms of Kripke structures.
     to each world $\st \in \St$ a truth-assignment to propositional symbols.
 \end{definition}
 
+We denote $R_a \st \upsilon$ to mean that $\upsilon$ is accessible from $\st$ through
+the accessibility relation $R_a$, that is $(\st, \upsilon) \in R_a$, and $R^*_a \st
+\upsilon$, to mean that $\upsilon$ is reachable from $\st$ through a finite number of
+steps, that is, exists a sequence $(\st_1, \ldots, \st_k)$ of worlds such that
+$R_a \st_i \st_{i+1}, \forall\ 1 \leq i < k$, where $\st_1 = \st$ and $\st_k =
+\upsilon$, with $a \in \Agents$, $\st, \upsilon, \st_i \in W$ and $k \in \Nat$. Note
+that $R_a^*$ is the \emph{transitive closure} of $R_a$, the least transitive set
+that contains all elements of $R_a$. Here we also make use of the
+\emph{transitive and reflexive closure}, denoted by $R_a^+$, the least
+transitive and reflexive set that contains all elements of $R_a$.
+
 \emph{Satisfiability} and \emph{validity} of a formula is defined in terms of the \emph{satisfiability relation}.
 
 \begin{definition}
@@ -183,7 +194,8 @@ The semantics of \system{K}{n}{} is presented in terms of Kripke structures.
 Satisfiability is defined with respect to the root of a model. A formula $\varphi
 \in \wff$ is said to be \emph{satisfiable} if there exists a Kripke model
 $\Model = (\St, \st_0, R_1, \ldots, R_n, \pi)$ such that
-\sat{\Model}{\st_0}{\varphi}. A formula is said to be \emph{valid} if it is
+\sat{\Model}{\st_0}{\varphi}. In this case we simply write $\Model \models
+\formula$ to mean that $\Model$ statisfies \formula~at $\st_0$. A formula is said to be \emph{valid} if it is
 satisfiable in all models. We say that a set $\mathcal{F}$ is satisfiable if
 every $\formula \in \mathcal{F}$ is satisfiable. Validity of sets is defined
 analogously. 
@@ -220,21 +232,79 @@ PSPACE-complete~\cite{Spaan:coml}.
 \input{tex/multimodal}
 
 \begin{example}
+    \label{ex2}
     (\emph{Tree-like} model) 
-    Finite trees are ubiquitous in linguistics. For example, the tree
-    illustrated in Figure~\ref{example_tree-like} represents some simple facts
-    about phrase-structure, namely that a sentence $(S)$ can consist of a noun
-    phrase $(NP)$ and a verb phrase $(VP)$; an $(NP)$ can consist of a proper
-    noun $(PN)$; and a $(VP)$ can consist of a transitive verb $(TV)$ and a
-    $(NP)$.
-
-    For this example, consider $\Model = (W, S, R, \pi)$ to be the tree-like
-    model illustrated in~Figure~\ref{example_tree-like}. Where $W = \{S, NP, VP,
-    PN, TV, NP', PN'\}$ and $R$ is easily implied by the figured.
-    Take $loves, Pete, Anna \in \Prop$.
-\end{example}
+    Consider the formula $\formula = \nec{1} (p \then \pos{2} p)$. The
+    Figure~\ref{example_models} contains examples of models that satisfy
+    \formula. Note that the model from the figure~\ref{example_tree-like} has a
+    graphical representation similar to a tree. Finite trees are ubiquitous in
+    computer science, they are used to represent knowledge or data from the most
+    diverse fields. As trees play such an important role, we will take this
+    opportunity to define them, and next, we will show some interesting results
+    concerning our modal language.
 
 \input{tex/treemodel}
+ 
+    By a tree $\mathcal{T}$ we mean a relational structure $(T, S)$ where $T$ is
+    a set of nodes and $S$ is a binary relation among these nodes. $T$
+    contains a unique~$r_0 \in T$ (called the \emph{root}) such that all
+    other nodes in $T$ are reachable from $r_0$, that is, $\forall t \in T$
+    we have $S^*r_0 t$, besides that, every element of $T$, distinct from
+    $r_0$, has a unique $S$-predecessor, and the transitive and reflexive
+    closure $S^+$ is
+    acyclic, that is, $\forall t \in T, \neg S^* t t$~\cite{areces2000tree}.
+
+    A \emph{tree model} is a Kripke model $(W, r_0, R, \pi)$, with $\Agents =
+    \{1\}$, where $(W, R)$ is a tree and $r_0$ is its root. A \emph{tree-like
+    model} for \system{K}{n}{} is a model $(W, r_0, R_1, \ldots, R_n, \pi)$,
+    with $\Agents = \{1, \ldots, n\}$, such that $(W, \cup_{i \in \Agents} R_i)$
+    is a tree, with $r_0$ as the root.
+
+    In a tree-like model, we can define the \emph{depth} of worlds in $W$.
+
+    \begin{definition}
+        Let $\Model = (W, r_0, R_1, \ldots, R_a, \pi)$ be a tree-like model
+        for \system{K}{n}{}. We define the $depth: W \longrightarrow \Nat$ of a
+        world $\st \in W$, as the length of the path from $r_0$ to $\st$
+        through the union of the relations in \Model. We sometimes say $depth$
+        of \Model~to mean the largest path from the root to a world in $W$.
+    \end{definition}
+
+    \begin{theorem}
+        Let $\formula \in \wff$ be a formula and $\Model = (W, \st_0, R_1,
+        \ldots, R_n, \pi)$ be a model. Then $\Model \models \formula$ if and only if
+        there is a tree-like model $\Model'$ such that $\Model' \models \formula$.
+        Moreover, $\Model'$ is finite and its $depth$ is bounded by
+        $mdepth(\formula)$.
+    \end{theorem}
+    \begin{proof}
+    \end{proof}
+
+    \begin{theorem}
+        Let $\formula, \formula' \in \wff$ and $\Model = (W, \st_0, R_1, \ldots,
+        R_n, \pi)$ be a tree-like model such that $\Model \models \formula$. If
+        $(\formula', \lambda', ml) \in \tau(\formula, \varepsilon, 0)$ and
+        $\formula'$ is satisfied in $\Model$, then there is $\st \in W$, with
+        $depth(w) = ml$, such that $\sat{\Model}{\st}{\formula'}$. Moreover,
+        the subtree rooted at $w$ has height equals to $mdepth(\formula')$.
+    \end{theorem}
+    \begin{proof}
+    \end{proof}
+\end{example}
+
+The \emph{global satisfiability} problem for a modal logic is equivalent to the
+satisfiability problem of the logic obtained by adding the universal modality,
+$\nec{*}$, to the original language~\cite{goranko1992using}. Let
+$\system{K}{n}{*}$ be the logic obtained by adding $\nec{*}$ to \system{K}{n}{}.
+Let $\Model = (W, \st_0, R_1, \ldots, R_n, \pi)$ be a tree-like model for
+\system{K}{n}{}. A model $\Model^*$ for \system{K}{n}{*} is the pair $(\Model,
+R_*)$, where $R_* = W \times W$. A formula $\nec{*} \formula$ is satisfied at
+the world $\st \in W$, in the model $\Model^*$, written
+\sat{\Model^*}{\st}{\nec{*}\formula}, if, and only if, for all $\st'
+\in W$, we have that \sat{\Model^*}{\st'}{\formula}. In this sense, let $\formula
+\in \wff$ be a formula, we say that $\formula$ is globally satisfiable in a
+model \Model, denoted $\Model \models_G \formula$, if, and only if, $\Model^*
+\models \nec{*} \formula$.
 
 \section{Normal Form}
 
@@ -261,9 +331,11 @@ be a model and take $\formula \in \wff$.
 Satisfiability of labelled formulae is given by:
 
 \begin{enumerate}
-    \item \sat{\Model^*}{\st_0}{ml : \formula} if, and only if, for all worlds
+    \item $\Model^* \models ml : \formula$ if, and only if, for all worlds
         $\st \in W$ such that $depth(\st) = ml$, we have
         \sat{\Model^*}{\st}{\formula} 
+    \item $\Model^* \models * : \formula$ if, and only if, $\Model^* \models
+        \nec{*} \formula$
 \end{enumerate}
     
 \end{definition}

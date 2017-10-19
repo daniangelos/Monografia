@@ -1,29 +1,50 @@
 %\section{}
-The problem of determining whether a boolean formula is satisfiable has the
-historical honor of being the first problem ever shown to be
-NP-Complete~\cite{Cook}. Great theoretical and practical efforts have been directed
-in improving the efficiency of solvers for this problem, known as \emph{Boolean
-Satisfiability Solvers}, or just \emph{SAT solvers}. Despite the worst-case
-exponential run time of all the algorithms known, satisfiability solvers are
-increasingly leaving their mark as a general purpose tool in the most diverse
-areas~\cite{satchapter}. In essence, SAT solvers provide a generic combinatorial
-reasoning and search platform. 
+The problem of determining whether a formula in classical propositional logic is
+satisfiable has the historical honor of being the first problem ever shown to be
+NP-Complete~\cite{Cook}. Great theoretical and practical efforts have been
+directed in improving the efficiency of solvers for this problem, known as
+\emph{Boolean Satisfiability Solvers}, or just \emph{SAT solvers}. Despite the
+worst-case exponential run time of all the algorithms known, satisfiability
+solvers are increasingly leaving their mark as a general purpose tool in the
+most diverse areas~\cite{satchapter}. In essence, SAT solvers provide a generic
+combinatorial reasoning and search platform. 
 
-In the context of SAT solvers, the underlying representational formalism is
-propositional logic. We are interested in propositional formulae in
-\emph{Conjunctive Normal Form} (CNF): $F$ is in CNF if it is a conjunction of
-\emph{clauses}, where each clause is a disjunction of \emph{literals}. For
-example, $F = (p \lor \neg q) \land (\neg p \lor r \lor s) \land (q \lor r)$ is
-a CNF formula with four variables and three clauses.
+In the context of SAT solvers for propositional provers, the underlying
+representational formalism is propositional logic~\cite{satchapter}. We are
+interested in formulae in \emph{Conjunctive Normal Form} (CNF): $\formula$ is in
+CNF if it is a conjunction of \emph{clauses}, where each clause is a disjunction
+of literals. For example, $\formula = (p \lor \neg q) \land (\neg p \lor r \lor
+s) \land (q \lor r)$ is a CNF formula with four literals and three clauses. 
+
+%% satisfying assignment %%
+A propositional formula $\formula$ takes value in the set $\{false, true\}$. A
+\emph{truth assignment} (or just assignment) to a set of literals
+$\Literals$ is a map $\sigma : \Literals \longrightarrow \{false, true\}$. A
+\emph{satisfying assignment} for $\formula$ is an assignment $\sigma$ such
+that $\formula$ evaluates to $true$ under $\sigma$.
+
 
 Therefore, the \emph{Boolean Satisfiability Problem} (SAT) can be expressed as:
-Given a CNF formula $F$, does $F$ have a satisfying assignment? One can be
+Given a CNF formula $\formula$, does $\formula$ have a satisfying assignment? One can be
 interested not only in the answer of this decision problem, but also in finding
-an actual satisfying assignment when it there exists one. All practical SAT
-solvers do produce such assignment~\cite{cormen}.
+the actual assignment that satisfies the formula, when it exists. All practical
+SAT solvers do produce such assignment~\cite{cormen}.
 
 \section{The DPLL Procedure}
 \label{sec:dpll}
+
+A \emph{complete} solution method for the SAT problem is one that, given the
+input formula $\formula$, either produces a satisfying assignment for $\formula$
+or proves that it is unsatisfiable.  One of the most surprising aspects
+of the relatively recent practical progress of SAT solvers is that the best
+complete methods remain variants of a process introduced in the early 1960’s:
+the DPLL procedure~\cite{satchapter}, which performs a backtrack search in the
+space of partial truth assignments~\cite{DavisPutman:1960}. A key feature of
+DPLL is efficient pruning of the search space based on falsified clauses. Since
+its introduction, the main improvements to DPLL have been
+smart branch selection heuristics, extensions like clause learning and
+randomized restarts, and well-crafted data structures such as lazy
+implementations and watched literals for fast unit propagation~\cite{satchapter}.
 
 \begin{algorithm}[!ht]
 \label{alg:dpll}
@@ -75,4 +96,5 @@ solvers do produce such assignment~\cite{cormen}.
 
 \section{MiniSat}
 \label{sec:minisat}
+Minisat~\cite{minisat}
 

@@ -1,51 +1,55 @@
 %\section{}
-This chapter introduces \system{K}{n}{}, a \emph{propositional modal logic
-language}, semantically determined by an account of necessity and possibility.
+This chapter formally introduces \system{K}{n}{}, a \emph{propositional modal
+logic language}, semantically determined by an account of necessity and
+possibility~\cite{journals/jal/NalonD07}.
 
 A propositional modal language is the well known propositional language augmented
-by a collection of \emph{modal operators}. In classical logic, propositions or
-sentences are either evaluated to true or false, in any model. Propositional
-logic and predicate logic, for instance, do not allow for any further
-possibilities. However, in natural language, we often distinguish between
-various modalities of truth, such as \emph{necessarily} true, \emph{known to be}
-true, \emph{believed to be} true or yet true \emph{in some future}, for example.
-Therefore, one may think that classical logics lacks expressivity in this sense. 
+by a collection of \emph{modal operators}~\cite{blackburn2002modal}. In
+classical logic, propositions or sentences are evaluated to either true or
+false, in any model. Propositional logic and predicate logic, for instance, do
+not allow for any further possibilities. However, in natural language, we often
+distinguish between various modalities of truth, such as \emph{necessarily}
+true, \emph{known to be} true, \emph{believed to be} true or yet true \emph{in
+some future}, for example.  Therefore, one may think that classical logics lacks
+expressivity in this sense. 
 
-Modal logic adds operators to express one or more of these different modes of
+Modal logics add operators to express one or more of these different modes of
 truth. Different modalities define different languages. The key concept behind
-these operators is that they allow us to reason over relations among contexts or
-interpretations, an abstraction that here we think as \emph{possible worlds}.
-The purpose of the modal operators is to permit the information that holds at
-other worlds to be examined --- but, crucially, only at worlds visible from the
-current one via an accessibility relation~\cite{blackburn2002modal}. Then,
-evaluation of a modal formula depends on a set of possible worlds and the
-accessibility relations defined for these worlds. It is possible to define
-several accessibility relations between worlds, and different modal logics are
-defined by different relations.
+these operators is that they allow us to reason over relations among different
+contexts or interpretations, an abstraction that here we think as \emph{possible
+worlds}.  The purpose of the modal operators is to permit the information that
+holds at other worlds to be examined --- but, crucially, only at worlds visible
+or accessible from the current one via an accessibility
+relation~\cite{blackburn2002modal}. Then, the evaluation of a modal formula
+depends on the set of possible worlds and the accessibility relations defined
+for these worlds. It is possible to define several accessibility relations
+between worlds, and different modal logics are defined by different relations.
 
 The modal language which is the focus of this work is the extension of the
-classical propositional logic that adds the unary operators: $\nec{a}$ and
+classical propositional logic plus the unary operators $\nec{a}$ and
 $\pos{a}$, whose reading are ``is necessary by the agent $a$'' and ``is
 possible by the agent $a$'', respectively. This language, known as
 \system{K}{n}{}, is characterized by the schema $\nec{a}(\varphi \then \psi) \then
-(\nec{a} \varphi \then \nec{a} \psi)$ (axiom \system{K}{}{}), where $a \in \Agents = \{1,
-\ldots, n\}$ and $\varphi, \psi$ are well-formed formulae. The addition of other
-axioms defines different systems of modal logics and it imposes restrictions on
-the class of models where formulae are valid~\cite{chellas:modal_logic}. 
+(\nec{a} \varphi \then \nec{a} \psi)$ (axiom \system{K}{}{}), where $a$
+represents an agent in a finite, fixed set, and $\varphi, \psi$ are well-formed
+formulae. The addition of other axioms defines different systems of modal logics
+and it imposes restrictions on the class of models where formulae are
+valid~\cite{chellas:modal_logic}. 
 
-Worlds and their accessibility relations define a structure known as
-\emph{Kripke model}. The satisfiability and validity of a formula depend on this
-structure. For example, given a Kripke model that contains a set of possible
-worlds, a binary relation of accessibility between worlds and a valuation
-function that maps in which worlds a proposition symbol holds, we say that a
-formula $\nec{}p$ is satisfiable at some world $\st$ of this model, if the
-valuation function establishes that $p$ is true at all worlds accessible from
-\st.
+Worlds and their accessibility relations define a structure known as a
+\emph{Kripke model}, a structure proposed by Kripke to semantically analyse
+modal logics~\cite{kripke:i}.  The satisfiability and validity of a formula
+depend on this structure. For example, given a Kripke model that contains a set
+of possible worlds, a binary relation of accessibility between worlds and a
+valuation function that maps in which worlds a proposition symbol holds, we say
+that a formula $\nec{}p$ is satisfiable at some world $\st$ of this model, if
+the valuation function establishes that $p$ is true at all worlds accessible
+from \st.
 
-It is now time to formally define the modal language we will be working with. The
+In the following, we will formally define the modal language we will be working with. The
 syntax and semantics of \system{K}{n}{} are showed in Sections~\ref{syntax}
 and~\ref{semantics}, respectively, and the definitions presented in these two
-sections are adaptations from~\cite{journals/jal/NalonD07}.
+sections follow those in~\cite{journals/jal/NalonD07}.
 
 \section{Syntax}
 \label{syntax}
@@ -69,11 +73,9 @@ in a finite, non-empty fixed set of labels $\Agents = \{1, \ldots, n\}, n
     \end{enumerate}
 \end{definition}
 
-Just as the familiar first-order existential and universal quantifiers are duals
-to each other, that is, $\forall x\ \formula \iff \neg \exists x\ \neg \formula$, we have
-the dual connectives $\pos{a}$ for necessity, which express possibility, and
-they are defined by $\pos{a} \formula \stackrel{def} \neg \nec{a} \neg \formula$, for each
-$\agent \in \Agents$. Other logic operators may be used as abbreviations.
+The operators $\pos{\agent}$ are the duals of $\nec{\agent}$, for each $\agent \in
+\Agents$, that is, $\pos{\agent} \formula$ can be defined as $\neg \nec{\agent} \neg
+\formula$, with $\formula \in \wff$. Other logical operators are also used as abbreviations.
 In this work, we consider the usual ones:
 \begin{itemize}
     \item $\varphi \wedge \psi \stackrel{def} \neg(\neg \varphi \lor \neg \psi)$ (conjuction)
@@ -93,12 +95,11 @@ p$, and denote by \Literals~the set of all literals. A \emph{modal literal} is a
 formula of the form $\nec{a} l$ or $\pos{a} l$, with $l \in \Literals$ and $a
 \in \Agents$.
 
-The following function definitions are based on formulae' syntax. The
+The following definitions are also needed later. The
 \emph{modal depth} of a formula is recursively defined as follows:
 
 \begin{definition}
-    We define $mdepth : \wff \longrightarrow \Nat$ to represent the
-    maximal number of nesting modal operators in a formula. Inductively:
+    We define $mdepth : \wff \longrightarrow \Nat$ inductively as:
     \begin{enumerate}
         \item $mdepth(p) = 0$ 
         \item $mdepth(\neg \formula) = mdepth(\formula)$
@@ -108,17 +109,20 @@ The following function definitions are based on formulae' syntax. The
     With $p \in \Prop$ and $\formula, \psi \in \wff$.
 \end{definition}
 
-For instance, if $\formula = \nec{a}\pos{a} p$ then $mdepth(\formula) = 2$ but $mdepth(p) = 0$.
+This function represents the maximal number of nesting operators in a formula.
+For instance, if $\formula = \nec{a}\pos{a} p \lor \pos{a} q, a \in \Agents$,
+then $mdepth(\formula) = 2$.
 
 The \emph{modal level} of a formula (or a subformula) is given relative to its position in the
 \emph{annotated syntactic tree}.
 
-\begin{definition}
+\begin{definition}%
     Let $\Sigma$ be the alphabet $\{1, 2, .\}$ and $\Sigma^*$ the set of all
-    finite sequences over $\Sigma$. Denote by $\varepsilon$ the empty sequence.
-    We define $\tau : \wff \times \Sigma^* \times \Nat \longrightarrow
-    \mathscr{P}(\wff \times \Sigma^* \times \Nat)$ as the partial function
-    inductively defined as follows:
+    finite sequences over $\Sigma$. 
+    %Denote by $\varepsilon \in \Sigma$ the empty sequence.  
+    We define $\tau : \wff \times \Sigma^* \times \Nat
+    \longrightarrow \mathscr{P}(\wff \times \Sigma^* \times \Nat)$ as the
+    partial function inductively defined as follows:
     \begin{enumerate}
         \item $\tau(p, \lambda, ml) = \{(p, \lambda, ml)\}$
         \item $\tau(\neg \formula, \lambda, ml) = \{(\neg \formula, \lambda, ml)\} \cup \tau(\formula, \lambda.1, ml)$
@@ -129,7 +133,7 @@ The \emph{modal level} of a formula (or a subformula) is given relative to its p
     \in \wff$.
 \end{definition}
 
-The function $\tau$ applied to $(\formula, \varepsilon, 0)$ returns the
+The function $\tau$ applied to $(\formula, 1, 0)$ returns the
 annotated syntactic tree for \formula, where each node is uniquely identified by
 a subformula, its position in the tree (or path order) and its modal level. For
 instance, $p$ occurs twice in the formula $\nec{a}\pos{a}(p \land \nec{a} p)$,
@@ -137,13 +141,14 @@ at the position 1.1.1, with modal level 2, and again at position
 1.1.2.1, with modal level 3.
 
 \begin{definition}
-    We define $mlevel : \wff \times \wff \times \Sigma^* \longrightarrow \Nat$,
-    to represent the maximal number of modal operators in which scope a subformula
-    occurs. Let \formula~be a formula and let $\tau(\formula, \varepsilon, 0)$
-    be its annotated syntactic tree. If $(\formula', \lambda, ml)\in
-    \tau(\formula, \varepsilon, 0)$ then $mlevel(\formula, \formula', \lambda) =
-    ml$.
+    Let \formula~be a formula and let $\tau(\formula, 1, 0)$ be its
+    annotated syntactic tree. We define $mlevel : \wff \times \wff \times \Sigma^*
+    \longrightarrow \Nat$, as: if $(\formula', \lambda, ml)\in \tau(\formula,
+    1, 0)$ then $mlevel(\formula, \formula', \lambda) = ml$.
 \end{definition}
+
+This function represents the maximal number of operators in which scope a
+subformula occurs.
 
 \section{Semantics}
 \label{semantics}
@@ -162,14 +167,14 @@ The semantics of \system{K}{n}{} is presented in terms of Kripke structures.
     to each world $\st \in \St$ a truth-assignment to propositional symbols.
 \end{definition}
 
-We denote $R_a \st \upsilon$ to mean that $\upsilon$ is accessible from $\st$ through
+We write $R_a \st \upsilon$ to denote that $\upsilon$ is accessible from $\st$ through
 the accessibility relation $R_a$, that is $(\st, \upsilon) \in R_a$, and $R^*_a \st
 \upsilon$, to mean that $\upsilon$ is reachable from $\st$ through a finite number of
-steps, that is, exists a sequence $(\st_1, \ldots, \st_k)$ of worlds such that
-$R_a \st_i \st_{i+1}, \forall\ 1 \leq i < k$, where $\st_1 = \st$ and $\st_k =
-\upsilon$, with $a \in \Agents$, $\st, \upsilon, \st_i \in W$ and $k \in \Nat$. Note
+steps, that is, it exists a sequence $(\st_1, \ldots, \st_k)$ of worlds such that
+$R_a \st_i \st_{i+1}$, for all $i \leq k$, where $\st_1 = \st$ and $\st_k =
+\upsilon$, with $a \in \Agents$, $\st, \upsilon, \st_i \in W$ and $i, k \in \Nat$. Note
 that $R_a^*$ is the \emph{transitive closure} of $R_a$, the least transitive set
-that contains all elements of $R_a$. Here we also make use of the
+that contains all elements of $R_a$. In this work, we will also use the
 \emph{transitive and reflexive closure}, denoted by $R_a^+$, the least
 transitive and reflexive set that contains all elements of $R_a$.
 
@@ -181,13 +186,13 @@ transitive and reflexive set that contains all elements of $R_a$.
     \sat{\Model}{\st}{\varphi}, between a world \st~and a formula $\varphi$,
     is inductively defined by:
     \begin{enumerate}
-        \item \sat{\Model}{\st}{p} if, and only if, $\pi(\st, p) = \textbf{true}$, for all $p \in \Prop$;
+        \item \sat{\Model}{\st}{p} if, and only if, $\pi(\st, p) = true$, for all $p \in \Prop$;
         \item \sat{\Model}{\st}{\neg\varphi} if, and only if, $
             \langle \Model, \st \rangle \not \models \varphi$;
         \item \sat{\Model}{\st}{\varphi\lor\psi} if, and only if,
-            \sat{\Model}{\st}{\varphi} or \sat{\Model}{\st}{\psi}
+            \sat{\Model}{\st}{\varphi} or \sat{\Model}{\st}{\psi};
         \item \sat{\Model}{\st}{\nec{a} \varphi} if, and only if, for all $t\in
-            \St$, $(\st, t) \in R_a$ implies  \sat{\Model}{t}{\varphi}
+            \St$, $(\st, t) \in R_a$ implies  \sat{\Model}{t}{\varphi}.
     \end{enumerate}
 \end{definition}
 
@@ -195,27 +200,27 @@ Satisfiability is defined with respect to the root of a model. A formula $\varph
 \in \wff$ is said to be \emph{satisfiable} if there exists a Kripke model
 $\Model = (\St, \st_0, R_1, \ldots, R_n, \pi)$ such that
 \sat{\Model}{\st_0}{\varphi}. In this case we simply write $\Model \models
-\formula$ to mean that $\Model$ statisfies \formula~at $\st_0$. A formula is said to be \emph{valid} if it is
-satisfiable in all models. We say that a set $\mathcal{F}$ is satisfiable if
-every $\formula \in \mathcal{F}$ is satisfiable. Validity of sets is defined
-analogously. 
+\formula$ to mean that $\Model$ statisfies \formula~in $\st_0$. A formula is
+said to be \emph{valid} if it is satisfiable in all models. We say that a set
+$\mathcal{F}$ of formulae is satisfiable if every $\formula \in \mathcal{F}$ is
+satisfiable.
 
 The satisfiability problem for \system{K}{n}{} corresponds to determining the
 existence of a model in which a formula is satisfied. This problem is proven to be
 PSPACE-complete~\cite{Spaan:coml}.
 
 \begin{example}
-    Consider the model illustrated in Figure~\ref{example_semantics}, let's call
-    it \Model. Take $\Model = (W, \st_0, R, \pi)$, for $\Prop = \{p\}$ and
-    $\Agents = \{1\}$, where 
+    Let $\Model$ be the model illustrated in Figure~\ref{example_semantics}. Take
+    $\Model = (W, \st_0, R, \pi)$, for $\Prop = \{p\}$ and $\Agents = \{1\}$,
+    where 
     \begin{enumerate}
         \item[$(i)$] $W = \{\st_0, \st_1, \st_2\}$
         \item[$(ii)$] $R = \{(\st_1, \st_1), (\st_2, \st_2),
             (\st_0, \st_1), (\st_0, \st_2)\}$
         \item[$(iii)$] $ \pi(\st, p) = 
             \begin{cases} 
-                \text{\textbf{true}}    & \quad \text{if } \st = \st_0\\
-                \text{\textbf{false}}   & \quad \text{otherwise}
+                true    & \quad \text{if } \st = \st_0\\
+                false   & \quad \text{otherwise}
             \end{cases}
                        $
     \end{enumerate}
@@ -225,7 +230,7 @@ PSPACE-complete~\cite{Spaan:coml}.
     evaluates to true in the current context, one can see the same sentence
     occurring with the opposite valuation through an accessibility relation.
     This kind of reasoning is not possible in classical logic. Other examples of
-    formulae satisfied by this model: $p \land \pos{} \neg p$, $\nec{}\nec{}
+    formulae satisfied by this model are: $p \land \pos{} \neg p$, $\nec{}\nec{}
     \neg p$ and $\nec{} \nec {} \nec{} \neg p$.
 \end{example}
 
@@ -236,39 +241,38 @@ PSPACE-complete~\cite{Spaan:coml}.
     (\emph{Tree-like} model) 
     Consider the formula $\formula = \nec{1} (p \then \pos{2} p)$. The
     Figure~\ref{example_models} contains examples of models that satisfy
-    \formula. Note that the model from the figure~\ref{example_tree-like} has a
+    \formula, hence, \formula~is satisfiable. Note that the model from the figure~\ref{example_tree-like} has a
     graphical representation similar to a tree. Finite trees are ubiquitous in
     computer science, they are used to represent knowledge or data from the most
-    diverse fields. As trees play such an important role, we will take this
-    opportunity to define them, and next, we will show some interesting results
-    concerning our modal language.
+    diverse fields, such as linguistics, programming language etc. As trees play
+    such an important role, we will take this opportunity to define them, and
+    next, we will mention some interesting results concerning our modal language.
 
 \input{tex/treemodel}
  
     By a tree $\mathcal{T}$ we mean a relational structure $(T, S)$ where $T$ is
     a set of nodes and $S$ is a binary relation among these nodes. $T$
     contains a unique~$r_0 \in T$ (called the \emph{root}) such that all
-    other nodes in $T$ are reachable from $r_0$, that is, $\forall t \in T$
-    we have $S^*r_0 t$, besides that, every element of $T$, distinct from
-    $r_0$, has a unique $S$-predecessor, and the transitive and reflexive
-    closure $S^+$ is
-    acyclic, that is, $\forall t \in T, \neg S^* t t$~\cite{areces2000tree}.
+    other nodes in $T$ are reachable from $r_0$, that is, for all $t \in T$,
+    with $t \neq r_0$, we have $S^*r_0 t$, besides that, every element of $T$,
+    distinct from $r_0$, has a unique $S$-predecessor, and the transitive and
+    reflexive closure $S^+$ is acyclic, that is, for all $t \in T$, we have $\neg
+    S^* t t$~\cite{areces2000tree}.
 
-    A \emph{tree model} is a Kripke model $(W, r_0, R, \pi)$, with $\Agents =
-    \{1\}$, where $(W, R)$ is a tree and $r_0$ is its root. A \emph{tree-like
-    model} for \system{K}{n}{} is a model $(W, r_0, R_1, \ldots, R_n, \pi)$,
+    A \emph{tree model} is a Kripke model $(W, \st_0, R, \pi)$, with $\Agents =
+    \{1\}$, where $(W, R)$ is a tree and $\st_0$ is its root. A \emph{tree-like
+    model} for \system{K}{n}{} is a model $(W, \st_0, R_1, \ldots, R_n, \pi)$,
     with $\Agents = \{1, \ldots, n\}$, such that $(W, \cup_{i \in \Agents} R_i)$
-    is a tree, with $r_0$ as the root.
+    is a tree, with $\st_0$ as the root.
 
-    In a tree-like model, we can define the \emph{depth} of worlds in $W$.
+    Let $\Model = (W, \st_0, R_1, \ldots, R_a, \pi)$ be a tree-like model for
+    \system{K}{n}{}. We define the $depth: W \longrightarrow \Nat$ of a world
+    $\st \in W$, as the length of the path from $\st_0$ to $\st$ through the
+    union of the relations in \Model. We sometimes say $depth$ of \Model~to mean
+    the largest path from the root to any world in $W$.
 
-    \begin{definition}
-        Let $\Model = (W, r_0, R_1, \ldots, R_a, \pi)$ be a tree-like model
-        for \system{K}{n}{}. We define the $depth: W \longrightarrow \Nat$ of a
-        world $\st \in W$, as the length of the path from $r_0$ to $\st$
-        through the union of the relations in \Model. We sometimes say $depth$
-        of \Model~to mean the largest path from the root to a world in $W$.
-    \end{definition}
+    The following theorems are particular cases of the ones presented
+    in~\cite{areces2000tree}.
 
     \begin{theorem}
         Let $\formula \in \wff$ be a formula and $\Model = (W, \st_0, R_1,
@@ -277,55 +281,56 @@ PSPACE-complete~\cite{Spaan:coml}.
         Moreover, $\Model'$ is finite and its $depth$ is bounded by
         $mdepth(\formula)$.
     \end{theorem}
-    \begin{proof}
-    \end{proof}
 
     \begin{theorem}
         Let $\formula, \formula' \in \wff$ and $\Model = (W, \st_0, R_1, \ldots,
         R_n, \pi)$ be a tree-like model such that $\Model \models \formula$. If
-        $(\formula', \lambda', ml) \in \tau(\formula, \varepsilon, 0)$ and
+        $(\formula', \lambda', ml) \in \tau(\formula, 1, 0)$ and
         $\formula'$ is satisfied in $\Model$, then there is $\st \in W$, with
         $depth(w) = ml$, such that $\sat{\Model}{\st}{\formula'}$. Moreover,
         the subtree rooted at $w$ has height equals to $mdepth(\formula')$.
     \end{theorem}
-    \begin{proof}
-    \end{proof}
 \end{example}
 
-The \emph{global satisfiability} problem for a modal logic is equivalent to the
-satisfiability problem of the logic obtained by adding the universal modality,
-$\nec{*}$, to the original language~\cite{goranko1992using}. Let
-$\system{K}{n}{*}$ be the logic obtained by adding $\nec{*}$ to \system{K}{n}{}.
-Let $\Model = (W, \st_0, R_1, \ldots, R_n, \pi)$ be a tree-like model for
-\system{K}{n}{}. A model $\Model^*$ for \system{K}{n}{*} is the pair $(\Model,
-R_*)$, where $R_* = W \times W$. A formula $\nec{*} \formula$ is satisfied at
-the world $\st \in W$, in the model $\Model^*$, written
-\sat{\Model^*}{\st}{\nec{*}\formula}, if, and only if, for all $\st'
-\in W$, we have that \sat{\Model^*}{\st'}{\formula}. In this sense, let $\formula
-\in \wff$ be a formula, we say that $\formula$ is globally satisfiable in a
-model \Model, denoted $\Model \models_G \formula$, if, and only if, $\Model^*
-\models \nec{*} \formula$.
+For the \emph{global satisfiability} problem of a modal logic we need to add the
+universal modality, $\nec{*}$, to the original modal
+language~\cite{goranko1992using}. Let $\system{K}{n}{*}$ be the logic obtained
+by adding $\nec{*}$ to \system{K}{n}{}. A model $\Model^*$ for \system{K}{n}{*}
+is the pair $(\Model, R_*)$, where $\Model = (W, \st_0, R_1, \ldots, R_n, \pi)$
+is a tree-like model for \system{K}{n}{} and $R_* = W \times W$. The global
+satisfiability problem is equivalent to the satisfiability problem in the
+following sense: a formula $\nec{*} \formula$ is satisfied at the world $\st \in
+W$, in the model $\Model^*$, written \sat{\Model^*}{\st}{\nec{*}\formula}, if,
+and only if, for all $\st' \in W$, we have that \sat{\Model^*}{\st'}{\formula}.
+Therefore, let $\formula \in \wff$ be a formula, we say that $\formula$ is
+globally satisfiable in a model \Model, denoted $\Model \models_G \formula$, if,
+and only if, $\Model^* \models \nec{*} \formula$.
+
+\subsection{Proof Systems} % remove this section tag later
 
 \section{Normal Form}
 
-Normal forms can provide elegant and constructive proofs of many standard
-results~\cite{fine1975}. This happens because once you translated a set of
-formulae into a normal form, you have all your formulae in a specific structure
-and possibly less operators to work with, which may implicate into a smaller number
-of rules for a proof system. One can even add information into formulae in a
-specific normal form. That is the case of the normal form we use in this work.
+In general terms, a normal form is an elegant representation of an equivalence
+class. The equivalence relation in question may determine what kind of normal
+form is used. The relation considered in this work relates two formulae if
+whenever one is satisfiable, the other one also is.  Normal forms can provide
+constructive proofs of many standard results~\cite{fine1975}. This happens
+because formulae translated into a normal form have a specific structure and
+possibly less operators, which may implicate into a smaller number of rules for
+a proof system. 
 
 Formulae in \system{K}{n}{} can be transformed into a layered normal form called
 \emph{Separated Normal Form with Modal Levels}, denoted by
-\snf{$ml$}~\cite{journals/jal/NalonD07}. A formula in \snf{$ml$} is a
-conjunction of \emph{clauses} labelled by the modal level in which they occur.
+\snf{$ml$}, proposed in~\cite{journals/jal/NalonD07}. A formula in \snf{$ml$} is a
+conjunction of \emph{clauses} where the modal level in which they occur is
+emphasized as a label.
 
 We write $ml: \formula$ to denote that \formula~occurs at modal level $ml\in
 \Nat \cup \{*\}$. By $*: \formula$ we mean that \formula~is true at
 all modal levels. Formally, let $\wffml$ denote the set of formulae with
-the modal level annotation, $ml : \formula$ such that $ml \in \Nat \cup \{*\}$
+the modal level annotation, $ml : \formula$, such that $ml \in \Nat \cup \{*\}$
 and $\formula \in \wff$. Let $\Model^* = (W, \st_0, R_1, \ldots, R_n, R_*, \pi)$
-be a model and take $\formula \in \wff$. 
+be a tree-like model and take $\formula \in \wff$. 
 
 \begin{definition}
 Satisfiability of labelled formulae is given by:
@@ -339,3 +344,72 @@ Satisfiability of labelled formulae is given by:
 \end{enumerate}
     
 \end{definition}
+
+Observe that the labels in formulae work as a kind of \textit{weak} universal
+operator, allowing us to reason about a set of formulae that are all satisfied
+at a given modal level.
+
+Clauses in \snf{$ml$} are defined as follows.
+
+\begin{definition}
+    Clauses in \snf{$ml$} are in one of the following forms:
+    \begin{enumerate}
+        \item Literal clause $\ \ \quad \qquad ml : \bigvee^r_{b=1} l_b$
+        \item Positive $a$-clause $\ \qquad ml : l' \then \nec{a} l$
+        \item Negative $a$-clause $\qquad ml : l' \then \pos{a} l$
+    \end{enumerate}
+    where $r, b \in \Nat, ml \in \Nat \cup \{*\}$ and $l, l', l_b \in
+    \Literals$.
+\end{definition}
+
+Positive and negative $a$-clauses are together known as \emph{modal
+$a$-clauses}, the index $a$ can be omitted if it is clear from the context.
+
+The transformation of a formula $\formula \in \wff$ into \snf{$ml$} is achieved
+by first transforming $\formula$ into its \emph{Negation Normal Form}, and then,
+recursively applying rewriting and renaming~\cite{plaisted1986structure}.
+
+\begin{definition}
+    Let $\formula \in \wff$. We say that $\formula$ is in Negation Normal Form (NNF) if
+    it contains only the operators $\neg, \lor, \land, \nec{a}$ and $\pos{a}$. Also,
+    only propositions are allowed in the scope of negations.
+\end{definition}
+
+Let $\formula$ be a formula and $t$ a propositional symbol not occurring in
+$\formula$. The translation of $\formula$ is given by $0 : t \land \rho(0 : t
+\then \formula)$ -- for global satisfiability, the translation is given by $* :
+t \land (\rho(* : t \then \formula)$ -- where $\rho$ is the \emph{translation
+function} defined below. We refer to clauses of the form $0 : D$, for a
+disjunction of literals $D$, as \emph{initial clauses}. 
+
+\begin{definition}
+    The translation function $\rho : \wffml \longrightarrow \wffml$ is defined
+    as follows:
+        \begin{align*}
+            \rho(ml : t \then \formula \land \psi) & = \rho(ml : t \then \formula) \land \rho(ml : t \then \psi) \\
+            \rho(ml : t \then \nec{a} \formula) & = (ml : t \then \nec{a} \formula) \text{, if \formula\ is a literal}\\
+                                                & = (ml : t \then \nec{a} t') \land \rho(ml+1 : t' \then \formula) \text{, otherwise}\\
+            \rho(ml : t \then \pos{a} \formula) & = (ml : t \then \pos{a} \formula) \text{, if \formula\ is a literal}\\
+                                                & = (ml : t \then \pos{a} t') \land \rho(ml+1 : t' \then \formula) \text{, otherwise}\\
+            \rho(ml : t \then \formula \lor \psi) & = (ml : \neg t \lor \formula
+            \lor \psi) \text{, if $\psi$ is a disjunction of literals}\\
+                                                  & = \rho(ml : t \then \formula \lor t') \land \rho(ml : t' \then \psi) \text{, otherwise}
+        \end{align*}
+        Where $t, t' \in \Literals$, $\formula, \psi \in \wff$, $ml \in
+        \Nat \cup \{*\}$ and $r, b \in \Nat$.
+\end{definition}
+
+As the conjunction operator is commutative, associative and idempotent, we will
+commonly refer to a formula in \snf{$ml$} as a set of clauses.
+
+The next lemma, taken from~\cite{nalon2015modal}, shows that the transformation
+into \snf{$ml$} preserves satisfiability.
+
+\begin{lemma}
+    Let $\formula \in \wff$ be a formula and let $t$ be a propositional symbol
+    not occurring in $\formula$. Then: 
+    \begin{enumerate}
+        \item[$(i)$] $\formula$ is satisfiable if, and only if, $0 : t \land \rho(0 : t \then \formula)$ is satisfiable;
+        \item[$(ii)$] $\formula$ is globally satisfiable if, and only if, $* : t \land \rho(* : t \then \formula)$ is satisfiable;
+    \end{enumerate}
+\end{lemma}

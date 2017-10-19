@@ -8,20 +8,20 @@
 %\begin{tikzpicture}[->,rectangle,draw,node distance=1.5cm,
                     %every state/.style={draw=green!30!black!50!,fill=green!10,shape=rectangle,rounded corners,drop shadow,minimum width=3cm}
                    %]
-\begin{tikzpicture}[->,circle,draw,node distance=5cm
+    \begin{tikzpicture}[->,circle,draw,node distance=5cm
                    ]
 
-    \node[circle,label=180:$\st_0$,draw,thick](w0){$
-        \begin{array}{c}       
-            p\\
+    \node[circle,label=180:$\st_0$,draw,thick,minimum width=1.4cm](w0){$
+        \begin{array}{c}
+            p
         \end{array}
     $};
-    \node[circle,label=180:$\st_2$,below right of=w0,draw,thick](w1) {$
+    \node[circle,label=180:$\st_2$,below right of=w0,draw,thick,minimum width=1.4cm](w1) {$
         \begin{array}{c}       
             \neg p\\
         \end{array}
     $};
-    \node[circle,label=0:$\st_1$,below left of=w0,draw,thick](w2) {$
+    \node[circle,label=0:$\st_1$,below left of=w0,draw,thick,minimum width=1.4cm](w2) {$
         \begin{array}{c}       
             \neg p\\
         \end{array}

@@ -5,14 +5,14 @@ particular, Prawitz' studies on such procedures brought back the idea of
 unification. J.~A.~Robinson incorporated the concept of unification on a
 refutation method, creating what was later known as resolution~\cite{casanova}. 
 
-The standard rules for resolution systems take two or more premises with literals or
-modal literals that are contradictory, and generate a resolvent. Most of these
-systems work exclusively with clauses in a specific normal form. Resolution
-systems are, in general, refutational systems, that is, to show that a
-formula \formula~is valid, $\neg \formula$ is translated into a normal form. The
-inference rules are applied until either no new resolvents can be generated or a
-contradiction is obtained. The contradiction implies that $\neg \formula$ is
-unsatisfiable and hence, that \formula~is valid.
+The standard rule for resolution systems takes two or more premises with
+literals that are contradictory, and generates a resolvent. Most of these systems
+work exclusively with clauses in a specific normal form. Resolution systems are
+refutational systems, that is, to show that a formula \formula~is valid, $\neg
+\formula$ is translated into a normal form. The inference rules are applied
+until either no new resolvents can be generated or a contradiction is obtained.
+The contradiction implies that $\neg \formula$ is unsatisfiable and hence, that
+\formula~is valid.
 
 %, for propositional
 %logic, contains only one inference rule, which originates a new clause from two
@@ -23,10 +23,12 @@ unsatisfiable and hence, that \formula~is valid.
 Clausal resolution was proposed as a proof method for classical logic by
 Robinson in 1965~\cite{Robinson65}, and was claimed to be suitable to be
 performed by computer, as it has only one inference rule that is applied
-many times. Nonclausal proof methods, in general, require a larger number of
-rules, making implementation more difficult. Clausal resolution is a simple and
-adaptable proof method for classical logics and, since it was proposed, a bank
-of research into heuristics and strategies has been growing. 
+exhaustively. 
+
+%Nonclausal proof methods, in general, require a larger number of rules, making
+%implementation more difficult. Clausal resolution is a simple and adaptable
+%proof method for classical logics and, since it was proposed, a bank of research
+%into heuristics and strategies has been growing. 
 
 %\subsection{Substitution}
 

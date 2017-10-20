@@ -23,6 +23,7 @@
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
+%\newtheorem{example}[subsection]{Example}
 %\newtheorem{proposition}[theorem]{Proposition}
 %\newtheorem{corollary}[theorem]{Corollary}
 %\newtheorem{definition}[theorem]{Definition}
@@ -34,9 +35,9 @@
 %\newenvironment{remark}[1][Remark]{\begin{trivlist}
 %\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
 
-\newcounter{example}[section]
+\newcounter{example}
 \newenvironment{example}[1][]{\refstepcounter{example}\par\medskip
-   \noindent \textbf{Example~\theexample #1} \rmfamily}{\medskip}
+   \noindent \textbf{Example~\theexample #1.} \rmfamily}{\medskip}
 
 
 \ifx\fmtname\@psfmtname \else \def\cmsy@{2}\fi % make sure we get cmsy

@@ -25,6 +25,8 @@ Robinson in 1965~\cite{Robinson65}, and was claimed to be suitable to be
 performed by computer, as it has only one inference rule that is applied
 exhaustively. 
 
+\subsection{Modal-Layered Resolution}
+
 %Nonclausal proof methods, in general, require a larger number of rules, making
 %implementation more difficult. Clausal resolution is a simple and adaptable
 %proof method for classical logics and, since it was proposed, a bank of research
@@ -136,3 +138,27 @@ into \snf{$ml$} preserves satisfiability.
 \begin{example}
     
 \end{example}
+
+\section{Modal-Layered Resolution Calculus for \system{K}{n}{}}
+
+The motivation for the use of this labelled clausal normal form is that
+inference rules can then be guided by the semantic information given by the
+labels and applied to smaller sets of clauses, reducing the number of
+unnecessary inferences, and therefore improving the efficiency of the proof
+procedure~\cite{Nalon2016}. 
+
+This calculus comprises a set of inference rules, given in Table~\ref{rules},
+for dealing with propositional and modal reasoning. In the following, we denote
+by $\sigma$ the result of unifying the labels in the premises for each rule.
+Formally, unification is given by a function $ \sigma : \mathscr{P}(\Nat \cup
+\{*\}) \longrightarrow \Nat \cup \{*\}$, where $\sigma (\{ml, *\}) = ml$ and
+$\sigma (\{ml\}) = ml$, otherwise, $\sigma$ is undefined. The following
+inference rules can only be applied if the unification of their labels is
+defined (where $* - 1 = *$). Note that for GEN1 and GEN3, if the
+modal clauses occur at the modal level $ml$, then the literal clause occurs at
+the next modal level, $ml + 1$.
+
+\input{tex/rules}
+
+
+\section{\ksp}

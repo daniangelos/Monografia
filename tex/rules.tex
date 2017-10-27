@@ -1,0 +1,86 @@
+\begin{table}
+    \caption{Inference rules}
+\centering
+{\scriptsize
+\begin{tabular}{c}
+\\
+\begin{tabular}{cc}
+%$
+%\begin{array}{lrcl}
+%\mbox{[IRES1]} &\universal(\constant{true} & \then & D \vee l)\\
+ %&\universal(\constant{start} & \then  & D' \vee \neg l)\\ \cline{2-4}
+ %&\universal(\constant{start} & \then & D \vee D')
+%\end{array}
+%$
+%&
+%$
+%\begin{array}{lrcl} 
+%\mbox{[IRES2]} &\universal(\constant{start} & \then &  D \vee l)\\
+ %&\universal(\constant{start} & \then & D' \vee \neg l)\\  \cline{2-4}
+ %&\universal(\constant{start} & \then & D \vee D')
+%\end{array}
+%$
+%& 
+$
+\begin{array}{lrl}
+\mbox{[LRES]} &ml_1: & D \lor l\\
+ &ml_2: & D' \lor \neg l\\  \cline{2-3}
+    &\sigma(\{ml_1,ml_2\}): & D \lor D'
+\end{array}
+$
+    &
+$
+\begin{array}{lrl}
+\mbox{[MRES]} &ml_1: & l_1   \then  \nec{a} l \\
+              &ml_2: & l_2  \then  \neg \nec{a} l\\ \cline{2-3}
+              &\sigma(\{ml_1,ml_2\}): & \neg l_1 \lor \neg l_2
+\end{array}
+$
+\end{tabular}
+\\
+\\
+\\
+$
+\begin{array}{lrl}
+    \mbox{[GEN2]}& ml_1: & {l'}_1 \then \nec{a} l_1 \\
+                 & ml_2: & {l'}_2 \then \nec{a} \neg l_1 \\
+                 & ml_3: & {l'}_3 \then \pos{a} l_2 \\ \cline{2-3}
+                 & \sigma(\{ml_1, ml_2, ml_3\}): &  \neg  {l'}_1 \lor  \neg {l'}_2 \lor \neg {l'}_3
+\end{array} 
+$
+\\
+\\
+\\
+{\setlength{\arraycolsep}{1pt}
+\begin{tabular}{cc}
+$
+\begin{array}{lrl}
+    \mbox{[GEN1]} & ml_1: & {l'}_1  \then  \nec{a}\neg l_1 \\
+              & \qquad \vdots  \\
+              & ml_m: & {l'}_m  \then  \nec{a}\neg l_m \\
+              & ml_{m+1}: & l'  \then  \pos{a}\neg  l \\
+              & ml_{m+2}:  & l_1 \lor \ldots \lor l_m \lor l \\  \cline{2-3}
+              & ml:  & \neg {l'}_1 \lor \ldots \lor \neg {l'}_m \lor \neg l'
+\end{array} 
+$
+&
+$
+\begin{array}{lrl}
+    \mbox{[GEN3]} & ml_1 : & {l'}_1 \then  \nec{a}\neg l_1 \\
+             & \qquad \vdots  \\
+             & ml_m : & {l'}_m  \then  \nec{a}\neg l_m \\
+             & ml_{m+1} : & l'  \then \pos{a}  l \\
+             & ml_{m+2} : & l_1 \lor \ldots \lor l_m  \\  \cline{2-3}
+             & ml : & \neg {l'}_1 \lor \ldots \lor \neg {l'}_m \lor \neg l'
+ \end{array}
+ $\\
+
+where $ml = \sigma (\{ml_1, \ldots, ml_{m+1}, ml_{m+2} - 1\})$
+    &
+where $ml = \sigma (\{ml_1, \ldots, ml_{m+1}, ml_{m+2} - 1\})$
+\end{tabular}}\\
+\\
+
+\end{tabular}}%
+\label{rules}%
+\end{table}

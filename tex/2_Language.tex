@@ -56,11 +56,11 @@ sections follow those in~\cite{journals/jal/NalonD07}.
 
 The language of \system{K}{n}{} is equivalent to its set of \emph{well-formed
 formulae}, denoted by \wff, which is constructed from a denumerable set of
-\emph{propositional symbols} $\Prop = \{p, q, r, \ldots\}$, the negation
-symbol $\neg$, the disjunction symbol $\lor$ and the modal connectives
-$\nec{a}$, that express the notion of necessity, for each index $a$
-in a finite, non-empty fixed set of labels $\Agents = \{1, \ldots, n\}, n
-\in \mathbb{N}$.
+\emph{propositional symbols} or \emph{variables} $\Prop = \{p, q, r, \ldots\}$,
+the negation symbol $\neg$, the disjunction symbol $\lor$ and the modal
+connectives $\nec{a}$, that express the notion of necessity, for each index $a$
+in a finite, non-empty fixed set of labels $\Agents = \{1, \ldots, n\}, n \in
+\mathbb{N}$.
 
 \begin{definition}
 \label{def:wff}
@@ -156,6 +156,7 @@ subformula occurs.
 The semantics of \system{K}{n}{} is presented in terms of Kripke structures.
 
 \begin{definition}
+\label{semantics}
     A Kripke model for \Prop~and $\Agents = \{1, \ldots, n\}$ is given by the tuple 
     \begin{equation}
         \Model = (\St, \st_0, R_1, \ldots, R_n, \pi)

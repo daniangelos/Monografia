@@ -7,14 +7,17 @@ directed in improving the efficiency of solvers for this problem, known as
 worst-case exponential run time of all the algorithms known, satisfiability
 solvers are increasingly leaving their mark as a general purpose tool in the
 most diverse areas~\cite{satchapter}. In essence, SAT solvers provide a generic
-combinatorial reasoning and search platform. 
+combinatorial reasoning and search platform. Beyond that, the source code
+of many implementations of such solvers is freely available and can be
+used as a basis for the development of decision procedures for more expressive
+logics~\cite{giunchiglia2002sat}.
 
 In the context of SAT solvers for propositional provers, the underlying
 representational formalism is propositional logic~\cite{satchapter}. We are
 interested in formulae in \emph{Conjunctive Normal Form} (CNF): $\formula$ is in
 CNF if it is a conjunction of \emph{clauses}, where each clause is a disjunction
 of literals. For example, $\formula = (p \lor \neg q) \land (\neg p \lor r \lor
-s) \land (q \lor r)$ is a CNF formula with four literals and three clauses. 
+s) \land (q \lor r)$ is a CNF formula with four variables and three clauses. 
 We use the symbol $\emptyset$ to denote the \emph{empty clause}, i.e., the
 clause that contains no literals. A clause with only one literal is referred to
 as a \emph{unit clause}, and a clause with two literals, as a \emph{binary
@@ -23,16 +26,18 @@ $\formula$ as a $k$-CNF formula.
 
 %% satisfying assignment %%
 A propositional formula $\formula$ takes value in the set $\{false, true\}$. A
-\emph{truth assignment} (or just assignment) to a set of literals $\Literals$ is
-a map $\sigma : \Literals \longrightarrow \{false, true\}$. A \emph{satisfying
-assignment} for $\formula$ is an assignment $\sigma$ such that $\formula$
-evaluates to $true$ under $\sigma$.  A \emph{partial assignment} for a formula
-$\formula$ is a truth assignment to a subset of the literals in $\formula$. For
-a partial assignment $\rho$ for a CNF formula $\formula$, $\formula|_\rho$
-denotes the simplified formula obtained by replacing the literals appearing in
-$\rho$ with their specified values, removing all clauses with at least one
-$true$ literal, and deleting all occurrences of $false$ literals from the
-remaining clauses.
+\emph{truth assignment} (or just assignment) to a set of variables $\Prop$, is
+the valuation function $\pi$ as defined in Definition~\ref{semantics}. As in
+propositional logic we have a unit set as the set of possible worlds $\St$, we
+can omit this set from the function signature and write $\pi : \Prop \longrightarrow
+\{false,true\}$, for simplicity. A \emph{satisfying assignment} for $\formula$
+is an assignment $\pi$ such that $\formula$ evaluates to $true$ under $\pi$.  A
+\emph{partial assignment} for a formula $\formula$ is a truth assignment to a
+subset of the variables in $\formula$. For a partial assignment $\rho$ for a CNF
+formula $\formula$, $\formula|_\rho$ denotes the simplified formula obtained by
+replacing the variables appearing in $\rho$ with their specified values, removing
+all clauses with at least one $true$ literal, and deleting all occurrences of
+$false$ literals from the remaining clauses~\cite{satchapter}.
 
 Therefore, the \emph{Boolean Satisfiability Problem} (SAT) can be expressed as:
 Given a CNF formula $\formula$, does $\formula$ have a satisfying assignment? If
@@ -47,16 +52,16 @@ assignment~\cite{cormen}.
 
 A \emph{complete} solution method for the SAT problem is one that, given the
 input formula $\formula$, either produces a satisfying assignment for $\formula$
-or proves that it is unsatisfiable.  One of the most surprising aspects
-of the relatively recent practical progress of SAT solvers is that the best
-complete methods remain variants of a process introduced in the early 1960’s:
-the Davis-Putnam-Logemann-Loveland, or DPLL, procedure~\cite{satchapter}, which
-performs a backtrack search in the space of partial truth
-assignments~\cite{DavisLongemannLoveland:1962}. A key feature of DPLL is efficient pruning
-of the search space based on falsified clauses. Since its introduction, the main
-improvements to DPLL have been smart branch selection heuristics, extensions
-like clause learning and randomized restarts, and well-crafted data structures
-such as lazy implementations and watched literals for fast unit
+or proves that it is unsatisfiable~\cite{satchapter}. One of the most surprising
+aspects of the relatively recent practical progress of SAT solvers is that the
+best complete methods remain variants of a process introduced in the early
+1960’s: the Davis-Putnam-Logemann-Loveland, or DPLL,
+procedure~\cite{DavisLongemannLoveland:1962}, which performs a backtrack search
+in the space of partial truth assignments. A key feature of DPLL is efficient
+pruning of the search space based on falsified clauses. Since its introduction,
+the main improvements to DPLL have been smart branch selection heuristics,
+extensions like clause learning and randomized restarts, and well-crafted data
+structures such as lazy implementations and watched literals for fast unit
 propagation~\cite{satchapter}.
 
 Algorithm~\ref{alg:dpll}, DPLL-recursive$(\formula, \rho)$, sketches the basic
@@ -64,22 +69,16 @@ DPLL procedure on CNF formulae~\cite{DavisLongemannLoveland:1962}. The main idea
 is to repeatedly select an unassigned literal $l$ in the input formula and
 recursively search for a satisfying assignment for $\formula|_l$ and
 $\formula|_{\neg l}$. The step where such an $l$ is chosen is called a
-\emph{branching step}. Setting $l$ to true or false when making a recursive call
+\emph{branching step}. Setting $l$ to $true$ or $false$ when making a recursive call
 is referred to as \emph{decision}, and is associated with a decision level which
 equals the recursion depth at that stage. The end of each recursive call, which
 takes $\formula$ back to fewer assigned literals, is called the
 \emph{backtracking step}.
 
-
-\begin{algorithm}[!ht]
-    %\SetKwInOut{Input}{Input}
-    %\SetKwInOut{Output}{Output}
-    %\Input{A CNF formula $\formula$ and an initially empty partial assignment $\rho$}
-    %\Output{UNSAT, or an assignment satisfying $\formula$}
-
-    %\underline{function Euclid} $(a,b)$
-
-    $(\formula, \rho) \leftarrow$ UnitPropagate$(\formula,\rho)$
+\begin{algorithm}[htp]
+    \SetAlgoLined\DontPrintSemicolon
+    \SetKwFunction{proc}{UnitPropagate}
+    $(\formula, \rho) \leftarrow$ \proc{$\formula,\rho$}
 
     \If{$\formula$ contains the empty clause}
     {\Return~UNSAT}
@@ -92,13 +91,54 @@ takes $\formula$ back to fewer assigned literals, is called the
     \If{DPLL-recursive$(\formula|_l, \rho \cup \{l\}) = $ SAT} 
     {\Return{SAT}}
     \Return{DPLL-recursive$(\formula|_{\neg l}, \rho \cup \{\neg l\})$}
-\caption{DPLL-recursive$(\formula, \rho$)}
-\label{alg:dpll}
-\end{algorithm}
 
-\section{Conflict Driven Clause Learning}
+    \vspace{2mm}
+    \setcounter{AlgoLine}{0}
+    \SetKwProg{myproc}{sub}{}{}
+    \myproc{\proc{$\formula, \rho$}}{%
+    \While{$\formula$ contains no empty clause but has a unit clause $x$}
+    {%
+        $\formula \leftarrow \formula|_x$\\
+        $\rho \leftarrow \rho \cup \{x\}$
+    }
+    \Return{$(\formula, \rho)$}
+    \nl \KwRet\;}
+    \caption{DPLL-recursive$(\formula, \rho$)}
+    \label{alg:dpll}
+\end{algorithm} 
+
+A partial assignment $\rho$ is maintained during the search and output if the
+formula turns out to be satisfiable. If $\formula |_\rho$ contains the empty
+clause, the corresponding clause of $\formula$ from which it came is said to be
+\emph{violated} by $\rho$. To increase efficiency, unit clauses are immediately
+set to $true$ as outlined in Algorithm~\ref{alg:dpll}, this process is called
+\emph{unit propagation}. The literals whose negation does not appear, called
+\emph{pure literals}, are also set to $true$ as a preprocessing step and, in
+some implementations, during the simplification process after every branch.
+
+Variants of this algorithm form the most widely used family of complete
+algorithms for the SAT problem. They are frequently implemented in an iterative
+manner, resulting in significantly reduced memory usage. The efficiency of
+state-of-the-art SAT solvers relies heavily on various features that have been
+developed, analysed and tested over the last decade. These include fast unit
+propagation using watched literals, deterministic and randomized restart
+strategies, effective clause deletion mechanisms, smart static and dynamic
+branching heuristics and learning mechanisms. This last one is more discussed in
+the next section.
+
+\section{Conflict-Driven Clause Learning}
 \label{sec:cdcl}
 
+One of the main reasons for the widespread use of SAT in many applications is
+that solvers based on clause learning are so effective in
+practice~\cite{satchapter}. The main idea is to cache ``causes of conflict'' as
+learned clauses, and utilize this information to prune the search in a different
+part of the search space encountered later. Since their inception in the
+mid-90s, \emph{Conflict-Driven Clause Learning} (CDCL) SAT solvers have been
+applied, in many cases with remarkable success, to a number of practical
+applications~\cite{cdclchapter}. The organization of CDCL SAT solvers is
+primarily inspired by the DPLL procedure.
+ 
 Algorithm~\ref{alg:cdcl}.
 
 \begin{algorithm}[!ht]
@@ -122,5 +162,6 @@ Algorithm~\ref{alg:cdcl}.
 
 \section{MiniSat and Glucose}
 \label{sec:minisat}
-Minisat~\cite{minisat}
+MiniSat~\cite{minisat}
 
+Glucose~\cite{glucose}

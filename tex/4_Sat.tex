@@ -70,9 +70,9 @@ is to repeatedly select an unassigned literal $l$ in the input formula and
 recursively search for a satisfying assignment for $\formula|_l$ and
 $\formula|_{\neg l}$. The step where such an $l$ is chosen is called a
 \emph{branching step}. Setting $l$ to $true$ or $false$ when making a recursive call
-is referred to as \emph{decision}, and is associated with a decision level which
-equals the recursion depth at that stage. The end of each recursive call, which
-takes $\formula$ back to fewer assigned literals, is called the
+is referred to as \emph{decision}, and is associated with a \emph{decision
+level} which equals the recursion depth at that stage. The end of each recursive
+call, which takes $\formula$ back to fewer assigned literals, is called the
 \emph{backtracking step}.
 
 \begin{algorithm}[htp]
@@ -108,13 +108,17 @@ takes $\formula$ back to fewer assigned literals, is called the
 \end{algorithm} 
 
 A partial assignment $\rho$ is maintained during the search and output if the
-formula turns out to be satisfiable. If $\formula |_\rho$ contains the empty
-clause, the corresponding clause of $\formula$ from which it came is said to be
-\emph{violated} by $\rho$. To increase efficiency, unit clauses are immediately
-set to $true$ as outlined in Algorithm~\ref{alg:dpll}, this process is called
-\emph{unit propagation}. The literals whose negation does not appear, called
-\emph{pure literals}, are also set to $true$ as a preprocessing step and, in
-some implementations, during the simplification process after every branch.
+formula turns out to be satisfiable.  To increase efficiency, a key procedure in SAT
+solvers is the \emph{unit propagation}~\cite{cdclchapter}, where unit clauses
+are immediately set to $true$ as outlined in Algorithm~\ref{alg:dpll}. In most
+implementations of DPLL, logical consequences are derived with unit propagation.
+Thus, this procedure is used for identifying variables which must be assigned
+a specific value. If $\formula |_\rho$ contains the empty clause, a
+\emph{conflict} condition is declared, the corresponding clause of $\formula$
+from which it came is said to be \emph{violated} by $\rho$, and the algorithm
+backtracks. The literals whose negation does not appear, called \emph{pure
+literals}, are also set to $true$ as a preprocessing step and, in some
+implementations, during the simplification process after every branch. 
 
 Variants of this algorithm form the most widely used family of complete
 algorithms for the SAT problem. They are frequently implemented in an iterative
@@ -138,30 +142,57 @@ mid-90s, \emph{Conflict-Driven Clause Learning} (CDCL) SAT solvers have been
 applied, in many cases with remarkable success, to a number of practical
 applications~\cite{cdclchapter}. The organization of CDCL SAT solvers is
 primarily inspired by the DPLL procedure.
+
+In CDCL SAT solvers, each variable $x_i$ is characterized by a number of
+properties, including the \emph{value}, the \emph{antecedent} and the
+decision level, denoted respectively by $\nu(x_i) \in \{false, true, u\},
+\alpha(x_i) \in \formula \cup \{nil\}$, and $\delta(x_i) \in \{-1, 0, 1, \ldots,
+|\Prop|\}$.
  
-Algorithm~\ref{alg:cdcl}.
+%Algorithm~\ref{alg:cdcl}.
 
 \begin{algorithm}[!ht]
-    \SetKwInOut{Input}{Input}
-    \SetKwInOut{Output}{Output}
-    \Input{}
-    \Output{}
-
-    \If{UnitPropagate$(F, \nu) == $ CONFLICT}
-    {\Return{UNSAT}}
-
-    $dl \leftarrow 0$
-
-    \While{\textbf{not} AllVariablesAssigned$(F, \nu)$}
-    {$(x, \nu) \leftarrow$ PickBranchingVariable$(F,\nu)$}
-
-    \Return{SAT}
-    \caption{CDCL$(F, \nu)$}
+    \caption{CDCL$(\formula, \nu)$}
 \label{alg:cdcl}
 \end{algorithm}
 
-\section{MiniSat and Glucose}
-\label{sec:minisat}
-MiniSat~\cite{minisat}
+\subsection{Conflict Analysis}
 
-Glucose~\cite{glucose}
+Each time the CDCL SAT solver identifies a conflict due to unit propagation, the
+conflict analysis procedure is invoked. As a result, one or more new clauses are
+learnt, and a backtracking decision level is computed. This procedure analyses
+the structure of unit propagation and decides which literals to include in the
+learnt clause.
+
+The decision levels associated with assigned variables define a partial order of
+the variables. Starting from a given unsatisfied clause, the conflict analysis
+procedure visits variables implied at the most recent decision level. HEREEE 
+
+Clause learning finds other applications besides the key efficiency improvements
+to CDCL SAT solvers. One example is \emph{clause reuse}. In a large number of
+applications, clauses learnt for a given CNF formula can often be reused for
+related CNF formulae. 
+
+Moreover, for unsatisfiable subformulae, the clauses learnt by a CDCL SAT solver
+encode a resolution refutation of the original formula. Given the way clauses
+are learnt in this solvers, each learnt clause can be explained by a number of
+resolution steps, each of which is a trivial resolution step. As a result, the
+resolution refutation can be obtained from the learnt clauses in linear time and
+space on the number of learnt clauses. 
+
+For unsatisfiable formulae, the resolution refutations obtained from the clauses
+learnt by a SAT solver serve as certificate for validating the correctness of
+the SAT solver. Moreover, resolution refutations based on clause learning find
+practical applications~\cite{cdclchapter}.
+
+Besides allowing producing a resolution refutation, learnt clauses also allow
+identifying a subset of clauses that is also unsatisfiable. For example, a
+\emph{minimally unsatisfiable subformula} can be derived by iteratively removing
+a single clause and checking unsatisfiability. Unnecessary clauses are
+discarded, and eventually a minimally unsatisfiable subformula is obtained.
+
+\section{Modern CDCL Solvers}
+\label{sec:minisat}
+%MiniSat~\cite{minisat}
+
+%Glucose~\cite{glucose}

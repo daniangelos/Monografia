@@ -98,8 +98,8 @@ recursively applying rewriting and renaming~\cite{plaisted1986structure}.
 
 Let $\formula$ be a formula and $t$ a propositional symbol not occurring in
 $\formula$. The translation of $\formula$ is given by $0 : t \land \rho(0 : t
-\then \formula)$ -- for global satisfiability, the translation is given by $* :
-t \land (\rho(* : t \then \formula)$ -- where $\rho$ is the \emph{translation
+\then \formula)$ --- for global satisfiability, the translation is given by $* :
+t \land \rho(* : t \then \formula)$ --- where $\rho$ is the \emph{translation
 function} defined below. We refer to clauses of the form $0 : D$, for a
 disjunction of literals $D$, as \emph{initial clauses}. 
 
@@ -139,10 +139,11 @@ into \snf{$ml$} preserves satisfiability.
     
 \end{example}
 
-\section{Modal-Layered Resolution Calculus for \system{K}{n}{}}
+\section{Modal-Layered Resolution Calculus for \system{K}{n}{}}%
+\label{sec:calculus}
 
-The motivation for the use of this labelled clausal normal form is that
-inference rules can then be guided by the semantic information given by the
+The motivation for the use of this labelled clausal normal form in a calculus is
+that inference rules can then be guided by the semantic information given by the
 labels and applied to smaller sets of clauses, reducing the number of
 unnecessary inferences, and therefore improving the efficiency of the proof
 procedure~\cite{Nalon2016}. 
@@ -158,7 +159,13 @@ defined (where $* - 1 = *$). Note that for GEN1 and GEN3, if the
 modal clauses occur at the modal level $ml$, then the literal clause occurs at
 the next modal level, $ml + 1$.
 
+The proofs for termination, soundness and completeness of this calculus can be
+found in~\cite{nalon2015modal}.
+
 \input{tex/rules}
 
-
 \section{\ksp}
+In this section, we present \ksp, the theorem prover presented
+in~\cite{Nalon2016} for the basic multimodal logic \system{K}{n}{}, which
+implements a variation of the set of support strategy~\cite{wos1965efficiency}
+for the modal resolution-based calculus described in Section~\ref{sec:calculus}.

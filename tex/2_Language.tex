@@ -17,7 +17,7 @@ Modal logics add operators to express one or more of these different modes of
 truth. Different modalities define different languages. The key concept behind
 these operators is that they allow us to reason over relations among different
 contexts or interpretations, an abstraction that here we think as \emph{possible
-worlds}.  The purpose of the modal operators is to permit the information that
+worlds}.  The purpose of the modal operators is to allow the information that
 holds at other worlds to be examined --- but, crucially, only at worlds visible
 or accessible from the current one via an accessibility
 relation~\cite{blackburn2002modal}. Then, the evaluation of a modal formula
@@ -26,27 +26,27 @@ for these worlds. It is possible to define several accessibility relations
 between worlds, and different modal logics are defined by different relations.
 
 The modal language which is the focus of this work is the extension of the
-classical propositional logic plus the unary operators $\nec{a}$ and
-$\pos{a}$, whose reading are ``is necessary by the agent $a$'' and ``is
-possible by the agent $a$'', respectively. This language, known as
-\system{K}{n}{}, is characterized by the schema $\nec{a}(\varphi \then \psi) \then
-(\nec{a} \varphi \then \nec{a} \psi)$ (axiom \system{K}{}{}), where $a$
-represents an agent in a finite, fixed set, and $\varphi, \psi$ are well-formed
-formulae. The addition of other axioms defines different systems of modal logics
-and it imposes restrictions on the class of models where formulae are
-valid~\cite{chellas:modal_logic}. 
+classical propositional logic plus the unary operators $\nec{a}$ and $\pos{a}$,
+whose reading are ``is necessary from the point of view of an agent $a$'' and
+``is possible from the point of view of an agent $a$'', respectively. This
+language, known as \system{K}{n}{}, is characterized by the schema
+$\nec{a}(\varphi \then \psi) \then (\nec{a} \varphi \then \nec{a} \psi)$ (axiom
+\system{K}{}{}), where $a$ is an index from a finite, fixed set, and $\varphi,
+\psi$ are well-formed formulae. The addition of other axioms defines different
+systems of modal logics and it imposes restrictions on the class of models where
+formulae are valid~\cite{chellas:modal_logic}. 
 
-Worlds and their accessibility relations define a structure known as a
-\emph{Kripke model}, a structure proposed by Kripke to semantically analyse
-modal logics~\cite{kripke:i}.  The satisfiability and validity of a formula
-depend on this structure. For example, given a Kripke model that contains a set
-of possible worlds, a binary relation of accessibility between worlds and a
-valuation function that maps in which worlds a proposition symbol holds, we say
-that a formula $\nec{}p$ is satisfiable at some world $\st$ of this model, if
-the valuation function establishes that $p$ is true at all worlds accessible
-from \st.
+A set of worlds, their accessibility relations and a valuation function define a
+structure known as a \emph{Kripke model}, a structure proposed by Kripke to
+semantically analyse modal logics~\cite{kripke:i}.  The satisfiability and
+validity of a formula depend on this structure. For example, given a Kripke
+model that contains a set of possible worlds, a binary relation of accessibility
+between worlds and a valuation function that maps in which worlds a proposition
+symbol holds, we say that a formula $\nec{}p$ is satisfiable at some world $\st$
+of this model, if the valuation function establishes that $p$ is true at all
+worlds accessible from \st.
 
-In the following, we will formally define the modal language we will be working with. The
+In the following, we will formally define the modal language. The
 syntax and semantics of \system{K}{n}{} are showed in Sections~\ref{syntax}
 and~\ref{semantics}, respectively, and the definitions presented in these two
 sections follow those in~\cite{journals/jal/NalonD07}.
@@ -58,8 +58,8 @@ The language of \system{K}{n}{} is equivalent to its set of \emph{well-formed
 formulae}, denoted by \wff, which is constructed from a denumerable set of
 \emph{propositional symbols} or \emph{variables} $\Prop = \{p, q, r, \ldots\}$,
 the negation symbol $\neg$, the disjunction symbol $\lor$ and the modal
-connectives $\nec{a}$, that express the notion of necessity, for each index $a$
-in a finite, non-empty fixed set of labels $\Agents = \{1, \ldots, n\}, n \in
+connectives $\nec{a}$, that express the notion of necessity, for each $a$
+in a finite, non-empty fixed set of indexes $\Agents = \{1, \ldots, n\}, n \in
 \mathbb{N}$.
 
 \begin{definition}
@@ -73,7 +73,7 @@ in a finite, non-empty fixed set of labels $\Agents = \{1, \ldots, n\}, n \in
     \end{enumerate}
 \end{definition}
 
-The operators $\pos{\agent}$ are the duals of $\nec{\agent}$, for each $\agent \in
+The operator $\pos{\agent}$ is the dual of $\nec{\agent}$, for each $\agent \in
 \Agents$, that is, $\pos{\agent} \formula$ can be defined as $\neg \nec{\agent} \neg
 \formula$, with $\formula \in \wff$. Other logical operators are also used as abbreviations.
 In this work, we consider the usual ones:
@@ -87,10 +87,9 @@ In this work, we consider the usual ones:
 
 Parentheses may be omitted if the reading is not ambiguous.  When $n = 1$, we
 often omit the index in the modal operators, i.e., we just write $\nec{}
-\varphi$ (or `box' \formula) and $\pos{}\varphi$ (or `diamond' \formula), for a
-well-formed formula $\varphi$. 
+\varphi$ and $\pos{}\varphi$, for a well-formed formula $\varphi$. 
 
-We define as \emph{literal} a propositional symbol $p \in \Prop$ or its negation $\neg
+We define a \emph{literal} as a propositional symbol $p \in \Prop$ or its negation $\neg
 p$, and denote by \Literals~the set of all literals. A \emph{modal literal} is a
 formula of the form $\nec{a} l$ or $\pos{a} l$, with $l \in \Literals$ and $a
 \in \Agents$.
@@ -106,7 +105,7 @@ The following definitions are also needed later. The
         \item $mdepth(\formula \lor \psi) = \max\{mdepth(\formula), mdepth(\psi)\}$
         \item $mdepth(\nec{a} \formula) = mdepth(\formula) + 1$
     \end{enumerate}
-    With $p \in \Prop$ and $\formula, \psi \in \wff$.
+    with $p \in \Prop$ and $\formula, \psi \in \wff$.
 \end{definition}
 
 This function represents the maximal number of nesting operators in a formula.
@@ -156,7 +155,7 @@ subformula occurs.
 The semantics of \system{K}{n}{} is presented in terms of Kripke structures.
 
 \begin{definition}
-\label{semantics}
+\label{def:semantics}
     A Kripke model for \Prop~and $\Agents = \{1, \ldots, n\}$ is given by the tuple 
     \begin{equation}
         \Model = (\St, \st_0, R_1, \ldots, R_n, \pi)
@@ -171,7 +170,7 @@ The semantics of \system{K}{n}{} is presented in terms of Kripke structures.
 We write $R_a \st \upsilon$ to denote that $\upsilon$ is accessible from $\st$ through
 the accessibility relation $R_a$, that is $(\st, \upsilon) \in R_a$, and $R^*_a \st
 \upsilon$, to mean that $\upsilon$ is reachable from $\st$ through a finite number of
-steps, that is, it exists a sequence $(\st_1, \ldots, \st_k)$ of worlds such that
+steps, that is, there exists a sequence $(\st_1, \ldots, \st_k)$ of worlds such that
 $R_a \st_i \st_{i+1}$, for all $i \leq k$, where $\st_1 = \st$ and $\st_k =
 \upsilon$, with $a \in \Agents$, $\st, \upsilon, \st_i \in W$ and $i, k \in \Nat$. Note
 that $R_a^*$ is the \emph{transitive closure} of $R_a$, the least transitive set
@@ -179,7 +178,7 @@ that contains all elements of $R_a$. In this work, we will also use the
 \emph{transitive and reflexive closure}, denoted by $R_a^+$, the least
 transitive and reflexive set that contains all elements of $R_a$.
 
-\emph{Satisfiability} and \emph{validity} of a formula is defined in terms of the \emph{satisfiability relation}.
+\emph{Satisfiability} and \emph{validity} of a formula are defined in terms of the \emph{satisfiability relation}.
 
 \begin{definition}
 \label{relsat}
@@ -197,14 +196,19 @@ transitive and reflexive set that contains all elements of $R_a$.
     \end{enumerate}
 \end{definition}
 
-Satisfiability is defined with respect to the root of a model. A formula $\varphi
-\in \wff$ is said to be \emph{satisfiable} if there exists a Kripke model
-$\Model = (\St, \st_0, R_1, \ldots, R_n, \pi)$ such that
+Satisfiability is defined with respect to the root of a model. A formula
+$\varphi \in \wff$ is said to be \emph{satisfiable} if there exists a Kripke
+model $\Model = (\St, \st_0, R_1, \ldots, R_n, \pi)$ such that
 \sat{\Model}{\st_0}{\varphi}. In this case we simply write $\Model \models
 \formula$ to mean that $\Model$ statisfies \formula~in $\st_0$. A formula is
-said to be \emph{valid} if it is satisfiable in all models. We say that a set
-$\mathcal{F}$ of formulae is satisfiable if every $\formula \in \mathcal{F}$ is
-satisfiable.
+said to be \emph{valid} if it is satisfiable in all models.  A formula
+$\formula$ is \emph{globally satisfied} in a model $\Model = (\St, \st_0 R_1,
+\ldots, R_n, \pi)$, if for all $\st \in \St$, we have
+$\sat{\Model}{\st}{\formula}$. A formula $\formula$ is said to be \emph{globally
+satisfiable} if there is a model $\Model$ such that $\Model$ globally satisfies
+$\formula$, denoted $\Model \models_G \formula$.  We say that a set
+$\mathcal{F}$ of formulae is satisfiable if there is a model that satisfies
+every $\formula \in \mathcal{F}$.
 
 The satisfiability problem for \system{K}{n}{} corresponds to determining the
 existence of a model in which a formula is satisfied. This problem is proven to be
@@ -239,26 +243,28 @@ PSPACE-complete~\cite{Spaan:coml}.
 
 \begin{example}
     \label{ex2}
-    (\emph{Tree-like} model) 
-    Consider the formula $\formula = \nec{1} (p \then \pos{2} p)$. The
-    Figure~\ref{example_models} contains examples of models that satisfy
-    \formula, hence, \formula~is satisfiable. Note that the model from the figure~\ref{example_tree-like} has a
-    graphical representation similar to a tree. Finite trees are ubiquitous in
-    computer science, they are used to represent knowledge or data from the most
-    diverse fields, such as linguistics, programming language etc. As trees play
-    such an important role, we will take this opportunity to define them, and
-    next, we will mention some interesting results concerning our modal language.
+    (\emph{Tree-like} model) Consider the formula $\formula = \nec{1} (p \then
+    \pos{2} p)$. The Figure~\ref{example_models} contains examples of models
+    that satisfy \formula, hence, \formula\ is satisfiable. Note that the model
+    from the Figure~\ref{example_tree-like} has a graphical representation
+    equivalent to a tree. 
+    %Finite trees are ubiquitous in
+    %computer science, they are used to represent knowledge or data from the most
+    %diverse fields, such as linguistics, programming language etc. As trees play
+    %such an important role, we will take this opportunity to define them, and
+    %next, we will mention some interesting results concerning our modal language.
 
 \input{tex/treemodel}
  
-    By a tree $\mathcal{T}$ we mean a relational structure $(T, S)$ where $T$ is
-    a set of nodes and $S$ is a binary relation among these nodes. $T$
-    contains a unique~$r_0 \in T$ (called the \emph{root}) such that all
-    other nodes in $T$ are reachable from $r_0$, that is, for all $t \in T$,
-    with $t \neq r_0$, we have $S^*r_0 t$, besides that, every element of $T$,
-    distinct from $r_0$, has a unique $S$-predecessor, and the transitive and
-    reflexive closure $S^+$ is acyclic, that is, for all $t \in T$, we have $\neg
-    S^* t t$~\cite{areces2000tree}.
+    As trees play an important role in computer science, we will take this
+    opportunity to define them. By a tree $\mathcal{T}$ we mean a relational
+    structure $(T, S)$ where $T$ is a set of nodes and $S$ is a binary relation
+    over these nodes. $T$ contains a unique node $r_0 \in T$ (called the
+    \emph{root}) such that all other nodes in $T$ are reachable from $r_0$, that
+    is, for all $t \in T$, with $t \neq r_0$, we have $S^*r_0 t$, besides that,
+    every element of $T$, distinct from $r_0$, has a unique $S$-predecessor, and
+    the transitive and reflexive closure $S^+$ is acyclic, that is, for all $t
+    \in T$, we have $\neg S^* t t$~\cite{areces2000tree}.
 
     A \emph{tree model} is a Kripke model $(W, \st_0, R, \pi)$, with $\Agents =
     \{1\}$, where $(W, R)$ is a tree and $\st_0$ is its root. A \emph{tree-like
@@ -272,10 +278,11 @@ PSPACE-complete~\cite{Spaan:coml}.
     union of the relations in \Model. We sometimes say $depth$ of \Model~to mean
     the largest path from the root to any world in $W$.
 
-    The following theorems are particular cases of the ones presented
+    The following theorems have been adapted from the ones presented
     in~\cite{areces2000tree}.
 
     \begin{theorem}
+        \label{theo:tl1}
         Let $\formula \in \wff$ be a formula and $\Model = (W, \st_0, R_1,
         \ldots, R_n, \pi)$ be a model. Then $\Model \models \formula$ if and only if
         there is a tree-like model $\Model'$ such that $\Model' \models \formula$.
@@ -284,6 +291,7 @@ PSPACE-complete~\cite{Spaan:coml}.
     \end{theorem}
 
     \begin{theorem}
+        \label{theo:tl2}
         Let $\formula, \formula' \in \wff$ and $\Model = (W, \st_0, R_1, \ldots,
         R_n, \pi)$ be a tree-like model such that $\Model \models \formula$. If
         $(\formula', \lambda', ml) \in \tau(\formula, 1, 0)$ and
@@ -291,9 +299,18 @@ PSPACE-complete~\cite{Spaan:coml}.
         $depth(w) = ml$, such that $\sat{\Model}{\st}{\formula'}$. Moreover,
         the subtree rooted at $w$ has height equals to $mdepth(\formula')$.
     \end{theorem}
+
+    The proof of Theorem~\ref{theo:tl2} is by induction on the structure of the
+    formula and shows that a subformula $\formula'$ of $\formula$ is satisfied
+    at a node with distance $m$ of the root of the tree-like model. As
+    determining the satisfiability of a formula depends only on its subformulae,
+    only the subtrees of height $mdepth(\formula')$ starting at level $m$ need
+    to be checked. The bound on the height of the subtrees follows from
+    Theorem~\ref{theo:tl1}~\cite{nalon2015modal}.
 \end{example}
 
-For the \emph{global satisfiability} problem of a modal logic we need to add the
+The \emph{global satisfiability problem} for a modal logic is equivalent to the
+satisfiability problem of the logic obtained by adding the
 universal modality, $\nec{*}$, to the original modal
 language~\cite{goranko1992using}. Let $\system{K}{n}{*}$ be the logic obtained
 by adding $\nec{*}$ to \system{K}{n}{}. A model $\Model^*$ for \system{K}{n}{*}
@@ -303,14 +320,12 @@ satisfiability problem is equivalent to the satisfiability problem in the
 following sense: a formula $\nec{*} \formula$ is satisfied at the world $\st \in
 W$, in the model $\Model^*$, written \sat{\Model^*}{\st}{\nec{*}\formula}, if,
 and only if, for all $\st' \in W$, we have that \sat{\Model^*}{\st'}{\formula}.
-Therefore, let $\formula \in \wff$ be a formula, we say that $\formula$ is
-globally satisfiable in a model \Model, denoted $\Model \models_G \formula$, if,
-and only if, $\Model^* \models \nec{*} \formula$.
+Therefore, let $\formula \in \wff$ be a formula, we say that $\Model \models_G
+\formula$, if, and only if, $\Model^* \models \nec{*} \formula$.
 
 \section{Proof Systems and Normal Forms}
 
-Informally, a proof is an argument that can convince if determined formula is
-satisfiable or not. Formally, a proof is a finite object constructed according
+Formally, a proof is a finite object constructed according
 to fixed syntactic rules that refer only to the structure of formulae and not to
 their intended meaning~\cite{fitting}. The set of syntactic rules that define
 proofs are said to specify a \emph{proof system} or \emph{calculus}. These rules
@@ -320,33 +335,37 @@ manipulation~\cite{resolutionbased}.
 A proof system is \emph{sound} for a particular logic if any formula that has a
 proof is a valid formula of the logic, and it is \emph{complete} for a
 particular logic if any valid formula has a proof~\cite{fitting}. A sound and
-complete calculus for \system{K}{n}{} finds a model for a formula if, and only
+complete calculus for \system{K}{n}{} finds a proof for a formula if, and only
 if, this formula is satisfiable.
 
 There are several kinds of proof systems, and they can be divided in many
 categories as, for instance, \emph{refutational systems}. To prove a formula
 using a refutational system, we begin by negating it, then analysing the
-consequences of doing so, using a kind of tree structure, we verify if the
-consequences turn out to be impossible, if that is the case, we conclude that
-the original formula has been proved~\cite{fitting}. The calculus for
-\system{K}{n}{} we use in this work is based in resolution, which is one of
-the most common examples of refutational systems. This calculus is introduced
-in Chapter~\ref{3_Resolution}, resolution is also briefly introduced in
-the same chapter. The resolution calculus used is proved to be sound and
-complete for \system{K}{n}{}, it was developed with regard to computer
-implementations and it uses formulae into a special \emph{normal form}.
+repercussion %impact% 
+of doing so, we verify if the consequences turn out to be impossible, if that is
+the case, we conclude that the original formula has been proved~\cite{fitting}.
+The calculus for \system{K}{n}{} we use in this work is resolution based,
+which is one of the most common examples of refutational systems. This calculus
+was proposed by~\cite{nalon2015modal} and is presented in
+Chapter~\ref{3_Resolution}, resolution is also briefly introduced in the same
+chapter. The resolution calculus used is proved to be sound and complete for
+\system{K}{n}{} in~\cite{nalon2015modal}, it was developed with regard to
+computer implementations and it uses formulae translated into a special
+\emph{normal form}.
 
-A normal form is an elegant representation of an equivalence class. The
-equivalence relation in question may determine what kind of normal form is used.
-The relation considered in proof systems for logic languages relates two
-formulae if whenever one is satisfiable, the other one also is. Therefore, the
-transformation rules defined for a specific normal form used in a proof system
-for a logic must preserve satisfiability, that is, the formula obtained by
-applying a transformation rule is satisfiable if, and only if, the original one
-also is. Normal forms can provide constructive proofs of many standard
-results~\cite{fine1975}. This happens because formulae translated into a normal
-form have a specific, normalized structure, possibly resulting in less
-operators, which may implicate into a smaller number of rules for a proof
+A normal form is an elegant representation of an equivalence class and the
+equivalence relation in question may determine what kind of normal form is
+used~\cite{normalformtheory}. The relation considered in proof systems for logic
+languages relates two formulae if whenever one is satisfiable, the other one
+also is. Therefore, the transformation rules defined for a specific normal form
+used in a proof system for a logic must preserve satisfiability, that is, the
+formula obtained by applying a transformation rule is satisfiable if, and only
+if, the original one also is. Normal forms may help calculi to provide constructive
+proofs of many standard results~\cite{fine1975}, that is, a proof that
+demonstrates the existence of a mathematical object by providing a method for
+creating this object. This happens because formulae translated into a normal
+form have a specific, normalized structure, possibly resulting in less operators
+to handle with, which may implicate into a smaller number of rules for a proof
 system. Hence, a calculus that is planned to be implemented in a computer may
 take great advantage of normal forms, since the smaller number of rules reduces
 the chances of implementation errors. 

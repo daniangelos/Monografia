@@ -1,0 +1,32 @@
+\begin{figure}
+          \centering
+          \small 
+\begin{tikzpicture}[->]
+
+    \node[](w0){$
+        t = false @ 3
+    $};
+    \node[below right=0.7cm and 2cm of w0](w1){$
+        q = false @ 5
+    $};
+    \node[below left=0.7cm and 2cm of w1](w2){$
+        p = false @ 5
+    $};
+    \node[below right=0.7cm and 2cm of w1](w3){$
+        s = true @ 5
+    $};
+    \node[below right=0.7cm and 2cm of w2](w4){$
+        r = false @ 5
+    $};
+    \path[thick] (w0) edge [above] node {$\clause_1$} (w1)
+    (w2) edge [above] node {$\clause_1$} (w1)
+    (w2) edge [below] node {$\clause_2$} (w4)
+    (w1) edge [above] node {$\clause_3$} (w3)
+    (w4) edge [below] node {$\clause_3$} (w3);
+
+\end{tikzpicture} 
+    \caption{Implication graph for Example~\ref{ex:graph1}}%
+    \label{fig:graph1}
+\end{figure}
+
+

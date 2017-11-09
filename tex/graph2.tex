@@ -1,0 +1,48 @@
+\begin{figure}
+          \centering
+          \small 
+\begin{tikzpicture}[->]
+
+    \node[](w0){$
+        t = false @ 3
+    $};
+    \node[below right=0.7cm and 1.3cm of w0](w1){$
+        q = false @ 5
+    $};
+    \node[below left=0.7cm and 1.3cm of w1](w2){$
+        p = false @ 5
+    $};
+    \node[below right=0.7cm and 1.3cm of w1](w3){$
+        s = true @ 5
+    $};
+    \node[below right=0.7cm and 1.3cm of w2](w4){$
+        r = false @ 5
+    $};
+    \node[above right=0.7cm and 1.3cm of w3](w5){$
+        u = false @ 5
+    $};
+    \node[below right=0.7cm and 1.3cm of w5](w6){$
+        \kappa
+    $};
+    \node[below right=0.7cm and 1.3cm of w3](w7){$
+        x = false @ 5
+    $};
+    \node[below left=0.7cm and 1.3cm of w7](w8){$
+        y = false @ 5
+    $};
+    \path[thick] (w0) edge [above] node {$\clause_1$} (w1)
+    (w2) edge [above] node {$\clause_1$} (w1)
+    (w2) edge [below] node {$\clause_2$} (w4)
+    (w1) edge [above] node {$\clause_3$} (w3)
+    (w4) edge [below] node {$\clause_3$} (w3)
+    (w3) edge [above] node {$\clause_4$} (w5)
+    (w3) edge [below] node {$\clause_5$} (w7)
+    (w8) edge [below] node {$\clause_5$} (w7)
+    (w5) edge [above] node {$\clause_6$} (w6)
+    (w7) edge [below] node {$\clause_6$} (w6);
+
+\end{tikzpicture} 
+    \caption{Implication graph for Example~\ref{ex:graph2}}%
+    \label{fig:graph2}
+\end{figure}
+

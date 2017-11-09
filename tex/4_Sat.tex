@@ -4,25 +4,24 @@ satisfiable has the historical honor of being the first problem ever shown to be
 NP-Complete~\cite{Cook}. Great theoretical and practical efforts have been
 directed in improving the efficiency of solvers for this problem, known as
 \emph{Boolean Satisfiability Solvers}, or just \emph{SAT solvers}. Despite the
-worst-case exponential run time of all the algorithms known, satisfiability
-solvers are increasingly leaving their mark as a general purpose tool in the
-most diverse areas~\cite{satchapter}. In essence, SAT solvers provide a generic
-combinatorial reasoning and search platform. Beyond that, the source code
-of many implementations of such solvers is freely available and can be
-used as a basis for the development of decision procedures for more expressive
-logics~\cite{giunchiglia2002sat}.
+worst-case exponential run time of all the deterministic algorithms known,
+satisfiability solvers are increasingly leaving their mark as a general purpose
+tool in the most diverse areas~\cite{satchapter}. In essence, SAT solvers
+provide a generic combinatorial reasoning and search platform. Beyond that, the
+source code of many implementations of such solvers is freely available and can
+be used as a basis for the development of decision procedures for more
+expressive logics~\cite{giunchiglia2002sat}.
 
 In the context of SAT solvers for propositional provers, the underlying
 representational formalism is propositional logic~\cite{satchapter}. We are
 interested in formulae in \emph{Conjunctive Normal Form} (CNF): $\formula$ is in
-CNF if it is a conjunction of \emph{clauses}, where each clause is a disjunction
-of literals. For example, $\formula = (p \lor \neg q) \land (\neg p \lor r \lor
-s) \land (q \lor r)$ is a CNF formula with four variables and three clauses. 
-We use the symbol $\emptyset$ to denote the \emph{empty clause}, i.e., the
-clause that contains no literals. A clause with only one literal is referred to
-as a \emph{unit clause}, and a clause with two literals, as a \emph{binary
-clause}.  When every clause of $\formula$ has $k$ literals, we refer to
-$\formula$ as a $k$-CNF formula.  
+CNF if it is a conjunction of \emph{clauses}, denoted $\clause$, where each
+clause is a disjunction of literals. For example, $\formula = (p \lor \neg q)
+\land (\neg p \lor r \lor s) \land (q \lor r)$ is a CNF formula with four
+variables and three clauses.  We use the symbol $\emptyset$ to denote the
+\emph{empty clause}, i.e., the clause that contains no literals. A clause with
+only one literal is referred to as a \emph{unit clause}, and a clause with two
+literals, as a \emph{binary clause}.
 
 %% satisfying assignment %%
 A propositional formula $\formula$ takes value in the set $\{false, true\}$. A
@@ -45,9 +44,9 @@ this is the case, $\formula$ is said to be \emph{satisfiable}, otherwise,
 $\formula$ is \emph{unsatisfiable}.  One can be interested not only in the
 answer of this decision problem, but also in finding the actual assignment that
 satisfies the formula, when it exists. All practical SAT solvers do produce such
-assignment~\cite{cormen}. 
+an assignment~\cite{cormen}. 
 
-\section{The DPLL Procedure}
+\section{The DPLL Procedure}%
 \label{sec:dpll}
 
 A \emph{complete} solution method for the SAT problem is one that, given the
@@ -71,12 +70,12 @@ recursively search for a satisfying assignment for $\formula|_l$ and
 $\formula|_{\neg l}$. The step where such an $l$ is chosen is called a
 \emph{branching step}. Setting $l$ to $true$ or $false$ when making a recursive call
 is referred to as \emph{decision}, and is associated with a \emph{decision
-level} which equals the recursion depth at that stage. The end of each recursive
-call, which takes $\formula$ back to fewer assigned literals, is called the
-\emph{backtracking step}.
+level} which equals the recursion depth at that stage of the procedure. The end
+of each recursive call, which takes $\formula$ back to fewer assigned literals,
+is called the \emph{backtracking step}.
 
-\begin{algorithm}[htp]
-    \SetAlgoLined\DontPrintSemicolon
+\begin{algorithm}[htp]%
+    \SetAlgoLined\DontPrintSemicolon%
     \SetKwFunction{proc}{UnitPropagate}
     $(\formula, \rho) \leftarrow$ \proc{$\formula,\rho$}
 
@@ -102,8 +101,8 @@ call, which takes $\formula$ back to fewer assigned literals, is called the
         $\rho \leftarrow \rho \cup \{x\}$
     }
     \Return{$(\formula, \rho)$}
-    \nl \KwRet\;}
-    \caption{DPLL-recursive$(\formula, \rho$)}
+    \nl\KwRet\;}
+    \caption{DPLL-recursive$(\formula, \rho$)}%
     \label{alg:dpll}
 \end{algorithm} 
 
@@ -116,25 +115,26 @@ Thus, this procedure is used for identifying variables which must be assigned
 a specific value. If $\formula |_\rho$ contains the empty clause, a
 \emph{conflict} condition is declared, the corresponding clause of $\formula$
 from which it came is said to be \emph{violated} by $\rho$, and the algorithm
-backtracks. The literals whose negation does not appear, called \emph{pure
-literals}, are also set to $true$ as a preprocessing step and, in some
-implementations, during the simplification process after every branch. 
+backtracks. The literals whose negation do not appear in the formula, called
+\emph{pure literals}, are also set to $true$ as a preprocessing step and, in
+some implementations, during the simplification process after every branching. 
 
 Variants of this algorithm form the most widely used family of complete
 algorithms for the SAT problem. They are frequently implemented in an iterative
 manner, resulting in significantly reduced memory usage. The efficiency of
 state-of-the-art SAT solvers relies heavily on various features that have been
-developed, analysed and tested over the last decade. These include fast unit
-propagation using watched literals, deterministic and randomized restart
+developed, analysed and tested over the last two decades. These include fast
+unit propagation using watched literals, deterministic and randomized restart
 strategies, effective clause deletion mechanisms, smart static and dynamic
-branching heuristics and learning mechanisms. This last one is more discussed in
-the next section.
+branching heuristics and learning mechanisms. We will discuss learning
+mechanisms in the next section and refer the reader to~\cite{satchapter} for
+more details about other strategies.
 
-\section{Conflict-Driven Clause Learning}
+\section{Conflict-Driven Clause Learning}%
 \label{sec:cdcl}
 
 One of the main reasons for the widespread use of SAT in many applications is
-that solvers based on clause learning are so effective in
+that solvers based on clause learning are effective in
 practice~\cite{satchapter}. The main idea is to cache ``causes of conflict'' as
 learned clauses, and utilize this information to prune the search in a different
 part of the search space encountered later. Since their inception in the
@@ -143,16 +143,160 @@ applied, in many cases with remarkable success, to a number of practical
 applications~\cite{cdclchapter}. The organization of CDCL SAT solvers is
 primarily inspired by the DPLL procedure.
 
-In CDCL SAT solvers, each variable $x_i$ is characterized by a number of
+In CDCL SAT solvers, each variable $p$ is characterized by a number of
 properties, including the \emph{value}, the \emph{antecedent} and the
-decision level, denoted respectively by $\nu(x_i) \in \{false, true, u\},
-\alpha(x_i) \in \formula \cup \{nil\}$, and $\delta(x_i) \in \{-1, 0, 1, \ldots,
-|\Prop|\}$.
- 
-%Algorithm~\ref{alg:cdcl}.
+decision level, denoted respectively by $\nu(p) \in \{false, true, u\},
+\alpha(p) \in \formula \cup \{nil\}$, and $\delta(p) \in \{-1, 0, 1, \ldots,
+|\Prop|\}$. A variable $p$ that is assigned a value as the result of unit
+propagation is said to be \emph{implied}. The unit clause $\clause$ used for
+implying this value is said to be the antecedent of $p$, that is, $\alpha(p) =
+\clause$. For variables that are decision variables or are unassigned, the
+antecedent is $nil$. Hence, antecedents are only defined for variables whose
+value is implied by other assignments. The decision level of a variable $p$
+denotes the depth of the decision tree at which the variables is assigned a
+value in $\{false, true\}$ or $\delta(p) = -1$ if $p$ is still unassigned. The
+decision level associated with variables used for branching steps is specified
+by the search process, and denotes the current depth of the \emph{decision
+stack}. Hence, a variable $p$ associated with a decision assignment is
+characterized by having $\alpha(p) = nil$ and $\delta(p) > 0$. More formally,
+the decision level of $p$ with antecedent $\clause$ is given by: 
+\begin{equation}
+    \delta(p) = \max(\{0\} \cup \{\delta(p') | p' \in \clause \land p' \neq p\})
+\end{equation}
+i.e.\ the decision of an implied literal is either the highest decision level of
+the implied literals in a unit clause, or it is 0 in case the clause is unit.
+The notation $p = v @ d$ is used to denote that $\nu(p) = v$ and $\delta(p) =
+d$. Moreover, the decision level of a literal is defined as the decision level
+of its variable, that is, $\delta(l) = \delta(p)$ if $l = p$ or $l = \neg p$.
+
+\begin{example}
+    Consider the formula 
+    \begin{align*}
+        \formula & = \clause_1 \land \clause_2 \land \clause_3\\
+                 & = (p \lor \neg s) \land (p \lor r) \land (\neg r \lor q \lor s)
+    \end{align*}
+    Assume that the decision assignment is $s = false @ 1$. Unit propagation
+    yields no additional implied assignments. Assume that the second decision is
+    $p = false @ 2$. Unit propagation yields the implied assignment $r = true @
+    2$ and $q = true @ 2$. Moreover, $\alpha(r) = \clause_2$ and $\alpha(q) =
+    \clause_3$.
+\end{example}
+
+During the execution of a DPLL based SAT solver, assigned variables as well as
+their antecedents define a directed acyclic graph $I = (V_I, E_I)$ referred to as
+the \emph{implication graph}~\cite{silva1997grasp}. The vertices of this graph
+are defined by all assigned variables and one special node $\kappa$, $V_I
+\subseteq \Prop \cup \{\kappa\}$. The edges in the implication graph are
+obtained from the antecedent of each assigned variable: if $\clause = \alpha(p)$
+then there is a directed edge from each variable in $\clause$, other than $p$, to
+$p$. If unit propagation yields an unsatisfied clause $\clause_i$, then a special
+vertex $\kappa$ is used to represent the unsatisfied clause. In this case, the
+antecedent of $\kappa$ is defined by $\alpha(\kappa) = \clause_j$.
+
+The edges of $I$ are formally defined below. Let $z, z_1, z_2 \in V_I$ be
+vertices in $I$, in order to derive the conditions for existence of edges in
+$I$, a number of predicates need to be defined first. 
+
+\begin{definition}
+    The predicate $\gamma(z, \clause)$ takes value 1 if, and only if, $z$
+    is a literal in $\clause$, and is defined as follows:
+    \begin{equation}
+        \gamma(z, \clause) = 
+        \left\{
+            \begin{array}{ll}
+                1 & \text{if $z \in \clause \lor \neg z \in \clause$} \\
+                0 & \text{otherwise}
+            \end{array}
+        \right.
+    \end{equation}
+    This predicate can now be used for testing the value of a literal in $z$ in
+    a given clause. The predicate $\nu_0(z, \clause)$ takes value 1 if, and only
+    if, $z$ is a literal in $\clause$ and its value is $false$:
+    \begin{equation}
+        \nu_0(z, \clause) = 
+        \left\{
+            \begin{array}{ll}
+                1 & \text{if $\gamma(z, \clause) \land z \in \clause \land \nu(z) = false$}\\
+                1 & \text{if $\gamma(z, \clause) \land \neg z \in \clause \land \nu(z) = true$}\\
+                0 & \text{otherwise}
+            \end{array}
+        \right.
+    \end{equation}
+    The predicate $\nu_1(z, \clause)$ takes value 1 if, and only if, $z$ is a
+    literal in $\clause$ and its value is $true$:
+    \begin{equation}
+        \nu_1(z, \clause) = 
+        \left\{
+            \begin{array}{ll}
+                1 & \text{if $\gamma(z, \clause) \land z \in \clause \land \nu(z) = true$}\\
+                1 & \text{if $\gamma(z, \clause) \land \neg z \in \clause \land \nu(z) = false$}\\
+                0 & \text{otherwise}
+            \end{array}
+        \right.
+    \end{equation}
+    As a result, there is an edge from $z_1$ to $z_2$ in $I$ if, and only if,
+    the following predicate takes value 1:
+    \begin{equation}
+        \epsilon(z_1, z_2) = 
+        \left\{
+            \begin{array}{ll}
+                1 & \text{if $z_2 = \kappa \land \gamma(z_1, \alpha(\kappa))$}\\
+                1 & \text{if $z_2 \neq \kappa \land \alpha(z_2) = \clause \land \nu_0(z_1, \clause) \land \nu_1(z_2, \clause)$}\\
+                0 & \text{otherwise}
+            \end{array}
+        \right.
+    \end{equation}
+\end{definition}
+
+Consequently, the set of edges $E_I$ of the implication graph $I$ is given by:
+\begin{equation}
+    E_I = \{ (z_1, z_2) | \epsilon(z_1, z_2) = 1\}
+\end{equation}
+
+Finally, observe that a labeling function for associating a clause with each
+edge can also be defined. 
+
+\begin{definition}
+    Let $\iota : V_I \times V_I \longrightarrow \formula$ be a labeling
+    function. Then $\iota(z_1, z_2)$, with $z_1, z_2 \in V_I$ and $(z_1, z_2)
+    \in E_I$, is defined by $\iota(z_1, z_2) = \alpha(z_2)$.
+\end{definition}
+
+\begin{example}
+    \label{ex:graph1}
+    (Implication graph without conflict). Consider the CNF formula:
+    \begin{align*}
+        \formula & = \clause_1 \land \clause_2 \land \clause_3\\
+                 & = (p \lor t \lor \neg q) \land (p \lor \neg r) \land (q \lor r \lor s)
+    \end{align*}
+    Assume decision assignment $t = false@3$. Moreover, assume that the current
+    decision assignment is $p = false@5$. The resulting implication graph is
+    shown in Figure~\ref{fig:graph1}.
+    \input{tex/graph1}
+\end{example}
+
+\begin{example}
+    \label{ex:graph2}
+    (Implication graph with conflict). Consider the CNF formula:
+    \begin{align*}
+        \psi & = \clause_1 \land \clause_2 \land \clause_3 \land \clause_4 \land \clause_5 \land \clause_6  \\
+                 & = (p \lor t \lor \neg q) \land (p \lor \neg r) \land (q \lor r \lor s) \land (\neg s \lor \neg u) \land (y \lor \neg s \lor \neg x) \land (u \lor x)
+    \end{align*}
+    Assume decision assignments $y = false@2$ and $t = false@3$. Moreover,
+    assume the current decision assignment $p = false@5$. The resulting
+    implication graph is shown in Figure~\ref{fig:graph2} and yields a conflict
+    because the clause $\clause_6$ becomes unsatisfied.
+    \input{tex/graph2}
+\end{example}
+
+Algorithm~\ref{alg:cdcl} shows the standard organization of a CDCL SAT solver,
+which essentially follows the organization of DPLL. With respect to DPLL, the
+main differences are the call to function ConflictAnalysis each time a conflict
+is identified, and the call to Backtrack when backtracking takes place.
+Moreover, the Backtrack procedure allows for backtracking non-chronologically. 
 
 \begin{algorithm}[!ht]
-    \caption{CDCL$(\formula, \nu)$}
+    \caption{CDCL$(\formula, \nu)$}%
 \label{alg:cdcl}
 \end{algorithm}
 
@@ -166,7 +310,7 @@ learnt clause.
 
 The decision levels associated with assigned variables define a partial order of
 the variables. Starting from a given unsatisfied clause, the conflict analysis
-procedure visits variables implied at the most recent decision level. HEREEE 
+procedure visits variables implied at the most recent decision level. %HEREEE 
 
 Clause learning finds other applications besides the key efficiency improvements
 to CDCL SAT solvers. One example is \emph{clause reuse}. In a large number of
@@ -191,8 +335,6 @@ identifying a subset of clauses that is also unsatisfiable. For example, a
 a single clause and checking unsatisfiability. Unnecessary clauses are
 discarded, and eventually a minimally unsatisfiable subformula is obtained.
 
-\section{Modern CDCL Solvers}
+\section{Modern CDCL Solvers}%
 \label{sec:minisat}
 %MiniSat~\cite{minisat}
-
-%Glucose~\cite{glucose}

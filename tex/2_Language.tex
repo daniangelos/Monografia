@@ -51,7 +51,7 @@ syntax and semantics of \system{K}{n}{} are showed in Sections~\ref{syntax}
 and~\ref{semantics}, respectively, and the definitions presented in these two
 sections follow those in~\cite{journals/jal/NalonD07}.
 
-\section{Syntax}
+\section{Syntax}%
 \label{syntax}
 
 The language of \system{K}{n}{} is equivalent to its set of \emph{well-formed
@@ -62,7 +62,7 @@ connectives $\nec{a}$, that express the notion of necessity, for each $a$
 in a finite, non-empty fixed set of indexes $\Agents = \{1, \ldots, n\}, n \in
 \mathbb{N}$.
 
-\begin{definition}
+\begin{definition}%
 \label{def:wff}
     The set of well-formed formulae, \wff, is the least set such that:
     \begin{enumerate}
@@ -116,7 +116,7 @@ The \emph{modal level} of a formula (or a subformula) is given relative to its p
 \emph{annotated syntactic tree}.
 
 \begin{definition}%
-    Let $\Sigma$ be the alphabet $\{1, 2, .\}$ and $\Sigma^*$ the set of all
+    Let $\Sigma$ be the alphabet $\{1, 2,.\}$ and $\Sigma^*$ the set of all
     finite sequences over $\Sigma$. 
     %Denote by $\varepsilon \in \Sigma$ the empty sequence.  
     We define $\tau : \wff \times \Sigma^* \times \Nat
@@ -149,12 +149,12 @@ at the position 1.1.1, with modal level 2, and again at position
 This function represents the maximal number of operators in which scope a
 subformula occurs.
 
-\section{Semantics}
+\section{Semantics}%
 \label{semantics}
 
 The semantics of \system{K}{n}{} is presented in terms of Kripke structures.
 
-\begin{definition}
+\begin{definition}%
 \label{def:semantics}
     A Kripke model for \Prop~and $\Agents = \{1, \ldots, n\}$ is given by the tuple 
     \begin{equation}
@@ -167,20 +167,22 @@ The semantics of \system{K}{n}{} is presented in terms of Kripke structures.
     to each world $\st \in \St$ a truth-assignment to propositional symbols.
 \end{definition}
 
-We write $R_a \st \upsilon$ to denote that $\upsilon$ is accessible from $\st$ through
-the accessibility relation $R_a$, that is $(\st, \upsilon) \in R_a$, and $R^*_a \st
-\upsilon$, to mean that $\upsilon$ is reachable from $\st$ through a finite number of
-steps, that is, there exists a sequence $(\st_1, \ldots, \st_k)$ of worlds such that
-$R_a \st_i \st_{i+1}$, for all $i \leq k$, where $\st_1 = \st$ and $\st_k =
-\upsilon$, with $a \in \Agents$, $\st, \upsilon, \st_i \in W$ and $i, k \in \Nat$. Note
-that $R_a^*$ is the \emph{transitive closure} of $R_a$, the least transitive set
-that contains all elements of $R_a$. In this work, we will also use the
-\emph{transitive and reflexive closure}, denoted by $R_a^+$, the least
-transitive and reflexive set that contains all elements of $R_a$.
+We write $R_a \st \upsilon$ to denote that $\upsilon$ is accessible from $\st$
+through the accessibility relation $R_a$, that is $(\st, \upsilon) \in R_a$, and
+$R^*_a \st \upsilon$, to mean that $\upsilon$ is reachable from $\st$ through a
+finite number of steps, that is, there exists a sequence $(\st_1, \ldots,
+\st_k)$ of worlds such that $R_a \st_i \st_{i+1}$, for all $i \leq k$, where
+$\st_1 = \st$ and $\st_k = \upsilon$, with $a \in \Agents$, $\st, \upsilon,
+\st_i \in W$ and $i, k \in \Nat$. Note that $R_a^*$ is the \emph{transitive
+closure} of $R_a$, the least transitive set that contains all elements of $R_a$.
+In this work, we will also use the \emph{transitive and reflexive closure},
+denoted by $R_a^+$, the least transitive and reflexive set that contains all
+elements of $R_a$.
 
-\emph{Satisfiability} and \emph{validity} of a formula are defined in terms of the \emph{satisfiability relation}.
+\emph{Satisfiability} and \emph{validity} of a formula are defined in terms of
+the \emph{satisfiability relation}.
 
-\begin{definition}
+\begin{definition}%
 \label{relsat}
     Let $\Model = (\St, \st_0, R_1, \ldots, R_n, \pi)$ be a Kripke model, $\st \in \St$ and $\varphi, \psi \in \wff$. The \emph{satisfiability relation}, denoted by 
     \sat{\Model}{\st}{\varphi}, between a world \st~and a formula $\varphi$,
@@ -196,23 +198,18 @@ transitive and reflexive set that contains all elements of $R_a$.
     \end{enumerate}
 \end{definition}
 
-Satisfiability is defined with respect to the root of a model. A formula
-$\varphi \in \wff$ is said to be \emph{satisfiable} if there exists a Kripke
-model $\Model = (\St, \st_0, R_1, \ldots, R_n, \pi)$ such that
-\sat{\Model}{\st_0}{\varphi}. In this case we simply write $\Model \models
-\formula$ to mean that $\Model$ statisfies \formula~in $\st_0$. A formula is
-said to be \emph{valid} if it is satisfiable in all models.  A formula
-$\formula$ is \emph{globally satisfied} in a model $\Model = (\St, \st_0 R_1,
-\ldots, R_n, \pi)$, if for all $\st \in \St$, we have
-$\sat{\Model}{\st}{\formula}$. A formula $\formula$ is said to be \emph{globally
-satisfiable} if there is a model $\Model$ such that $\Model$ globally satisfies
-$\formula$, denoted $\Model \models_G \formula$.  We say that a set
-$\mathcal{F}$ of formulae is satisfiable if there is a model that satisfies
-every $\formula \in \mathcal{F}$.
-
-The satisfiability problem for \system{K}{n}{} corresponds to determining the
-existence of a model in which a formula is satisfied. This problem is proven to be
-PSPACE-complete~\cite{Spaan:coml}.
+A formula $\varphi \in \wff$ is said to be \emph{locally satisfiable} if there
+exists a Kripke model $\Model = (\St, \st_0, R_1, \ldots, R_n, \pi)$ such that
+\sat{\Model}{\st_0}{\varphi}. In this case we simply write $\Model \models_L
+\formula$ to mean that $\Model$ locally satisfies \formula. A model
+$\Model = (\St, \st_0, R_1, \ldots, R_n, \pi)$ is said to \emph{globally satisfy}
+a formula $\formula$, denoted $\Model \models_G \formula$, if for all $\st \in
+\St$, we have $\sat{\Model}{\st}{\formula}$. A formula $\formula$ is said to be
+\emph{globally satisfiable} if there is a model $\Model$ such that $\Model$
+globally satisfies $\formula$.  We say that a set $\mathcal{F}$ of formulae is
+locally satisfiable if there is a model that locally satisfies every $\formula
+\in \mathcal{F}$. Global satisfiability of sets is defined analogously. A
+formula is said to be \emph{valid} if it is locally satisfiable in all models.
 
 \begin{example}
     Let $\Model$ be the model illustrated in Figure~\ref{example_semantics}. Take
@@ -241,7 +238,7 @@ PSPACE-complete~\cite{Spaan:coml}.
 
 \input{tex/multimodal}
 
-\begin{example}
+\begin{example}%
     \label{ex2}
     (\emph{Tree-like} model) Consider the formula $\formula = \nec{1} (p \then
     \pos{2} p)$. The Figure~\ref{example_models} contains examples of models
@@ -276,24 +273,32 @@ PSPACE-complete~\cite{Spaan:coml}.
     \system{K}{n}{}. We define the $depth: W \longrightarrow \Nat$ of a world
     $\st \in W$, as the length of the path from $\st_0$ to $\st$ through the
     union of the relations in \Model. We sometimes say $depth$ of \Model~to mean
-    the largest path from the root to any world in $W$.
+    the longest path from the root to any world in $W$.
 
     The following theorems have been adapted from the ones presented
     in~\cite{areces2000tree}.
 
-    \begin{theorem}
+    \begin{theorem}%
         \label{theo:tl1}
         Let $\formula \in \wff$ be a formula and $\Model = (W, \st_0, R_1,
-        \ldots, R_n, \pi)$ be a model. Then $\Model \models \formula$ if and only if
-        there is a tree-like model $\Model'$ such that $\Model' \models \formula$.
+        \ldots, R_n, \pi)$ be a model. Then $\Model \models_L \formula$ if and only if
+        there is a tree-like model $\Model'$ such that $\Model' \models_L \formula$.
         Moreover, $\Model'$ is finite and its $depth$ is bounded by
         $mdepth(\formula)$.
     \end{theorem}
 
-    \begin{theorem}
+    The proof of Theorem~\ref{theo:tl1} presented in~\cite{blackburn2002modal}
+    constructs a tree-like model $\Model'$ as a \emph{generated submodel} of
+    $\Model$, that is, it restricts the binary relations to consider only a
+    subset of $W$. Then, using the satisfiability invariance of generated
+    submodels, also proved in~\cite{blackburn2002modal}, which states that a
+    formula is satisfiable in a model if, and only if, is satisfiable in its
+    generated submodels, the proof becomes trivial.
+
+    \begin{theorem}%
         \label{theo:tl2}
         Let $\formula, \formula' \in \wff$ and $\Model = (W, \st_0, R_1, \ldots,
-        R_n, \pi)$ be a tree-like model such that $\Model \models \formula$. If
+        R_n, \pi)$ be a tree-like model such that $\Model \models_L \formula$. If
         $(\formula', \lambda', ml) \in \tau(\formula, 1, 0)$ and
         $\formula'$ is satisfied in $\Model$, then there is $\st \in W$, with
         $depth(w) = ml$, such that $\sat{\Model}{\st}{\formula'}$. Moreover,
@@ -309,19 +314,23 @@ PSPACE-complete~\cite{Spaan:coml}.
     Theorem~\ref{theo:tl1}~\cite{nalon2015modal}.
 \end{example}
 
-The \emph{global satisfiability problem} for a modal logic is equivalent to the
-satisfiability problem of the logic obtained by adding the
-universal modality, $\nec{*}$, to the original modal
-language~\cite{goranko1992using}. Let $\system{K}{n}{*}$ be the logic obtained
-by adding $\nec{*}$ to \system{K}{n}{}. A model $\Model^*$ for \system{K}{n}{*}
-is the pair $(\Model, R_*)$, where $\Model = (W, \st_0, R_1, \ldots, R_n, \pi)$
-is a tree-like model for \system{K}{n}{} and $R_* = W \times W$. The global
-satisfiability problem is equivalent to the satisfiability problem in the
-following sense: a formula $\nec{*} \formula$ is satisfied at the world $\st \in
-W$, in the model $\Model^*$, written \sat{\Model^*}{\st}{\nec{*}\formula}, if,
-and only if, for all $\st' \in W$, we have that \sat{\Model^*}{\st'}{\formula}.
-Therefore, let $\formula \in \wff$ be a formula, we say that $\Model \models_G
-\formula$, if, and only if, $\Model^* \models \nec{*} \formula$.
+The \emph{local satisfiability problem} for \system{K}{n}{} corresponds to
+determining the existence of a model in which a formula is locally satisfied.
+This problem is proven to be PSPACE-complete~\cite{Spaan:coml}. The
+\emph{global satisfiability problem} for a modal logic is equivalent to the
+local satisfiability problem of the logic obtained by adding the universal
+modality, $\nec{*}$, to the original modal language~\cite{goranko1992using}. Let
+$\system{K}{n}{*}$ be the logic obtained by adding $\nec{*}$ to \system{K}{n}{}.
+A model $\Model^*$ for \system{K}{n}{*} is the pair $(\Model, R_*)$, where
+$\Model = (W, \st_0, R_1, \ldots, R_n, \pi)$ is a tree-like model for
+\system{K}{n}{} and $R_* = W \times W$. The global satisfiability problem is
+equivalent to the satisfiability problem in the following sense: a formula
+$\nec{*} \formula$ is satisfied at the world $\st \in W$, in the model
+$\Model^*$, written \sat{\Model^*}{\st}{\nec{*}\formula}, if, and only if, for
+all $\st' \in W$, we have that \sat{\Model^*}{\st'}{\formula}. Therefore, let
+$\formula \in \wff$ be a formula, we say that $\Model \models_G \formula$, if,
+and only if, $\Model^* \models_L \nec{*} \formula$. The global satisfiability
+problem is proven to be EXPTIME~\cite{Spaan:coml}.
 
 \section{Proof Systems and Normal Forms}
 

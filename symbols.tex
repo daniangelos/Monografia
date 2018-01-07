@@ -9,7 +9,7 @@
 \newcommand{\wff}{\WFF{\system{K}{n}{}}{}}
 \newcommand{\wffml}{\ifmmode\text{WFF}^{\scriptsize ml}_{\scriptsize \system{K}{n}{}}}
 \newcommand{\sat}[3]{\ensuremath{\langle #1, #2 \rangle \models #3}}
-\newcommand{\Model}{\ensuremath{\mathcal{M}}}
+\newcommand{\Model}{\ensuremath{\mathfrak{M}}}
 \newcommand{\formula}{\ensuremath{\varphi}}
 \newcommand{\trule}{\ensuremath{\sigma}}
 \newcommand{\calculus}[1]{\ensuremath{\mathcal{C}_{#1}}}
@@ -21,9 +21,12 @@
 \renewcommand{\stackrel}[1]{\ensuremath{\overset{\text{#1}}{=}}}
 \newcommand{\ckn}{\ensuremath{\cal{C}_{\system{K}{n}{}}}}
 \newcommand{\ex}{\ensuremath{\nec{}(p \then \pos{})}}
-\newcommand{\clause}{\ensuremath{\omega}}
+\newcommand{\clause}{\ensuremath{\mathcal{C}}}
 \newcommand{\passignment}{\ensuremath{\rho}}
 \newcommand{\res}{\ensuremath{\odot}}
+\newcommand{\Clauses}{\ensuremath{\mathcal{K}}}
+\newcommand{\pframe}{\ensuremath{\mathfrak{F}}}
+\newcommand{\contradiction}{\ensuremath{\varepsilon}}
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
@@ -127,6 +130,8 @@
      
 \newcommand{\cfalse}{\constant{false}}
 \newcommand{\ctrue}{\constant{true}}
+\newcommand{\false}{\mathit{false}}
+\newcommand{\true}{\mathit{true}}
 \newcommand{\st}{\ensuremath{w}}
 \newcommand{\St}{\ensuremath{W}}
 \newcommand{\depth}{\sf profundidade}

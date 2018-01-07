@@ -1,50 +1,284 @@
 %\section{}
 Resolution appeared in the early 1960's through investigations on performance
-improvements of refutational procedures based on \emph{Herbrand Theorem}. In
-particular, Prawitz' studies on such procedures brought back the idea of
-unification. J.~A.~Robinson incorporated the concept of unification on a
-refutation method, creating what was later known as resolution~\cite{casanova}. 
+improvements of refutational systems based on the \emph{Herbrand's Theorem}, which
+allows a kind of reduction of first-order logic to propositional
+logic~\cite{casanova}. In particular, Prawitz' studies of such systems brought
+back the concept of unification. J.~A.~Robinson incorporated this concept on a
+refutational system, creating what was later known as
+resolution~\cite{Robinson65}. 
 
-The standard rule for resolution systems takes two or more premises with
-literals that are contradictory, and generates a resolvent. Most of these systems
-work exclusively with clauses in a specific normal form. Resolution systems are
-refutational systems, that is, to show that a formula \formula~is valid, $\neg
-\formula$ is translated into a normal form. The inference rules are applied
-until either no new resolvents can be generated or a contradiction is obtained.
-The contradiction implies that $\neg \formula$ is unsatisfiable and hence, that
-\formula~is valid.
+Resolution relies on saturation. A saturation-based theorem proving is usually
+characterized by a process in which two levels of data structures are
+manipulated and at the level of deduction, new formulae are derived from given
+ones by thorough application of specified inference rules, with the ultimate
+goal of obtaining a contradiction. In addition, the current set of formulae is
+analyzed to identify the most promising inference rules to be applied next and
+to eliminate redundancies~\cite{bachmair2001resolution}.
 
-%, for propositional
-%logic, contains only one inference rule, which originates a new clause from two
-%existing ones.
+Numerous resolution systems have been proposed in the literature. The standard
+system has only one inference rule, showed in Equation~\ref{eq:res}, that takes
+two \emph{clauses} with literals that form a complementary pair and generates a
+\emph{resolvent}, where each clause, denoted by $\clause$, is a disjunction of
+literals. 
+
+\begin{equation}
+\label{eq:res}
+ \begin{array}{lc}
+     \mbox{[RES]} & \clause_i \lor l \qquad \neg l \lor \clause_j\\  \cline{2-2}
+     & \clause_i \lor \clause_j
+\end{array}
+\end{equation}
+where $\clause_i$ and $\clause_j$ are possibly empty clauses, $l$ is a literal
+and $\clause_i \lor \clause_j$ is the resolvent.
+
+We use the constant $\cfalse$ to denote the \emph{empty clause},
+i.e., the clause that contains no literals. 
+
+Most of these systems work exclusively with clauses in a specific
+normal form.  Resolution is a refutationally complete theorem proving method.
+Therefore, to show that a formula \formula~is valid, $\neg \formula$ is
+translated into a normal form, then the inference rule is applied until either
+no new resolvents can be generated or a contradiction is obtained. This means
+that the search for a contradiction proceeds by saturating the given clause set,
+exhaustively applying the inference rule~\cite{bachmair2001resolution}. The
+contradiction implies that $\neg \formula$ is unsatisfiable and hence, that
+\formula~is valid. 
+
+Resolution-based provers are widely implemented and tested. Besides reliable
+implementations, we can also profit from several complete strategies which can
+be extended to deal with modal resolution~\cite{journals/jal/NalonD07}. Such
+provers for multimodal logics require pruning of the search space for a proof in
+order to deal with the inherent intractability of the satisfiability problem for
+such logics. In~\cite{nalon2015modal} is presented a clausal modal-layered
+resolution calculus for \system{K}{n}{}, which divides the clause set according
+to the modal depth at which each clause occurs. This calculus is introduced in
+Section~\ref{sec:calculus}.
 
 \section{Clausal Resolution}
 
-Clausal resolution was proposed as a proof method for classical logic by
-Robinson in 1965~\cite{Robinson65}, and was claimed to be suitable to be
-performed by computer, as it has only one inference rule that is applied
-exhaustively. 
+Clausal resolution is a simple and adaptable proof system for classical logics.
+It was proposed by Robinson in 1965~\cite{Robinson65}, and was claimed to be
+suitable to be performed by a computer, as it has only one inference rule that is
+applied. Robinson emphasizes that, from the theoretical point of
+view, an inference rule need only to be sound and effective, that is, it allows
+only logical consequences of premisses to be deduced and it must be
+algorithmically decidable whether an alleged application of the rule is indeed
+an application of it.
 
-\subsection{Modal-Layered Resolution}
+The single inference rule of this system of logic entails the \emph{resolution
+principle}, namely: \emph{From any two clauses} $\clause_i$ \emph{and}
+$\clause_j$ \emph{which contain a complementary pair of literals, one may infer
+a resolvent of} $\clause_i$ \emph{and} $\clause_j$~\cite{Robinson65}. This one
+rule is machine-oriented, rather then human-oriented, in the sense of the
+preceding remarks, once that is no more need to a single step in a deduction to
+be simple enough to be apprehended as correct by a human mind in a single
+intellectual act.
 
-%Nonclausal proof methods, in general, require a larger number of rules, making
-%implementation more difficult. Clausal resolution is a simple and adaptable
-%proof method for classical logics and, since it was proposed, a bank of research
-%into heuristics and strategies has been growing. 
+In his paper, Robinson presents a formulation of first-order logic designed to
+be used as the basic theoretical instrument of the proposed computer
+theorem-proving program. For the purpose of this work, we are only interested in
+the calculus for propositional logic. Therefore, we will neither discuss the theory
+behind the Herbrand's Theorem nor the definition of the unification procedure,
+but, if curious, the reader can refer to~\cite{Robinson65} for more details.
 
-%\subsection{Substitution}
+In the sense of this last remark, the only representational formalism needed is
+propositional logic. As resolution has only the RES rule, a proof consists of
+repeated application of this rule to the propositional clauses. These
+applications are sufficient to derive an empty clause if and only if the initial
+formula is unsatisfiable~\cite{satchapter}.
 
-%\subsection{Unification}
+\begin{example}%
+\label{ex:res}
+    Consider the set of clauses $\Clauses = \{(\neg p \lor q), (\neg p \lor r),
+    (\neg r \lor q), (\neg q \lor r), \neg r, p\}$. Table~\ref{tab:res} shows an
+    example of derivation of the empty clause for $\Clauses$, proving that this
+    set is unsatisfiable.
 
-%\subsection{The resolution principle}
+    \begin{table}%
+    \caption{Derivation of $\Clauses$ in Example~\ref{ex:res}}
+        \centering
+        \begin{tabular}{rlll}
+            1. & $\neg p \lor q$ & & \\
+            2. & $\neg p \lor r$ & & \\
+            3. & $\neg r \lor q$ & & \\
+            4. & $\neg q \lor r$ & & \\
+            5. & $\neg r$ & & \\
+            6. & $p$ & & \\
+            7. & $\neg p \lor q$ & [RES,3,2] & $= 1$\\
+            8. & $\neg p \lor r$ & [RES,4,1] & $= 2$\\
+            9. & $\neg q \lor q$ & [RES,4,3] & $= \ctrue$\\
+            10.&  $\neg r \lor r$ & [RES,4,3] & $= \ctrue$\\
+            11.&  $\neg p$ & [RES,5,2] & \\
+            12.&  $\neg q$ & [RES,5,4] & \\
+            13.&  $q$ & [RES,6,1] & \\
+            14.&  $r$ & [RES,6,2] & \\
+            15.&  $\cfalse$ & [RES,11,6] & contradiction\\
+        \end{tabular}%
+    \label{tab:res}
+    \end{table}
+\end{example}
 
-\section{Separated Normal Form with Modal Levels}
+Despite its simplicity, unrestricted resolution is hard to implement efficiently
+due to the difficulty of finding good choices of clauses to
+resolve~\cite{satchapter}; natural choices typically yield huge storage
+requirements. Thus, Robinson established two principles, namely
+\emph{purity principle} and \emph{subsumption principle}, to discuss the question of
+developing efficient resolution systems. A refutation system based on resolution
+incorporating the first principle tends to derive a smaller number of clauses.
+On the other hand, the incorporation of the second principle helps to increase the
+rate of which a contradiction is derived~\cite{Robinson65}. Such principles are
+called \emph{search principles}. A third search principle is presented in terms
+of subsumption.
+
+\begin{definition}
+    If $\Clauses$ is any finite set of clauses, $\clause$ is a clause in
+    $\Clauses$ and $l$ a literal in $\clause$ with the property that no literal
+    in any other clause in $\Clauses$ form a complementary pair with $l$, then
+    $l$ is said to be \emph{pure} in $\Clauses$.
+\end{definition}
+
+The purity principle is then based on Theorem~\ref{theo:pure}.
+
+\begin{theorem}%
+    \label{theo:pure}
+    If $\Clauses$ is any finite set of clauses, and $l \in \clause \in \Clauses$
+    is a pure literal in $\Clauses$, then $\Clauses$ is satisfiable if and only
+    if $\Clauses - \{\clause\}$ is satisfiable.
+\end{theorem}
+
+\begin{definition}
+    If $\clause_i$ and $\clause_j$ are two distinct nonempty clauses, we say
+    that $\clause_i$ \emph{subsumes} $\clause_j$ in the case that $\clause_i
+    \subseteq \clause_j$. 
+\end{definition}
+
+Theorem~\ref{theo:subs} establishes the basic property of subsumption.
+
+\begin{theorem}%
+    \label{theo:subs}
+    If $\Clauses$ is any finite set of clauses, and $\clause_j$ is any clause
+    in $\Clauses$ which is subsumed by some clause in $\Clauses -
+    \{\clause_j\}$, then $\Clauses$ is satisfiable if and only if $\Clauses -
+    \{\clause_j\}$ is satisfiable.
+\end{theorem}
+
+Theorems~\ref{theo:pure} and~\ref{theo:subs} are both proved in~\cite{Robinson65}.
+
+A particularly useful application of the subsumption principle is the following:
+suppose a resolvent $\clause_R$ of $\clause_i$ and $\clause_j$ subsumes
+$\clause_i$, then in adding $\clause_R$ as a result of resolving $\clause_i$ and
+$\clause_j$, we may simultaneously delete, by the subsumption principle,
+$\clause_i$. This combined operation entails the replacement of $\clause_i$ by
+$\clause_R$; accordingly this third principle is named as the \emph{replacement
+principle}.
+
+The application, to a finite set $\Clauses$ of clauses, of any of the three
+search principles described, produces a set $\Clauses'$ which either has fewer
+clauses than $\Clauses$ or has the same number, but with one or more shorter
+clauses~\cite{Robinson65}. 
+
+\begin{example}
+    Let $\Clauses$ be the set of clauses showed in Table~\ref{tab:resa}. Prior
+    to the thorough application of the RES rule, one may search for
+    opportunities to apply the search principles, in order to reduce the
+    number of clauses and increase the rate of which a contradiction is derived.
+
+    In this example, the third clause can be eliminated from the set of clauses
+    through an application of the purity principle, as expressed in
+    Table~\ref{tab:resb}, once there is no other clause that has the
+    complementary pair of the literal $u$. 
+    Furthermore, as the clause 5 subsumes the clause 4, this last one can also
+    be eliminated from the set of clauses, leaving only the clauses in
+    Table~\ref{tab:resc}.
+    The application of RES to clauses 1 and 2 generates the resolvent
+    $\neg q$, which subsumes both clauses, hence, by the replacement principle,
+    both may be replaced by the clause 7, as showed in Table~\ref{tab:resd}.
+    Finally, the application of RES to the clauses 5 and 7, generates the clause
+    8 as a resolvent, and then resolving this one with the clause 6 will
+    generate the empty clause, thus, a contradiction. 
+
+    Applying the search principles allowed us to go from a set of six clauses
+    with 4 literals to a set of four with only 2 literals.
+
+    \begin{table}
+        \caption{Derivation schemes for Example~\ref{ex:principles}}
+        \centering
+       \begin{subtable}{.20\textwidth}
+           \caption{Initial clauses}
+           \begin{tabular}{rl}
+               1. & $\neg q \lor \neg r$ \\
+               2. & $\neg q \lor r$ \\
+               3. & $u \lor \neg p$ \\
+               4. & $\neg p \lor q \lor \neg r$ \\
+               5. & $\neg p \lor q$ \\
+               6. & $p$
+           \end{tabular}%
+           \label{tab:resa}
+       \end{subtable} 
+       \begin{subtable}{.21\textwidth}
+           \caption{Purity principle}
+           \begin{tabular}{rl}
+               1. & $\neg q \lor \neg r$ \\
+               2. & $\neg q \lor r$ \\
+               4. & $\neg p \lor q \lor \neg r$ \\
+               5. & $\neg p \lor q$ \\
+               6. & $p$ \\
+                  & 
+           \end{tabular}%
+           \label{tab:resb}
+       \end{subtable} 
+       \begin{subtable}{.19\textwidth}
+           \caption{Subsumption}
+           \begin{tabular}{rl}
+               1. & $\neg q \lor \neg r$ \\
+               2. & $\neg q \lor r$ \\
+               5. & $\neg p \lor q$ \\
+               6. & $p$ \\
+                  & \\
+                  &
+           \end{tabular}%
+           \label{tab:resc}
+       \end{subtable} 
+       \begin{subtable}{.24\textwidth}
+           \caption{Replacement}
+           \begin{tabular}{rll}
+               5. & $\neg p \lor q$ \\
+               6. & $p$ \\
+               7. & $\neg q$ & [RES,1,2] \\
+               8. & $\neg p$ & [RES,5,7] \\
+               9.& $\cfalse$ & [RES,6,8] \\
+                  &
+           \end{tabular}%
+           \label{tab:resd}
+       \end{subtable} 
+    \end{table}%
+\label{ex:principles}
+\end{example}
+
+There are further principles of the same general sort, possibly less simple than
+the ones presented earlier, which Robinson considers to be merely a brief view
+of the possible approaches to the efficiency problem of resolution systems. 
+
+\section{Modal-Layered Resolution Calculus for \system{K}{n}{}}%
+\label{sec:calculus}
+
+The calculus presented in this section requires a translation into a more
+expressive modal language, where labels are used to express semantic properties
+of a formula. This transformation is presented in Section~\ref{sec:snf}.
+Furthermore, this calculus makes use of labelled resolution in order to avoid
+unnecessary applications of the inference rules~\cite{nalon2015modal}. For
+instance, we do not apply resolution to clauses at different modal levels, since
+they are not, in fact, contradictory.
+
+\subsection{Separated Normal Form with Modal Levels}%
+\label{sec:snf}
 
 Formulae in \system{K}{n}{} can be transformed into a layered normal form called
-\emph{Separated Normal Form with Modal Levels}, denoted by
-\snf{$ml$}, proposed in~\cite{journals/jal/NalonD07}. A formula in \snf{$ml$} is a
-conjunction of \emph{clauses} where the modal level in which they occur is
-emphasized as a label.
+\emph{Separated Normal Form with Modal Levels}, denoted by \snf{$ml$}, proposed
+in~\cite{journals/jal/NalonD07}, hence, all the definitions in this section are
+taken from~\cite{journals/jal/NalonD07}. A formula in \snf{$ml$} is a
+conjunction of \emph{clauses} where the modal level in which they occur is made
+explicit in the syntax as a label.
 
 We write $ml: \formula$ to denote that \formula~occurs at modal level $ml\in
 \Nat \cup \{*\}$. By $*: \formula$ we mean that \formula~is true at
@@ -57,18 +291,14 @@ be a tree-like model and take $\formula \in \wff$.
 Satisfiability of labelled formulae is given by:
 
 \begin{enumerate}
-    \item $\Model^* \models ml : \formula$ if, and only if, for all worlds
+    \item $\Model^* \models_L ml : \formula$ if, and only if, for all worlds
         $\st \in W$ such that $depth(\st) = ml$, we have
         \sat{\Model^*}{\st}{\formula} 
-    \item $\Model^* \models * : \formula$ if, and only if, $\Model^* \models
+    \item $\Model^* \models_L * : \formula$ if, and only if, $\Model^* \models
         \nec{*} \formula$
 \end{enumerate}
     
 \end{definition}
-
-Observe that the labels in formulae work as a kind of \textit{weak} universal
-operator, allowing us to reason about a set of formulae that are all satisfied
-at a given modal level.
 
 Clauses in \snf{$ml$} are defined as follows.
 
@@ -130,8 +360,8 @@ into \snf{$ml$} preserves satisfiability.
     Let $\formula \in \wff$ be a formula and let $t$ be a propositional symbol
     not occurring in $\formula$. Then: 
     \begin{enumerate}
-        \item[$(i)$] $\formula$ is satisfiable if, and only if, $0 : t \land \rho(0 : t \then \formula)$ is satisfiable;
-        \item[$(ii)$] $\formula$ is globally satisfiable if, and only if, $* : t \land \rho(* : t \then \formula)$ is satisfiable;
+        \item[$(i)$] $\formula$ is locally satisfiable if, and only if, $0 : t \land \rho(0 : t \then \formula)$ is satisfiable;
+        \item[$(ii)$] $\formula$ is globally satisfiable if, and only if, $* : t \land \rho(* : t \then \formula)$ is satisfiable.
     \end{enumerate}
 \end{lemma}
 
@@ -139,13 +369,12 @@ into \snf{$ml$} preserves satisfiability.
     
 \end{example}
 
-\section{Modal-Layered Resolution Calculus for \system{K}{n}{}}%
-\label{sec:calculus}
+\subsection{Calculus}
 
 The motivation for the use of this labelled clausal normal form in a calculus is
 that inference rules can then be guided by the semantic information given by the
 labels and applied to smaller sets of clauses, reducing the number of
-unnecessary inferences, and therefore improving the efficiency of the proof
+unnecessary applications, and therefore improving the efficiency of the proof
 procedure~\cite{Nalon2016}. 
 
 This calculus comprises a set of inference rules, given in Table~\ref{rules},
@@ -153,8 +382,8 @@ for dealing with propositional and modal reasoning. In the following, we denote
 by $\sigma$ the result of unifying the labels in the premises for each rule.
 Formally, unification is given by a function $ \sigma : \mathscr{P}(\Nat \cup
 \{*\}) \longrightarrow \Nat \cup \{*\}$, where $\sigma (\{ml, *\}) = ml$ and
-$\sigma (\{ml\}) = ml$, otherwise, $\sigma$ is undefined. The following
-inference rules can only be applied if the unification of their labels is
+$\sigma (\{ml\}) = ml$, otherwise, $\sigma$ is undefined. The 
+inference rules showed in Table~\ref{rules} can only be applied if the unification of their labels is
 defined (where $* - 1 = *$). Note that for GEN1 and GEN3, if the
 modal clauses occur at the modal level $ml$, then the literal clause occurs at
 the next modal level, $ml + 1$.
@@ -164,8 +393,33 @@ found in~\cite{nalon2015modal}.
 
 \input{tex/rules}
 
-\section{\ksp}
-In this section, we present \ksp, the theorem prover presented
+\begin{example}
+    
+\end{example}
+
+\begin{example}
+    
+\end{example}
+
+\subsection{\ksp}
+In this section, we briefly introduce \ksp, the theorem prover presented
 in~\cite{Nalon2016} for the basic multimodal logic \system{K}{n}{}, which
 implements a variation of the set of support strategy~\cite{wos1965efficiency}
 for the modal resolution-based calculus described in Section~\ref{sec:calculus}.
+
+\ksp\ was designed to support experimentation with different combinations of
+refinements of its basic calculus. Refinements and options for processing and
+preprocessing the input are coded as independently as possible in order to allow
+for the easy addition and testing of new features, even though this may not lead
+to optimal performance, since techniques need to be applied one after another,
+whereas most tools would apply them all together, but this helps to evaluate how
+the different options independently contribute to achieve
+efficiency~\cite{Nalon2016}. 
+
+The results showed in~\cite{Nalon2016} indicates that \ksp\ works well on
+problems with high modal depth where the separation of modal layers can be
+exploited to improve the efficiency of reasoning. Although, as with all provers
+that provide a variety of strategies and optimizations, to get the best
+performance for a particular formula or class or formulae, it is important to
+choose the right strategy and optimizations. \ksp\ leaves this choice to the
+user. The same applies to the transformation to the layered normal form.

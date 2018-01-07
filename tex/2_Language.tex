@@ -81,8 +81,8 @@ In this work, we consider the usual ones:
     \item $\varphi \wedge \psi \stackrel{def} \neg(\neg \varphi \lor \neg \psi)$ (conjuction)
     \item $\varphi \then \psi \stackrel{def} \neg \varphi \lor \psi$ (implication)
     \item $\varphi \iff \psi \stackrel{def} (\varphi \then \psi) \land (\psi \then \varphi)$ (equivalence)
-    \item $\textbf{false} \stackrel{def} \varphi \wedge \neg \varphi$ (\emph{falsum})
-    \item $ \textbf{true} \stackrel{def} \neg \textbf{false}$ (\emph{verum}) 
+    \item $\cfalse \stackrel{def} \varphi \wedge \neg \varphi$ (\emph{falsum})
+    \item $\ctrue \stackrel{def} \neg \cfalse$ (\emph{verum}) 
 \end{itemize}
 
 Parentheses may be omitted if the reading is not ambiguous.  When $n = 1$, we
@@ -92,7 +92,8 @@ often omit the index in the modal operators, i.e., we just write $\nec{}
 We define a \emph{literal} as a propositional symbol $p \in \Prop$ or its negation $\neg
 p$, and denote by \Literals~the set of all literals. A \emph{modal literal} is a
 formula of the form $\nec{a} l$ or $\pos{a} l$, with $l \in \Literals$ and $a
-\in \Agents$.
+\in \Agents$. If $l$ is a literal, we call $\neg l$ its complement and say that
+$l$ and $\neg l$ form, in either order, a complementary pair.
 
 The following definitions are also needed later. The
 \emph{modal depth} of a formula is recursively defined as follows:
@@ -163,7 +164,7 @@ The semantics of \system{K}{n}{} is presented in terms of Kripke structures.
     where $\St$ is a non-empty set of possible worlds with a distinguinshed world
     $\st_0$, the root of \Model; each $R_a$, $a \in \Agents$, is a binary relation
     on $\St$, that is, $R_a \subseteq \St \times \St$, and $\pi: \St \times \Prop
-    \longrightarrow \{false, true\}$ is the valuation function that associates
+    \longrightarrow \{\false, \true\}$ is the valuation function that associates
     to each world $\st \in \St$ a truth-assignment to propositional symbols.
 \end{definition}
 
@@ -188,7 +189,7 @@ the \emph{satisfiability relation}.
     \sat{\Model}{\st}{\varphi}, between a world \st~and a formula $\varphi$,
     is inductively defined by:
     \begin{enumerate}
-        \item \sat{\Model}{\st}{p} if, and only if, $\pi(\st, p) = true$, for all $p \in \Prop$;
+        \item \sat{\Model}{\st}{p} if, and only if, $\pi(\st, p) = \true$, for all $p \in \Prop$;
         \item \sat{\Model}{\st}{\neg\varphi} if, and only if, $
             \langle \Model, \st \rangle \not \models \varphi$;
         \item \sat{\Model}{\st}{\varphi\lor\psi} if, and only if,
@@ -221,8 +222,8 @@ formula is said to be \emph{valid} if it is locally satisfiable in all models.
             (\st_0, \st_1), (\st_0, \st_2)\}$
         \item[$(iii)$] $ \pi(\st, p) = 
             \begin{cases} 
-                true    & \quad \text{if } \st = \st_0\\
-                false   & \quad \text{otherwise}
+                \true    & \quad \text{if } \st = \st_0\\
+                \false   & \quad \text{otherwise}
             \end{cases}
                        $
     \end{enumerate}
@@ -254,7 +255,7 @@ formula is said to be \emph{valid} if it is locally satisfiable in all models.
 \input{tex/treemodel}
  
     As trees play an important role in computer science, we will take this
-    opportunity to define them. By a tree $\mathcal{T}$ we mean a relational
+    opportunity to define them. By a tree $\mathfrak{T}$ we mean a relational
     structure $(T, S)$ where $T$ is a set of nodes and $S$ is a binary relation
     over these nodes. $T$ contains a unique node $r_0 \in T$ (called the
     \emph{root}) such that all other nodes in $T$ are reachable from $r_0$, that
@@ -334,30 +335,58 @@ problem is proven to be EXPTIME~\cite{Spaan:coml}.
 
 \section{Proof Systems and Normal Forms}
 
-Formally, a proof is a finite object constructed according
-to fixed syntactic rules that refer only to the structure of formulae and not to
-their intended meaning~\cite{fitting}. The set of syntactic rules that define
-proofs are said to specify a \emph{proof system} or \emph{calculus}. These rules
-allow the derivation of formulae from formulae through strict symbol
-manipulation~\cite{resolutionbased}.
+Formally, a proof is a finite object constructed according to fixed syntactic
+rules that refer only to the structure of formulae and not to their intended
+meaning~\cite{fitting}. The set of syntactic rules that define proofs are said
+to specify a \emph{proof system} or \emph{calculus}. These rules allow the
+derivation of formulae from formulae through strict symbol
+manipulation~\cite{resolutionbased}. A proof system is \emph{sound} for a
+particular logic if any formula that has a proof is a valid formula of the
+logic, and it is \emph{complete} for a particular logic if any valid formula has
+a proof~\cite{fitting}. Therefore, a sound and complete calculus allows us to
+produce a proof that formulae are valid. 
 
-A proof system is \emph{sound} for a particular logic if any formula that has a
-proof is a valid formula of the logic, and it is \emph{complete} for a
-particular logic if any valid formula has a proof~\cite{fitting}. A sound and
-complete calculus for \system{K}{n}{} finds a proof for a formula if, and only
-if, this formula is satisfiable.
+A sound and complete calculus for \system{K}{n}{} finds a proof for a formula of
+this logic if, and only if, this formula is satisfiable. A proof for this
+logic is defined below.
 
-There are several kinds of proof systems, and they can be divided in many
-categories as, for instance, \emph{refutational systems}. To prove a formula
-using a refutational system, we begin by negating it, then analysing the
-repercussion %impact% 
-of doing so, we verify if the consequences turn out to be impossible, if that is
-the case, we conclude that the original formula has been proved~\cite{fitting}.
-The calculus for \system{K}{n}{} we use in this work is resolution based,
-which is one of the most common examples of refutational systems. This calculus
-was proposed by~\cite{nalon2015modal} and is presented in
+\begin{definition}%
+\label{def:kproof}
+    A \emph{\system{K}{n}{}-proof}, or a \emph{proof for \system{K}{n}{}}, is a
+    finite sequence of formulae, each of which is an axiom, or follows from one
+    or more earlier items in the sequence by applying a syntactic rule. The
+    axioms for \system{K}{n}{} are all instances of propositional tautologies
+    plus the axiom  \system{K}{}{}: $\nec{a}(\varphi \then \psi) \then (\nec{a}
+    \varphi \then \nec{a} \psi)$~\cite{blackburn2002modal}.
+\end{definition}
+
+Propositional tautologies may contain modalities, for example, $\pos{}p \lor
+\neg \pos{} q$ is a tautology. As tautologies are valid, they are a safe
+starting point for modal reasoning. 
+
+There are many kinds of proof systems. They can be loosely divide into two broad
+categories: \emph{synthetic} and \emph{analytic}~\cite{fitting}. An analytic
+proof system decomposes the formula being proved into simpler and simpler parts.
+A synthetic proof system, on the other hand, builds its way up to the formula being
+proved. Analytic proof systems tend to be easier to use, since the field of
+play is sharply limited to the formula being proved~\cite{fitting}. 
+
+The most common example of synthetic calculus is an \emph{axiom system}. Certain
+formulae are taken as axioms. A proof starts with these axioms and, using
+inference rules that produce new formulae, builds up a sequence that finally
+ends with the formula being proved.
+
+\emph{Resolution systems} are one of the more common analytic proof systems.
+These are \emph{refutational systems}, i.e., to prove a formula, we begin by
+negating it, then analysing the entailment of doing so. If it is the case that
+the consequences turn out to be impossible, we conclude that the original
+formula has been proved~\cite{fitting}.
+
+In the literature, there are several kinds of proof systems proposed for
+\system{K}{n}{}. The one we use in this work is based in resolution, it was
+proposed by~\cite{nalon2015modal} and is presented in
 Chapter~\ref{3_Resolution}, resolution is also briefly introduced in the same
-chapter. The resolution calculus used is proved to be sound and complete for
+chapter. The calculus used is proved to be sound and complete for
 \system{K}{n}{} in~\cite{nalon2015modal}, it was developed with regard to
 computer implementations and it uses formulae translated into a special
 \emph{normal form}.
@@ -369,17 +398,21 @@ languages relates two formulae if whenever one is satisfiable, the other one
 also is. Therefore, the transformation rules defined for a specific normal form
 used in a proof system for a logic must preserve satisfiability, that is, the
 formula obtained by applying a transformation rule is satisfiable if, and only
-if, the original one also is. Normal forms may help calculi to provide constructive
-proofs of many standard results~\cite{fine1975}, that is, a proof that
-demonstrates the existence of a mathematical object by providing a method for
-creating this object. This happens because formulae translated into a normal
-form have a specific, normalized structure, possibly resulting in less operators
-to handle with, which may implicate into a smaller number of rules for a proof
-system. Hence, a calculus that is planned to be implemented in a computer may
-take great advantage of normal forms, since the smaller number of rules reduces
-the chances of implementation errors. 
+if, the original one also is. 
+
+Normal forms may help calculi to provide constructive proofs of many standard
+results~\cite{fine1975}, that is, a proof that demonstrates the existence of a
+mathematical object by providing a method for creating this object. This happens
+because formulae translated into a normal form have a specific, normalized
+structure, possibly resulting in less operators to handle with, which may
+implicate into a smaller number of rules for a proof system. Hence, a calculus
+that is planned to be implemented in a computer may take great advantage of
+normal forms, since the smaller number of rules reduces the chances of
+implementation errors, for example. 
 
 The normal form used in this work is a layered normal form called Separated
-Normal Form with Modal Levels and it's introduced in Chapter~\ref{3_Resolution},
-along side with its transformation rules for formulae in \system{K}{n}{}. These
-rules are proved to preserve satisfiability of formulae. 
+Normal Form with Modal Levels, originally proposed
+in~\cite{journals/jal/NalonD07}. This normal form is introduced in
+Chapter~\ref{3_Resolution}, as well as the translation rules for formulae in
+\system{K}{n}{}. The proof that this translation preserves satisfiability can be
+found in~\cite{journals/jal/NalonD07}.

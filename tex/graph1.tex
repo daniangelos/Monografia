@@ -4,19 +4,19 @@
 \begin{tikzpicture}[->]
 
     \node[](w0){$
-        t = false @ 3
+        t = false @ 1
     $};
     \node[below right=0.7cm and 2cm of w0](w1){$
-        q = false @ 5
+        q = false @ 2
     $};
     \node[below left=0.7cm and 2cm of w1](w2){$
-        p = false @ 5
+        p = false @ 2
     $};
     \node[below right=0.7cm and 2cm of w1](w3){$
-        s = true @ 5
+        s = true @ 2
     $};
     \node[below right=0.7cm and 2cm of w2](w4){$
-        r = false @ 5
+        r = false @ 2
     $};
     \path[thick] (w0) edge [above] node {$\clause_1$} (w1)
     (w2) edge [above] node {$\clause_1$} (w1)

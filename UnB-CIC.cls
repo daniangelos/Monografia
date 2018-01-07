@@ -869,6 +869,7 @@
 		\@IncluirSecao{dedicatoria}%
 		\@IncluirSecao{agradecimentos}%
 	\fi%
+	\@IncluirSecao{resumo}%
 	\@IncluirSecao{abstract}%
 
 	\tableofcontents%

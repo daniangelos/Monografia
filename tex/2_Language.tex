@@ -1,4 +1,4 @@
-%\section{}
+\section{}
 This chapter formally introduces \system{K}{n}{}, a \emph{propositional modal
 logic language}, semantically determined by an account of necessity and
 possibility~\cite{journals/jal/NalonD07}.
@@ -13,17 +13,18 @@ true, \emph{known to be} true, \emph{believed to be} true or yet true \emph{in
 some future}, for example.  Therefore, one may think that classical logics lacks
 expressivity in this sense. 
 
-Modal logics add operators to express one or more of these different modes of
-truth. Different modalities define different languages. The key concept behind
-these operators is that they allow us to reason over relations among different
-contexts or interpretations, an abstraction that here we think as \emph{possible
-worlds}.  The purpose of the modal operators is to allow the information that
-holds at other worlds to be examined --- but, crucially, only at worlds visible
-or accessible from the current one via an accessibility
-relation~\cite{blackburn2002modal}. Then, the evaluation of a modal formula
-depends on the set of possible worlds and the accessibility relations defined
-for these worlds. It is possible to define several accessibility relations
-between worlds, and different modal logics are defined by different relations.
+Modal logics extend classical logic by adding operators, known as modalities, to
+express one or more of these different modes of truth. Different modalities
+define different languages. The key concept behind these operators is that they
+allow us to reason over relations among different contexts or interpretations,
+an abstraction that here we think as \emph{possible worlds}.  The purpose of the
+modal operators is to allow the information that holds at other worlds to be
+examined --- but, crucially, only at worlds visible or accessible from the
+current one via an accessibility relation~\cite{blackburn2002modal}. Then, the
+evaluation of a modal formula depends on the set of possible worlds and the
+accessibility relations defined over these worlds. It is possible to define
+several accessibility relations between worlds, and different modal logics are
+defined by different relations.
 
 The modal language which is the focus of this work is the extension of the
 classical propositional logic plus the unary operators $\nec{a}$ and $\pos{a}$,
@@ -39,15 +40,16 @@ formulae are valid~\cite{chellas:modal_logic}.
 A set of worlds, their accessibility relations and a valuation function define a
 structure known as a \emph{Kripke model}, a structure proposed by Kripke to
 semantically analyse modal logics~\cite{kripke:i}.  The satisfiability and
-validity of a formula depend on this structure. For example, given a Kripke
+validity of a formula depend on this structure. For instance, given a Kripke
 model that contains a set of possible worlds, a binary relation of accessibility
-between worlds and a valuation function that maps in which worlds a proposition
-symbol holds, we say that a formula $\nec{}p$ is satisfiable at some world $\st$
-of this model, if the valuation function establishes that $p$ is true at all
-worlds accessible from \st.
+between worlds and a valuation function that returns the value of a
+propositional symbols in a specific world, we say that a formula $\nec{a}p$ is
+satisfiable at some world $\st$ of this model, if the valuation function
+establishes that $p$ is true at all worlds accessible from $\st$ trough the
+accessibility relation indexed by $a$.
 
 In the following, we will formally define the modal language. The
-syntax and semantics of \system{K}{n}{} are showed in Sections~\ref{syntax}
+syntax and semantics of \system{K}{n}{} are given in Sections~\ref{syntax}
 and~\ref{semantics}, respectively, and the definitions presented in these two
 sections follow those in~\cite{journals/jal/NalonD07}.
 
@@ -232,9 +234,9 @@ formula is said to be \emph{valid} if it is locally satisfiable in all models.
     rather simple example to illustrate that, even though some sentence
     evaluates to true in the current context, one can see the same sentence
     occurring with the opposite valuation through an accessibility relation.
-    This kind of reasoning is not possible in classical logic. Other examples of
-    formulae satisfied by this model are: $p \land \pos{} \neg p$, $\nec{}\nec{}
-    \neg p$ and $\nec{} \nec {} \nec{} \neg p$.
+    This kind of reasoning is not possible in propositional classical logic.
+    Other examples of formulae satisfied by this model are: $p \land \pos{} \neg
+    p$, $\nec{}\nec{} \neg p$ and $\nec{} \nec {} \nec{} \neg p$.
 \end{example}
 
 \input{tex/multimodal}
@@ -309,18 +311,22 @@ formula is said to be \emph{valid} if it is locally satisfiable in all models.
     The proof of Theorem~\ref{theo:tl2} is by induction on the structure of the
     formula and shows that a subformula $\formula'$ of $\formula$ is satisfied
     at a node with distance $m$ of the root of the tree-like model. As
-    determining the satisfiability of a formula depends only on its subformulae,
-    only the subtrees of height $mdepth(\formula')$ starting at level $m$ need
-    to be checked. The bound on the height of the subtrees follows from
-    Theorem~\ref{theo:tl1}~\cite{nalon2015modal}.
+    determining the satisfiability of a formula $\formula$ depends only on its
+    subformulae $\formula'$, only the subtrees of height $mdepth(\formula')$
+    starting at level $ml$ need to be checked. The bound on the height of the
+    subtrees follows from Theorem~\ref{theo:tl1}~\cite{nalon2015modal}.
 \end{example}
 
 The \emph{local satisfiability problem} for \system{K}{n}{} corresponds to
-determining the existence of a model in which a formula is locally satisfied.
-This problem is proven to be PSPACE-complete~\cite{Spaan:coml}. The
-\emph{global satisfiability problem} for a modal logic is equivalent to the
-local satisfiability problem of the logic obtained by adding the universal
-modality, $\nec{*}$, to the original modal language~\cite{goranko1992using}. Let
+determining the existence of a model in which a formula is locally satisfied,
+while the \emph{global satisfiability problem} corresponds to determining the
+existence of a model in which a formula is globally satisfied. These problems
+are proven to be PSPACE-complete~\cite{Spaan:coml}, for local satisfiability,
+and EXPTIME~, for global satisfiability\cite{Spaan:coml}.
+
+The global satisfiability problem for a modal logic is equivalent to the local
+satisfiability problem of the logic obtained by adding the universal modality,
+$\nec{*}$, to the original modal language~\cite{goranko1992using}. Let
 $\system{K}{n}{*}$ be the logic obtained by adding $\nec{*}$ to \system{K}{n}{}.
 A model $\Model^*$ for \system{K}{n}{*} is the pair $(\Model, R_*)$, where
 $\Model = (W, \st_0, R_1, \ldots, R_n, \pi)$ is a tree-like model for
@@ -330,15 +336,18 @@ $\nec{*} \formula$ is satisfied at the world $\st \in W$, in the model
 $\Model^*$, written \sat{\Model^*}{\st}{\nec{*}\formula}, if, and only if, for
 all $\st' \in W$, we have that \sat{\Model^*}{\st'}{\formula}. Therefore, let
 $\formula \in \wff$ be a formula, we say that $\Model \models_G \formula$, if,
-and only if, $\Model^* \models_L \nec{*} \formula$. The global satisfiability
-problem is proven to be EXPTIME~\cite{Spaan:coml}.
+and only if, $\Model^* \models_L \nec{*} \formula$. 
 
 \section{Proof Systems and Normal Forms}
 
+%% LOGICAL CONSEQUENCE %%
+
+The \emph{proof} of theorems, or the \emph{deduction} of consequences of
+assumptions, in mathematics, typically proceeds by putting sentences in a
+list~\cite{kleene2002mathematical}. The assumptions are called \emph{axioms}.
+
 Formally, a proof is a finite object constructed according to fixed syntactic
 rules that refer only to the structure of formulae and not to their intended
-meaning~\cite{fitting}. The set of syntactic rules that define proofs are said
-to specify a \emph{proof system} or \emph{calculus}. These rules allow the
 derivation of formulae from formulae through strict symbol
 manipulation~\cite{resolutionbased}. A proof system is \emph{sound} for a
 particular logic if any formula that has a proof is a valid formula of the
@@ -347,7 +356,7 @@ a proof~\cite{fitting}. Therefore, a sound and complete calculus allows us to
 produce a proof that formulae are valid. 
 
 A sound and complete calculus for \system{K}{n}{} finds a proof for a formula of
-this logic if, and only if, this formula is satisfiable. A proof for this
+this logic if, and only if, this formula is valid. A proof for this
 logic is defined below.
 
 \begin{definition}%
@@ -376,11 +385,27 @@ formulae are taken as axioms. A proof starts with these axioms and, using
 inference rules that produce new formulae, builds up a sequence that finally
 ends with the formula being proved.
 
-\emph{Resolution systems} are one of the more common analytic proof systems.
+\emph{Tableau systems} are one of the more common analytic proof systems.
 These are \emph{refutational systems}, i.e., to prove a formula, we begin by
 negating it, then analysing the entailment of doing so. If it is the case that
 the consequences turn out to be impossible, we conclude that the original
-formula has been proved~\cite{fitting}.
+formula has been proved~\cite{fitting}. There are many varieties of tableaux,
+and the interesting thing about these systems is that, usually, proofs can be
+represented by trees of formulae.
+
+Another way of categorizing proof systems involves the chaining in which the
+rules are applied to form a line of reasoning. If the chaining starts from a set
+of conditions and moves toward some (possibly remote) conclusion, the system is
+called \emph{forward chaining}. If the conclusion is known, for instance, if it
+is a goal to be achieved, but the path to this conclusion is unknown, then
+reasoning backwards is called for, and the system is a \emph{backward
+chaining}~\cite{feigenbaum1988rise}.
+
+Backward chaining is a standard technique in automated deduction, often taking
+the form of a version of Robinson's \emph{resolution
+rule}~\cite{harland2000forward}. The fundamental question is to determine
+whether or not a given formula follows from a given set of formulae, and there
+are various techniques which can be applied to guide the search for a proof.  
 
 In the literature, there are several kinds of proof systems proposed for
 \system{K}{n}{}. The one we use in this work is based in resolution, it was
@@ -402,13 +427,14 @@ if, the original one also is.
 
 Normal forms may help calculi to provide constructive proofs of many standard
 results~\cite{fine1975}, that is, a proof that demonstrates the existence of a
-mathematical object by providing a method for creating this object. This happens
-because formulae translated into a normal form have a specific, normalized
-structure, possibly resulting in less operators to handle with, which may
-implicate into a smaller number of rules for a proof system. Hence, a calculus
-that is planned to be implemented in a computer may take great advantage of
-normal forms, since the smaller number of rules reduces the chances of
-implementation errors, for example. 
+mathematical object by providing a method for creating this object. 
+
+Formulae translated into a normal form have a specific, normalized structure,
+possibly resulting in less operators to handle with, which may implicate into a
+smaller number of rules for a proof system. Hence, a calculus that is planned to
+be implemented in a computer may take great advantage of normal forms, since the
+smaller number of rules reduces the chances of implementation errors, for
+example. 
 
 The normal form used in this work is a layered normal form called Separated
 Normal Form with Modal Levels, originally proposed

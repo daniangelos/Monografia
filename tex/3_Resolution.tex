@@ -3,23 +3,22 @@ Resolution appeared in the early 1960's through investigations on performance
 improvements of refutational systems based on the \emph{Herbrand's Theorem}, which
 allows a kind of reduction of first-order logic to propositional
 logic~\cite{casanova}. In particular, Prawitz' studies of such systems brought
-back the concept of unification. J.~A.~Robinson incorporated this concept on a
+back the concept of unification. J.\ A.\ Robinson incorporated this concept on a
 refutational system, creating what was later known as
 resolution~\cite{Robinson65}. 
 
 Resolution relies on saturation. A saturation-based theorem proving is usually
-characterized by a process in which two levels of data structures are
-manipulated and at the level of deduction, new formulae are derived from given
+characterized by a process in which new formulae are derived from given
 ones by thorough application of specified inference rules, with the ultimate
 goal of obtaining a contradiction. In addition, the current set of formulae is
 analyzed to identify the most promising inference rules to be applied next and
 to eliminate redundancies~\cite{bachmair2001resolution}.
 
 Numerous resolution systems have been proposed in the literature. The standard
-system has only one inference rule, showed in Equation~\ref{eq:res}, that takes
-two \emph{clauses} with literals that form a complementary pair and generates a
-\emph{resolvent}, where each clause, denoted by $\clause$, is a disjunction of
-literals. 
+system has only one inference rule~\cite{bachmair2001resolution}, showed in
+Equation~\ref{eq:res}, that takes two \emph{clauses} with literals that form a
+complementary pair and generates a \emph{resolvent}, where each clause, denoted
+by $\clause$, is a disjunction of literals. 
 
 \begin{equation}
 \label{eq:res}
@@ -32,17 +31,29 @@ where $\clause_i$ and $\clause_j$ are possibly empty clauses, $l$ is a literal
 and $\clause_i \lor \clause_j$ is the resolvent.
 
 We use the constant $\cfalse$ to denote the \emph{empty clause},
-i.e., the clause that contains no literals. 
+i.e., the clause that contains no literals. Due to the associativity and
+commutativity properties of disjunction, one may see a clause as a set of
+literals. In this work we might abuse of set notation, writing $l \in \clause$,
+when $l$ is a literal of $\clause$, and $\clause_i \subseteq \clause_j$, when
+all literals in $\clause_i$ are also literals in $\clause_j$.
 
+A clause set is said to be \emph{saturated} when no new relevant information can
+be generated~\cite{dershowitz2003abstract}. Saturation, up to redundancy, of the
+initial clause set is a quite useful criteria when we are thinking in terms of
+% cite reference to termination 
+termination proof and completeness proof~\cite{fitting} of a calculus.
+
+% be specific %
 Most of these systems work exclusively with clauses in a specific
-normal form.  Resolution is a refutationally complete theorem proving method.
+normal form. Resolution, as proposed by Robinson, is a refutationally complete
+theorem proving method~\cite{Robinson65}.
 Therefore, to show that a formula \formula~is valid, $\neg \formula$ is
 translated into a normal form, then the inference rule is applied until either
 no new resolvents can be generated or a contradiction is obtained. This means
-that the search for a contradiction proceeds by saturating the given clause set,
-exhaustively applying the inference rule~\cite{bachmair2001resolution}. The
-contradiction implies that $\neg \formula$ is unsatisfiable and hence, that
-\formula~is valid. 
+that the search for a contradiction proceeds by saturating the given
+clause set, exhaustively applying the inference
+rule~\cite{bachmair2001resolution}. The contradiction implies that $\neg
+\formula$ is unsatisfiable and hence, that \formula~is valid. 
 
 Resolution-based provers are widely implemented and tested. Besides reliable
 implementations, we can also profit from several complete strategies which can
@@ -58,12 +69,12 @@ Section~\ref{sec:calculus}.
 
 Clausal resolution is a simple and adaptable proof system for classical logics.
 It was proposed by Robinson in 1965~\cite{Robinson65}, and was claimed to be
-suitable to be performed by a computer, as it has only one inference rule that is
-applied. Robinson emphasizes that, from the theoretical point of
-view, an inference rule need only to be sound and effective, that is, it allows
-only logical consequences of premisses to be deduced and it must be
-algorithmically decidable whether an alleged application of the rule is indeed
-an application of it.
+suitable to be performed by a computer, as, for propositional logic, it has only
+one inference rule that is applied. Robinson emphasizes that, from the
+theoretical point of view, an inference rule need only to be sound and
+effective, that is, it allows only logical consequences of premisses to be
+deduced and it must be algorithmically decidable whether an alleged application
+of the rule is indeed an application of it.
 
 The single inference rule of this system of logic entails the \emph{resolution
 principle}, namely: \emph{From any two clauses} $\clause_i$ \emph{and}
@@ -377,16 +388,28 @@ labels and applied to smaller sets of clauses, reducing the number of
 unnecessary applications, and therefore improving the efficiency of the proof
 procedure~\cite{Nalon2016}. 
 
-This calculus comprises a set of inference rules, given in Table~\ref{rules},
-for dealing with propositional and modal reasoning. In the following, we denote
-by $\sigma$ the result of unifying the labels in the premises for each rule.
-Formally, unification is given by a function $ \sigma : \mathscr{P}(\Nat \cup
-\{*\}) \longrightarrow \Nat \cup \{*\}$, where $\sigma (\{ml, *\}) = ml$ and
-$\sigma (\{ml\}) = ml$, otherwise, $\sigma$ is undefined. The 
-inference rules showed in Table~\ref{rules} can only be applied if the unification of their labels is
-defined (where $* - 1 = *$). Note that for GEN1 and GEN3, if the
-modal clauses occur at the modal level $ml$, then the literal clause occurs at
-the next modal level, $ml + 1$.
+The modal-layered resolution calculus, proposed by Nalon, Hustadt and Dixon
+in~\cite{nalon2015modal}, comprises a set of inference rules, given in
+Table~\ref{rules}, for dealing with propositional and modal reasoning. In the
+following, we denote by $\sigma$ the result of unifying the labels in the
+premises for each rule.  Formally, unification is given by a function $ \sigma :
+\mathscr{P}(\Nat \cup \{*\}) \longrightarrow \Nat \cup \{*\}$, where $\sigma
+(\{ml, *\}) = ml$ and $\sigma (\{ml\}) = ml$, otherwise, $\sigma$ is undefined.
+The inference rules showed in Table~\ref{rules} can only be applied if the
+unification of their labels is defined (where $* - 1 = *$). Note that for GEN1
+and GEN3, if the modal clauses occur at the modal level $ml$, then the literal
+clause occurs at the next modal level, $ml + 1$.
+
+\begin{definition}
+    Let $\Clauses$ be a set of clauses in \snf{$ml$}. A \emph{derivation} from
+    $\Clauses$ is a sequence of sets $\Clauses_0, \Clauses_1, \ldots$ where
+    $\Clauses_0 = \Clauses$ and, for each $i > 0$, $\Clauses_{i+1} = \Clauses_i
+    \cup \{D\}$, where $D$ is the resolvent obtained from $\Clauses_i$ by an
+    application of either LRES, MRES, GEN1, GEN2 or GEN3. It is also required
+    that $D$ is in simplified form, $D \notin \Clauses_i$ and that $D$ is not a
+    tautology. A \emph{refutation} for $\Clauses$ is a finite derivation that
+    contains the empty clause~\cite{nalon2015modal}.
+\end{definition}
 
 The proofs for termination, soundness and completeness of this calculus can be
 found in~\cite{nalon2015modal}.

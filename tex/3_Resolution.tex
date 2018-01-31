@@ -37,33 +37,33 @@ literals. In this work we might abuse of set notation, writing $l \in \clause$,
 when $l$ is a literal of $\clause$, and $\clause_i \subseteq \clause_j$, when
 all literals in $\clause_i$ are also literals in $\clause_j$.
 
-A clause set is said to be \emph{saturated} when no new relevant information can
-be generated~\cite{dershowitz2003abstract}. Saturation, up to redundancy, of the
-initial clause set is a quite useful criteria when we are thinking in terms of
+A clause set is said to be \emph{saturated} when relevant information can not be
+generated, regardless of the rule that is applied~\cite{dershowitz2003abstract}.
+Saturation, up to redundancy, of the initial clause set is a quite useful
+criteria when we are thinking in terms of
 % cite reference to termination 
 termination proof and completeness proof~\cite{fitting} of a calculus.
 
 % be specific %
-Most of these systems work exclusively with clauses in a specific
-normal form. Resolution, as proposed by Robinson, is a refutationally complete
-theorem proving method~\cite{Robinson65}.
-Therefore, to show that a formula \formula~is valid, $\neg \formula$ is
-translated into a normal form, then the inference rule is applied until either
-no new resolvents can be generated or a contradiction is obtained. This means
-that the search for a contradiction proceeds by saturating the given
-clause set, exhaustively applying the inference
-rule~\cite{bachmair2001resolution}. The contradiction implies that $\neg
-\formula$ is unsatisfiable and hence, that \formula~is valid. 
+Most of the systems based on the rule of Equation~\ref{eq:res} work exclusively
+with clauses in a specific normal form. Resolution, as proposed by Robinson, is
+a refutationally complete theorem proving method~\cite{Robinson65}.  Therefore,
+to show that a formula \formula~is valid, $\neg \formula$ is translated into a
+normal form, then the inference rule is applied until either no new resolvents
+can be generated or a contradiction is obtained. This means that the search for
+a contradiction proceeds by saturating the given clause set, exhaustively
+applying the inference rule~\cite{bachmair2001resolution}. The contradiction
+implies that $\neg \formula$ is unsatisfiable and hence, that \formula~is valid. 
 
 Resolution-based provers are widely implemented and tested. Besides reliable
 implementations, we can also profit from several complete strategies which can
 be extended to deal with modal resolution~\cite{journals/jal/NalonD07}. Such
 provers for multimodal logics require pruning of the search space for a proof in
 order to deal with the inherent intractability of the satisfiability problem for
-such logics. In~\cite{nalon2015modal} is presented a clausal modal-layered
-resolution calculus for \system{K}{n}{}, which divides the clause set according
-to the modal depth at which each clause occurs. This calculus is introduced in
-Section~\ref{sec:calculus}.
+such logics. In~\cite{nalon2015modal}, Nalon et.\ al.\ present a clausal
+modal-layered resolution calculus for \system{K}{n}{}, which divides the clause
+set according to the modal depth at which each clause occurs. This calculus is
+introduced in Section~\ref{sec:calculus}.
 
 \section{Clausal Resolution}
 
@@ -79,11 +79,7 @@ of the rule is indeed an application of it.
 The single inference rule of this system of logic entails the \emph{resolution
 principle}, namely: \emph{From any two clauses} $\clause_i$ \emph{and}
 $\clause_j$ \emph{which contain a complementary pair of literals, one may infer
-a resolvent of} $\clause_i$ \emph{and} $\clause_j$~\cite{Robinson65}. This one
-rule is machine-oriented, rather then human-oriented, in the sense of the
-preceding remarks, once that is no more need to a single step in a deduction to
-be simple enough to be apprehended as correct by a human mind in a single
-intellectual act.
+a resolvent of} $\clause_i$ \emph{and} $\clause_j$~\cite{Robinson65}.   
 
 In his paper, Robinson presents a formulation of first-order logic designed to
 be used as the basic theoretical instrument of the proposed computer
@@ -131,15 +127,22 @@ formula is unsatisfiable~\cite{satchapter}.
 
 Despite its simplicity, unrestricted resolution is hard to implement efficiently
 due to the difficulty of finding good choices of clauses to
-resolve~\cite{satchapter}; natural choices typically yield huge storage
-requirements. Thus, Robinson established two principles, namely
-\emph{purity principle} and \emph{subsumption principle}, to discuss the question of
+resolve~\cite{satchapter}. As one can see in Example~\ref{ex:res}, natural
+choices typically imply huge storage requirements. Even with such a short
+example (only 6 initial clauses), the application of the resolution rule,
+without any restriction, yields the generation of constants, Clauses 9 and 10, and repeated
+clauses, Clauses 7 and 8. That is, useless information is generated and stored
+until the contradiction can be found. 
+
+In this sense, Robinson established two principles, namely \emph{purity
+principle} and \emph{subsumption principle}, to discuss the question of
 developing efficient resolution systems. A refutation system based on resolution
 incorporating the first principle tends to derive a smaller number of clauses.
-On the other hand, the incorporation of the second principle helps to increase the
-rate of which a contradiction is derived~\cite{Robinson65}. Such principles are
-called \emph{search principles}. A third search principle is presented in terms
-of subsumption.
+On the other hand, the incorporation of the second principle helps to increase
+the rate of which a contradiction is derived~\cite{Robinson65}. Such principles
+are called \emph{search principles}.  A third search principle is presented in
+terms of replacement using the subsumption principle, named,
+\emph{self-subsumption}. 
 
 \begin{definition}
     If $\Clauses$ is any finite set of clauses, $\clause$ is a clause in
@@ -180,8 +183,8 @@ suppose a resolvent $\clause_R$ of $\clause_i$ and $\clause_j$ subsumes
 $\clause_i$, then in adding $\clause_R$ as a result of resolving $\clause_i$ and
 $\clause_j$, we may simultaneously delete, by the subsumption principle,
 $\clause_i$. This combined operation entails the replacement of $\clause_i$ by
-$\clause_R$; accordingly this third principle is named as the \emph{replacement
-principle}.
+$\clause_R$; accordingly this third principle is named as the
+self-subsumption principle.
 
 The application, to a finite set $\Clauses$ of clauses, of any of the three
 search principles described, produces a set $\Clauses'$ which either has fewer
@@ -198,18 +201,18 @@ clauses~\cite{Robinson65}.
     through an application of the purity principle, as expressed in
     Table~\ref{tab:resb}, once there is no other clause that has the
     complementary pair of the literal $u$. 
-    Furthermore, as the clause 5 subsumes the clause 4, this last one can also
+    Furthermore, as the Clause 5 subsumes the Clause 4, this last one can also
     be eliminated from the set of clauses, leaving only the clauses in
     Table~\ref{tab:resc}.
-    The application of RES to clauses 1 and 2 generates the resolvent
-    $\neg q$, which subsumes both clauses, hence, by the replacement principle,
-    both may be replaced by the clause 7, as showed in Table~\ref{tab:resd}.
-    Finally, the application of RES to the clauses 5 and 7, generates the clause
-    8 as a resolvent, and then resolving this one with the clause 6 will
+    The application of RES to Clauses 1 and 2 generates the resolvent
+    $\neg q$, which subsumes both clauses, hence, by the self-subsumption principle,
+    both may be replaced by the Clause 7, as showed in Table~\ref{tab:resd}.
+    Finally, the application of RES to the Clauses 5 and 7, generates the Clause
+    8 as a resolvent, and then resolving this one with the Clause 6 will
     generate the empty clause, thus, a contradiction. 
 
     Applying the search principles allowed us to go from a set of six clauses
-    with 4 literals to a set of four with only 2 literals.
+    with four literals to a set of four clauses with only two.
 
     \begin{table}
         \caption{Derivation schemes for Example~\ref{ex:principles}}
@@ -268,7 +271,8 @@ clauses~\cite{Robinson65}.
 
 There are further principles of the same general sort, possibly less simple than
 the ones presented earlier, which Robinson considers to be merely a brief view
-of the possible approaches to the efficiency problem of resolution systems. 
+of the possible approaches to the efficiency problem of resolution systems.
+Details can be found in~\cite{Robinson65}.
 
 \section{Modal-Layered Resolution Calculus for \system{K}{n}{}}%
 \label{sec:calculus}
@@ -320,8 +324,8 @@ Clauses in \snf{$ml$} are defined as follows.
         \item Positive $a$-clause $\ \qquad ml : l' \then \nec{a} l$
         \item Negative $a$-clause $\qquad ml : l' \then \pos{a} l$
     \end{enumerate}
-    where $r, b \in \Nat, ml \in \Nat \cup \{*\}$ and $l, l', l_b \in
-    \Literals$.
+    where $r, b \in \Nat, ml \in \Nat \cup \{*\}$, $l, l', l_b \in
+    \Literals$ and $\agent \in \Agents$.
 \end{definition}
 
 Positive and negative $a$-clauses are together known as \emph{modal
@@ -407,8 +411,9 @@ clause occurs at the next modal level, $ml + 1$.
     \cup \{D\}$, where $D$ is the resolvent obtained from $\Clauses_i$ by an
     application of either LRES, MRES, GEN1, GEN2 or GEN3. It is also required
     that $D$ is in simplified form, $D \notin \Clauses_i$ and that $D$ is not a
-    tautology. A \emph{refutation} for $\Clauses$ is a finite derivation that
-    contains the empty clause~\cite{nalon2015modal}.
+    tautology. A \emph{local refutation} for $\Clauses$ is a finite derivation
+    that contains the empty clause at the initial modal level, or $0:
+    false$~\cite{nalon2015modal}.
 \end{definition}
 
 The proofs for termination, soundness and completeness of this calculus can be

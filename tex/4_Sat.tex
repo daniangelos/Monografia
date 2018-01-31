@@ -7,22 +7,23 @@ directed in improving the efficiency of solvers for this problem, known as
 worst-case deterministic exponential run time of all the algorithms known,
 satisfiability solvers are increasingly leaving their mark as a general purpose
 tool in the most diverse areas~\cite{satchapter}. In essence, SAT solvers
-provide a generic combinatorial reasoning and search platform. Beyond that, the
-source code of many implementations of such solvers is freely available and can
-be used as a basis for the development of decision procedures for more
-expressive logics~\cite{giunchiglia2002sat}.
+provide a generic combinatorial reasoning and search platform for such problems.
+Beyond that, the source code of many implementations of such solvers is freely
+available and can be used as a basis for the development of decision procedures
+for more expressive logics~\cite{giunchiglia2002sat}.
 
 In the context of SAT solvers for propositional provers, the underlying
-representational formalism is propositional logic~\cite{satchapter}. We are
-interested in formulae in \emph{Conjunctive Normal Form} (CNF): $\formula$ is in
-CNF if it is a conjunction of clauses. For example, $\formula = (p \lor \neg q)
-\land (\neg p \lor r \lor s) \land (q \lor r)$ is a CNF formula with four
-variables and three clauses. A clause with only one literal is referred to as a
-\emph{unit clause}, and a clause with two literals, as a \emph{binary clause}.
+representation formalism is propositional logic~\cite{satchapter}. We are
+interested in formulae in \emph{Conjunctive Normal Form} (CNF): a formula
+$\formula$ is in CNF if it is a conjunction of clauses. For example, $\formula =
+(p \lor \neg q) \land (\neg p \lor r \lor s) \land (q \lor r)$ is a CNF formula
+with four variables and three clauses. A clause with only one literal is
+referred to as a \emph{unit clause}, and a clause with two literals, as a
+\emph{binary clause}.
 
 %% satisfying assignment %%
 A propositional formula $\formula$ takes a value in the set $\{\false, \true\}$. In
-algorithms for SAT, variables can be \emph{assigned} a logic value in the same
+algorithms for SAT, variables can be \emph{assigned} a logical value in this same
 set and, alternatively, variables may also be \emph{unassigned}. A \emph{truth
 assignment} (or just an assignment) to a set of variables $\Prop$, is the valuation
 function $\pi$ as defined in Definition~\ref{def:semantics}. As in propositional
@@ -57,7 +58,7 @@ best complete methods remain variants of a process introduced in the early
 1960’s: the Davis-Putnam-Logemann-Loveland, or DPLL,
 procedure~\cite{DavisLongemannLoveland:1962}, which describes a backtracking
 algorithm to the search problem of finding a satisfying assignment for a formula in
-the space of partial assignments. A key feature of DPLL is efficient pruning of
+the space of partial assignments. A key feature of DPLL is the efficient pruning of
 the search space based on falsified clauses. Since its introduction, the main
 improvements to DPLL have been smart branch selection heuristics, extensions
 like clause learning and randomized restarts, and well-crafted data structures
@@ -71,8 +72,8 @@ formulae~\cite{DavisLongemannLoveland:1962}. The main idea is to repeatedly
 select an unassigned literal $l$ in the input formula and recursively search for
 a satisfying assignment for $\formula|_l$ and $\formula|_{\neg l}$. The step
 where such an $l$ is chosen is called a \emph{branching step}. Setting $l$ to
-$\true$ or $\false$ when making a recursive call is referred to as
-\emph{decision}, and is associated with a \emph{decision level} which equals the
+$\true$ or $\false$ when making a recursive call is referred to as a
+\emph{decision}, which is associated with a \emph{decision level} which equals the
 recursion depth at that stage of the procedure. The end of each recursive call,
 which takes $\formula$ back to fewer assigned literals, is called the
 \emph{backtracking step}.
@@ -102,7 +103,7 @@ which takes $\formula$ back to fewer assigned literals, is called the
     {%
         $l \leftarrow$ the literal in $\clause$ not assigned by $\passignment$\\
         $\formula \leftarrow \formula|_l$\\
-        $\passignment \leftarrow \passignment \cup \{\l\}$
+        $\passignment \leftarrow \passignment \cup \{l\}$
     }
     \Return{$(\formula, \passignment)$}
     }
@@ -518,13 +519,123 @@ allow identifying a subset of clauses that is also unsatisfiable. For example, a
 a single clause and checking unsatisfiability. Unnecessary clauses are
 discarded, and eventually a minimally unsatisfiable subformula is obtained.
 
-\section{Modern CDCL Solvers}%
+\section{Modern SAT Solvers}%
 
-Apart from conflict analysis, modern solvers include techniques like lazy data
-structures, search restarts, conflict-driven branching heuristics and clause
-deletion strategies~\cite{cdclchapter}.  
+Annual competitions have led to the development of dozens of clever
+implementations of SAT solvers, allowing many techniques to be explored and
+creating an extensive suite of real-world instances as well as challenging
+hand-crafted benchmarks problems~\cite{satchapter}. Apart from conflict
+analysis, modern solvers include techniques like lazy data structures, search
+restarts, conflict-driven branching heuristics and clause deletion
+strategies~\cite{cdclchapter}.  
 
-\subsection{MiniSat}%
-\label{sec:minisat}
+In 2001, researches at Princeton University designed a complete solver, named
+Chaff~\cite{moskewicz2001chaff}, that, as most solvers, is an instance of the
+DPLL search procedure with a number of enhancements aiming in efficient applications.
+Their algorithm was later used as base for numerous well-succeed
+implementations. Chaff achieved significant performance gains through careful
+engineering of all aspects of the search --- especially a particularly efficient
+implementation of unit propagation and a novel low overhead decision strategy.
+It was able to obtain, at the time, one to two orders of magnitude performance
+improvement on difficult SAT benchmarks~\cite{moskewicz2001chaff}.
 
-\subsection{Glucose}
+Alongside the optimized unit propagation, Chaff also designed a decision
+heuristic, which they called \emph{Variable State Independent Decaying Sum
+(VSIDS)}. Decision assignment consists of the determination of which new
+variable should be assigned a value in each decision level. There are several
+strategies in the literature to try and solve this problem, but by that far,
+there was a lack of clear statistical evidence supporting one strategy over
+others, making difficult to determine what differs a good decision from a bad
+one. With that in mind, and also after some testing with a few available
+strategies, Chaff's designers thought they could come up with a considerably
+better heuristic for the range of problems on which Chaff was being tested. The
+VSIDS strategy is described as follows:
+
+\begin{enumerate}
+    \item Each literal has a counter, initialized to 0.
+    \item When a clause is added to the clause database, the counter associated with
+        each literal in the clause is incremented.
+    \item The unassigned literal with the highest counter is chosen at each
+        decision.
+    \item Ties are broken randomly by default.
+    \item Periodically, all the counters are divided by a constant.
+\end{enumerate}
+
+Overall, this strategy can be viewed as attempting to satisfy the conflict
+clauses but, particularly, attempting to satisfy \emph{recent} conflict clauses,
+due to the fifth item. Since difficult problems generate many conflicts, the
+conflict clauses dominate the problem in terms of literal count, so this
+approach distinguishes itself in how it favors the information generated by
+recent conflict clauses~\cite{moskewicz2001chaff}. To this day, CDCL SAT solvers
+crucially depend on the VSIDS decision heuristic for their
+performance~\cite{vsidsincdcl}. 
+
+A few years later, S\"orensson and Een developed a SAT solver with conflict
+clause minimization, named \emph{MiniSat}, that stayed for a while as the
+state-of-the-art solver. MiniSat is a popular high-performance satisfiability
+solver that implements many well-known performance heuristics in a concise
+manner. It has won several prizes in the SAT 2005 competition, and has the
+advantage of being open-source. MiniSat is a minimalistic implementation of a
+Chaff-like SAT solver based on clause learning by conflict analysis. A number of
+small improvements has been made with respect to the original Chaff. Two
+important features are the incremental SAT interface, and the support for user
+defined boolean constrains. Although none of these improvements are really
+relevant for the SAT competition, they are important when using MiniSat as an
+integrated part of a bigger system. 
+
+MiniSat's version of VSIDS makes some simple changes to the original one, as
+follows:
+
+\begin{enumerate}
+    \item Each \emph{variable} has a counter.
+    \item Instead of a decay factor, variable counters are ``bumped'' with
+        larger and larger values in a floating point representation. When very
+        large values are encountered, all counters are scaled down.
+    \item 2\% of the time, a random decision is made instead. This factor is set
+        at run-time.
+\end{enumerate}
+In addition, MiniSat's implementation of VSIDS always keeps the variables in
+order by placing them in an array-based priority queue.
+
+In 2009, a MiniSat based solver appeared claiming to predict the quality of
+learn clauses. \emph{Glucose} is based on a scoring scheme introduced earlier on
+the same year by Audemard and Simon. The name of the solver is a contraction of
+the concept of ``glue clauses'', a particular kind of clauses that Glucose
+detects and preserves during search.
+
+Detecting what is a good learnt clause in advance is a challenge, and from first
+importance: deleting useful clauses can be dramatic in practice~\cite{glucose}.
+To prevent this, solvers have to let the maximum number of clauses grow
+exponentially. On very hard benchmarks, CDCL solvers face memory problems and,
+even if they don't, their greedy learning scheme deteriorates the performance.
+In~\cite{audemard2009predicting}, Audemard and Simon showed that a very simple
+static measure on clauses can dramatically improves the performance of the
+publicly available version of MiniSat of that time.
+
+During search, each decision is often followed by a large number of unit
+propagations. For Audemard and Simon, all literals from the same level are
+called ``blocks'' of literals in the later. Intuitively, at the semantic level,
+there is a chance that they are linked with each other by direct dependencies.
+The idea is that a good learning schema should add explicit links between
+independent blocks of decision literals. If the solver stays in the same search
+space, such a clause will probably help reducing the number of next decision
+levels in the remaining computation.
+
+In Glucose, literals in a clause are partitioned with respect to their decision
+level. The \emph{Literals Blocks Distance (LBD)} of a clause is exactly the
+number of subsets of its literals, divided accordingly to the current
+assignment. From a practical point of view, the LBD score of each learnt clause
+is computed and stored when it is produced. This measure is static, even if
+updated during search (LBD score of a clause can be re-computed when the clause
+is used in unit-propagation). For instance, it is easy to understand the
+importance of learnt clauses of LBD 2: they only contain one variable of the
+last decision level, and, later, this variable will be ``glued'' with the block
+of literals propagated above, no matter the size of the clause. These clauses
+are very important during search, and they receive a special name: ``glue
+clauses''.
+
+We can notice that these last decades showed an enormous progress in the
+performance of SAT solvers. We've seen these modern solvers increasingly leaving
+their mark as a general-purpose tool, which provides a ``black-box'' procedure
+that can often solve hard structured problems with over a million variables and
+several million constrains. 

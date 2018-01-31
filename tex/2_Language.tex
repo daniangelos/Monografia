@@ -1,4 +1,4 @@
-\section{}
+%\section{}
 This chapter formally introduces \system{K}{n}{}, a \emph{propositional modal
 logic language}, semantically determined by an account of necessity and
 possibility~\cite{journals/jal/NalonD07}.
@@ -37,16 +37,17 @@ $\nec{a}(\varphi \then \psi) \then (\nec{a} \varphi \then \nec{a} \psi)$ (axiom
 systems of modal logics and it imposes restrictions on the class of models where
 formulae are valid~\cite{chellas:modal_logic}. 
 
-A set of worlds, their accessibility relations and a valuation function define a
-structure known as a \emph{Kripke model}, a structure proposed by Kripke to
-semantically analyse modal logics~\cite{kripke:i}.  The satisfiability and
-validity of a formula depend on this structure. For instance, given a Kripke
-model that contains a set of possible worlds, a binary relation of accessibility
-between worlds and a valuation function that returns the value of a
-propositional symbols in a specific world, we say that a formula $\nec{a}p$ is
-satisfiable at some world $\st$ of this model, if the valuation function
-establishes that $p$ is true at all worlds accessible from $\st$ trough the
-accessibility relation indexed by $a$.
+A set of worlds, their accessibility relations, labelled by an agent, and a
+valuation function define a structure known as a \emph{Kripke model}, a
+structure proposed by Kripke to semantically analyse modal
+logics~\cite{kripke:i}.  The satisfiability and validity of a formula depend on
+this structure. For instance, given a Kripke model that contains a set of
+possible worlds, a binary relation of accessibility between worlds and a
+valuation function that returns the value of a propositional symbol in a
+specific world, we say that a formula $\nec{a}p$ is satisfiable at some world
+$\st$ of this model, if the valuation function establishes that $p$ is true at
+all worlds accessible from $\st$ trough the accessibility relation indexed by
+the agent $a$.
 
 In the following, we will formally define the modal language. The
 syntax and semantics of \system{K}{n}{} are given in Sections~\ref{syntax}
@@ -348,6 +349,8 @@ list~\cite{kleene2002mathematical}. The assumptions are called \emph{axioms}.
 
 Formally, a proof is a finite object constructed according to fixed syntactic
 rules that refer only to the structure of formulae and not to their intended
+meaning~\cite{fitting}. The set of syntactic rules that define proofs are said
+to specify a \emph{proof system} or \emph{calculus}. These rules allow the
 derivation of formulae from formulae through strict symbol
 manipulation~\cite{resolutionbased}. A proof system is \emph{sound} for a
 particular logic if any formula that has a proof is a valid formula of the
@@ -399,13 +402,17 @@ of conditions and moves toward some (possibly remote) conclusion, the system is
 called \emph{forward chaining}. If the conclusion is known, for instance, if it
 is a goal to be achieved, but the path to this conclusion is unknown, then
 reasoning backwards is called for, and the system is a \emph{backward
-chaining}~\cite{feigenbaum1988rise}.
+chaining}~\cite{feigenbaum1988rise}. 
 
 Backward chaining is a standard technique in automated deduction, often taking
 the form of a version of Robinson's \emph{resolution
-rule}~\cite{harland2000forward}. The fundamental question is to determine
+rule}~\cite{harland2000forward}. Calculi based on this rule is often referred
+as \emph{resolution-based systems}. The fundamental question is to determine
 whether or not a given formula follows from a given set of formulae, and there
-are various techniques which can be applied to guide the search for a proof.  
+are various techniques which can be applied to guide the search for a proof.
+Resolution systems for propositional logic perform this search by thoroughly
+applying a single rule, with the goal of obtaining a contradiction, since it is
+also a refutational system.
 
 In the literature, there are several kinds of proof systems proposed for
 \system{K}{n}{}. The one we use in this work is based in resolution, it was

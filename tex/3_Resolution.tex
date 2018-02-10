@@ -47,13 +47,14 @@ termination proof and completeness proof~\cite{fitting} of a calculus.
 % be specific %
 Most of the systems based on the rule of Equation~\ref{eq:res} work exclusively
 with clauses in a specific normal form. Resolution, as proposed by Robinson, is
-a refutationally complete theorem proving method~\cite{Robinson65}.  Therefore,
-to show that a formula \formula~is valid, $\neg \formula$ is translated into a
-normal form, then the inference rule is applied until either no new resolvents
-can be generated or a contradiction is obtained. This means that the search for
-a contradiction proceeds by saturating the given clause set, exhaustively
-applying the inference rule~\cite{bachmair2001resolution}. The contradiction
-implies that $\neg \formula$ is unsatisfiable and hence, that \formula~is valid. 
+a refutationally complete theorem proving method for first order
+logic~\cite{Robinson65}.  Therefore, to show that a formula \formula~is valid,
+$\neg \formula$ is translated into a normal form, then the inference rule is
+applied until either no new resolvents can be generated or a contradiction is
+obtained. This means that the search for a contradiction proceeds by saturating
+the given clause set, exhaustively applying the inference
+rule~\cite{bachmair2001resolution}. The contradiction implies that $\neg
+\formula$ is unsatisfiable and hence, that \formula~is valid. 
 
 Resolution-based provers are widely implemented and tested. Besides reliable
 implementations, we can also profit from several complete strategies which can
@@ -413,7 +414,9 @@ clause occurs at the next modal level, $ml + 1$.
     that $D$ is in simplified form, $D \notin \Clauses_i$ and that $D$ is not a
     tautology. A \emph{local refutation} for $\Clauses$ is a finite derivation
     that contains the empty clause at the initial modal level, or $0:
-    false$~\cite{nalon2015modal}.
+    false$~\cite{nalon2015modal}. Meanwhile, a \emph{global refutation} for
+    $\Clauses$ is a finite derivation that contains the empty clause at any
+    modal level.
 \end{definition}
 
 The proofs for termination, soundness and completeness of this calculus can be

@@ -65,18 +65,18 @@ like clause learning and randomized restarts, and well-crafted data structures
 such as lazy implementations and watched literals for fast unit
 propagation~\cite{satchapter}.
 
-Algorithm~\ref{alg:dpll}, DPLL-recursive$(\formula, \passignment)$, where
+Algorithm~\ref{alg:dpll}, DPLL-recursive$(\formula, \passignment)$ sketches the
+basic DPLL procedure on CNF formulae~\cite{DavisLongemannLoveland:1962}, where
 $\passignment$ corresponds to a partial assignment of the CNF formula
-$\formula$, sketches the basic DPLL procedure on CNF
-formulae~\cite{DavisLongemannLoveland:1962}. The main idea is to repeatedly
-select an unassigned literal $l$ in the input formula and recursively search for
-a satisfying assignment for $\formula|_l$ and $\formula|_{\neg l}$. The step
-where such an $l$ is chosen is called a \emph{branching step}. Setting $l$ to
-$\true$ or $\false$ when making a recursive call is referred to as a
-\emph{decision}, which is associated with a \emph{decision level} which equals the
-recursion depth at that stage of the procedure. The end of each recursive call,
-which takes $\formula$ back to fewer assigned literals, is called the
-\emph{backtracking step}.
+$\formula$. The main idea is to repeatedly select an unassigned literal $l$ in
+the input formula and recursively search for a satisfying assignment for
+$\formula|_l$ and $\formula|_{\neg l}$. The step where such an $l$ is chosen is
+called a \emph{branching step} and $l$ is referred as a \emph{decision
+variable}. Setting the decision variable to $\true$ or $\false$ when making a
+recursive call is referred to as a \emph{decision}, which is associated with a
+\emph{decision level} which equals the recursion depth at that stage of the
+procedure. The end of each recursive call, which takes $\formula$ back to fewer
+assigned literals, is called the \emph{backtracking step}.
 
 \begin{algorithm}[htp]%
     \SetAlgoLined\DontPrintSemicolon%
@@ -120,52 +120,61 @@ Thus, this procedure is used for identifying variables which must be assigned
 a specific value. If $\formula |_\passignment$ contains the empty clause, a
 \emph{conflict} condition is declared, the corresponding clause of $\formula$
 from which it came is said to be \emph{violated} by $\passignment$, and the algorithm
-backtracks. The literals whose negation do not appear in the formula, called
+backtracks. 
+
+The literals whose negation do not appear in the formula, called
 \emph{pure literals}, are also set to $\true$ as a preprocessing step and, in
 some implementations, during the simplification process after every branching. 
+We mentioned pure literal elimination in Chapter~\ref{3_Resolution} as the
+purity principle proposed by Robinson.
 
 Variants of this algorithm form the most widely used family of complete
 algorithms for the SAT problem. They are frequently implemented in an iterative
-manner, resulting in significantly reduced memory usage. The efficiency of
-state-of-the-art SAT solvers relies heavily on various features that have been
-developed, analysed and tested over the last two decades. These include fast
-unit propagation using watched literals, deterministic and randomized restart
-strategies, effective clause deletion mechanisms, smart static and dynamic
-branching heuristics and learning mechanisms. We will discuss learning
-mechanisms in the next section and refer the reader to~\cite{satchapter} for
-more details about other strategies.
+manner, instead of using recursion, resulting in significantly reduced memory
+usage. The efficiency of state-of-the-art SAT solvers relies heavily on various
+features that have been developed, analysed and tested over the last two
+decades. These include fast unit propagation using watched literals,
+deterministic and randomized restart strategies, effective clause deletion
+mechanisms, smart static and dynamic branching heuristics and learning
+mechanisms. We will discuss learning mechanisms in the next section and refer
+the reader to~\cite{satchapter} for more details about other search strategies.
 
 \section{Conflict-Driven Clause Learning}%
 \label{sec:cdcl}
 
 One of the main reasons for the widespread use of SAT in many applications is
 that solvers based on clause learning are effective in
-practice~\cite{satchapter}. The main idea is to cache ``causes of conflict'' as
-learned clauses, and utilize this information to prune the search in a different
-part of the search space encountered later. Since their inception in the
-mid-90s, \emph{Conflict-Driven Clause Learning} (CDCL) SAT solvers have been
-applied, in many cases with remarkable success, to a number of practical
+practice~\cite{satchapter}. The main idea behind CDCL is to cache ``causes of
+conflict'' as learned clauses, and utilize this information to prune the search
+in a different part of the search space encountered later. Since their inception
+in the mid-90s, \emph{Conflict-Driven Clause Learning} (CDCL) SAT solvers have
+been applied, in many cases with remarkable success, to a number of practical
 applications~\cite{cdclchapter}. The organization of CDCL SAT solvers is
 primarily inspired by the DPLL procedure.
 
 In CDCL SAT solvers, each variable $p$ is characterized by a number of
-properties, including the \emph{value}, the \emph{antecedent} and the
-decision level, denoted respectively by $\nu(p) \in \{\false, \true, u\}$, where
-$\nu(p) = u$ means that $p$ is still unassigned, $\alpha(p) \in \formula \cup
-\{nil\}$, and $\delta(p) \in \{-1, 0, 1, \ldots, |\Prop|\}$. A variable $p$ that
-is assigned a value as the result of unit propagation is said to be
-\emph{implied}.  The unit clause $\clause$ used for implying this value is said
-to be the antecedent of $p$, that is, $\alpha(p) = \clause$. For variables that
-are decision variables or are unassigned, the antecedent is $nil$. Hence,
-antecedents are only defined for variables whose value is implied by other
-assignments. The decision level of a variable $p$ denotes the depth of the
-decision tree at which the variables is assigned a value in $\{\false, \true\}$
-or $\delta(p) = -1$ if $p$ is still unassigned. The decision level associated
-with variables used for branching steps is specified by the search process, and
-denotes the current depth of the \emph{decision stack}. Hence, a variable $p$
-associated with a decision assignment is characterized by having $\alpha(p) =
-nil$ and $\delta(p) > 0$. More formally, the decision level of $p$ with
-antecedent $\clause$ is given by: 
+properties. Mainly, we need to maintain its \emph{value}, its \emph{antecedent}
+and its decision level.  A variable's value is denoted by $\nu(p)$, and defined
+in the set $\{\false, \true, u\}$, where $\nu(p) = u$ means that $p$ is still
+unassigned. 
+
+A variable $p$ that is assigned a value as the result of unit propagation is
+said to be \emph{implied}.  The unit clause $\clause$ used for implying this
+value is said to be the antecedent of $p$, and it's denoted by $\alpha(p) =
+\clause$. For variables that are decision variables or are unassigned, the
+antecedent is $nil$. Hence, antecedents are only defined for variables whose
+value is implied by other assignments. 
+
+The decision level of a variable $p$, written $\delta(p)$, denotes the depth of
+the decision tree at which the variables is assigned a value in $\{\false,
+\true\}$ or $\delta(p) = -1$ if $p$ is still unassigned, therefore, $\delta(p)
+\in \{-1, 0, 1, \ldots, |\Prop_\formula|\}$, where $\Prop_\formula$ denotes the
+set of all variables that appear on the initial formula $\formula$. The decision
+level associated with variables used for branching steps is specified by the
+search process, and denotes the current depth of the \emph{decision stack}.
+Hence, a variable $p$ associated with a decision assignment is characterized by
+having $\alpha(p) = nil$ and $\delta(p) > 0$. More formally, the decision level
+of $p$ with antecedent $\clause$ is given by: 
 \begin{equation}
     \delta(p) = \max(\{0\} \cup \{\delta(p') \mid p' \in \clause \land p' \neq p\})
 \end{equation}
@@ -191,15 +200,16 @@ of its variable, that is, $\delta(l) = \delta(p)$ if $l = p$ or $l = \neg p$.
 \end{example}
 
 During the execution of a DPLL based SAT solver, assigned variables as well as
-their antecedents define a directed acyclic graph $I = (V_I, E_I)$ referred to as
-the \emph{implication graph}~\cite{silva1997grasp}. The vertices of this graph
-are defined by all assigned variables and one special node $\contradiction$, $V_I
-\subseteq \Prop \cup \{\contradiction\}$. The edges in the implication graph are
-obtained from the antecedent of each assigned variable: if $\alpha(p) = \clause$
-then there is a directed edge from each variable in $\clause$, other than $p$, to
-$p$. If unit propagation yields an unsatisfied clause $\clause_i$, then a special
-vertex $\contradiction$ is used to represent the unsatisfied clause. In this case, the
-antecedent of $\contradiction$ is defined by $\alpha(\contradiction) = \clause_i$.
+their antecedents define a directed acyclic graph $I = (V_I, E_I)$ referred to
+as the \emph{implication graph}~\cite{silva1997grasp}. The vertices of this
+graph are assigned variables or the special node $\contradiction$, which
+represents a contradiction, then $V_I \subseteq \Prop \cup \{\contradiction\}$.
+The edges in the implication graph are obtained from the antecedent of each
+implied variable: if $\alpha(p) = \clause$ then there is a directed edge,
+labelled by $\clause$, from each variable in $\clause$, other than $p$, to $p$.
+If unit propagation yields an unsatisfied clause $\clause_i$, then the special
+vertex $\contradiction$ is used to represent it. In this case, the antecedent of
+$\contradiction$ is defined by $\alpha(\contradiction) = \clause_i$.
 
 The edges of $I$ are formally defined below. Let $z, z_1, z_2 \in V_I$ be
 vertices in $I$, in order to derive the conditions for existence of edges in
@@ -388,30 +398,34 @@ learnt clause.
 The decision levels associated with assigned variables define a partial order of
 the variables. Starting from a given unsatisfied clause (represented in the
 implication graph as the vertex $\contradiction$), the conflict analysis
-procedure visits variables implied at the most recent decision level, i.e., the
-current largest decision level, identifies the antecedents of these variables
-and keeps from the antecedents the literals assigned at decision levels less
-than the one being considered. This process is repeated until the most recent
-decision variable is visited.
+procedure visits variables implied at the most recent decision level, i.e., it
+visits the graph vertex which represents the variables assigned at the current
+largest decision level. Then, this procedure identifies the antecedents of these
+variables and keeps from the antecedents the literals assigned at decision
+levels less than the one being considered. This process is repeated until the
+most recent decision variable is visited.
 
-Let $d$ be the current decision level, let $p$ be the decision variable, let
-$\nu(p) = v$ be the decision assignment and let $\clause$ be an unsatisfied
-clause identified with unit propagation. In terms of the implication graph, the
-conflict vertex $\contradiction$ is such that $\alpha(\contradiction) = \clause$. Moreover, take
-$\res$ to be the resolution operator. For two clauses $\clause_i$ and
-$\clause_j$, for which there is a unique variable $q$ such that one clause has a
-literal $q$ and the other has literal $\neg q$, $\clause_i \res \clause_j$
-contains all the literals of $\clause_i$ and $\clause_j$ with the exception of
-$q$ and $\neg q$.
+Let $d$ be the current decision level and $p$ the current decision variable such that
+$\delta(p) = d$. Let $\nu(p) = v$ be the decision assignment and let $\clause$
+be an unsatisfied clause identified with unit propagation. In terms of the
+implication graph, the conflict vertex $\contradiction$ is such that
+$\alpha(\contradiction) = \clause$. Moreover, take $\res$ to represent the
+process of applying the resolution principle, that is, for two clauses
+$\clause_i$ and $\clause_j$ containing contradictory literals, $\clause_i \res
+\clause_j$ denotes the application of the resolution rule as defined
+by~Equation~\ref{eq:res}. For instance, if $l$ and $\neg l$ are literals of
+$\clause_i$ and $\clause_j$, respectively, $\clause_i \res \clause_j$ contains
+all the literals of both clauses with the exception of $l$ and $\neg l$.
 
 The clause learning procedure used in SAT solvers can be defined by a sequence
 of selective resolution operations~\cite{journals/corr/abs-1107-0044,DAC00*675},
-that at each step yields a new temporary clause. 
+that at each step yields a \emph{new temporary clause}. 
 
 \begin{definition}%
 \label{def:clauselearning}
-    First, define a predicate that holds if a clause $\clause$ has an implied
-    literal $l$ assigned at the current decision level $d$:
+
+    Let $l$ be a literal of a clause $\clause$, and $d$ the current decision
+    level. Then, consider the following predicate:
 
     \begin{equation}%
         \label{eq:appliedliteral}
@@ -424,9 +438,8 @@ that at each step yields a new temporary clause.
         \right.
     \end{equation}
 
-    Let $\clause^{d, i}$, with $i = 0, 1, \ldots$, be the intermediate clause
-    obtained after $i$ resolution operations. Using the predicated defined
-    by Equation~\ref{eq:appliedliteral}, this intermediate clause can be defined
+    Then, using the predicate defined by Equation~\ref{eq:appliedliteral}, let
+    $\clause^{d,i}$, with $i = 0, 1, \ldots$, be a intermediate clause obtained
     as follows:
 
     \begin{equation}%
@@ -440,20 +453,25 @@ that at each step yields a new temporary clause.
             \end{array}
         \right.
     \end{equation}
+
 \end{definition}
+
+The predicate $\xi$ holds if, and only if, the implied literal $l$ of $\clause$
+is assigned a value at the current decision level $d$.   
 
 Equation~\ref{eq:newclause} can be used for formalizing the clause learning
 procedure. The first condition, $i = 0$, denotes the initialization step given
 in $\contradiction$ in $I$, where all literals in the unsatisfied clause are added to
 the first intermediate clause. Afterwards, at each step $i$, a literal $l$
 assigned at the current decision level $d$ is selected and the intermediate
-clause $\clause^{d, i-1}$ is resolved with the antecedent of $l$.
+clause $\clause^{d, i-1}$ is resolved with the antecedent of $l$. Therefore,
+$\clause^{d,i}$ denotes the clause obtained after $i$ resolution operations.
 
-For an iteration $i$ such that $\clause^{d, i} = \clause^{d, i-1}$, then a
-\emph{fixed point} is reached, and $\clause_L \stackrel{def} \clause^{d, i}$
-represents the new learnt clause. Observe that the number of resolution
+An iteration $i$ such that $\clause^{d, i} = \clause^{d, i-1}$ represents a
+reached \emph{fixed point}, and $\clause_L \stackrel{def} \clause^{d, i}$
+denotes the new learnt clause. Observe that the number of resolution
 operations represented by Equation~\ref{eq:newclause} is no greater than
-$|\Prop|$.
+$|\Prop_\formula|$.
 
 \begin{example}%
 \label{ex:cl}
@@ -462,10 +480,10 @@ $|\Prop|$.
     example results in the intermediate clauses shown in Table~\ref{tab:cl}. The
     resulting learnt clause is $\clause_L = \clause^{5,6} = (p \lor t \lor y)$.
     Alternatively, this clause can be obtained by inspecting the graph in
-    Figure~\ref{fig:graph2} and selecting the literals assigned at decision
-    levels less than the current decision level 5, i.e. $t = \false @3$ and $y =
-    \false @ 2$, and by selecting the current decision assignment $p = \false
-    @5$.
+    Figure~\ref{fig:graph2} and selecting the negation of the literals assigned
+    at decision levels less than the current decision level 5, i.e. $t = \false
+    @3$ and $y = \false @ 2$, and by selecting the current decision assignment
+    $p = \false @5$.
 \end{example}
 
 \begin{table}%
@@ -499,25 +517,23 @@ for identifying UIPs is to reduce the size of learnt clauses.
 Clause learning finds other applications besides the key efficiency improvements
 to CDCL SAT solvers. One example is \emph{clause reuse}. In a large number of
 applications, clauses learnt from a given CNF formula can often be reused for
-related CNF formulae. 
+related CNF formulae. The basic concept is to reuse constrains on the search
+space which are deduced while checking a previous instance, for speeding up the
+SAT checking of the current one~\cite{shtrichman2001pruning}.
 
-Moreover, for unsatisfiable subformulae, the clauses learnt by a CDCL SAT solver
-encode a resolution refutation of the original formula. Given the way clauses
-are learnt in this solvers, each learnt clause can be explained by a number of
-resolution steps, each of which is a trivial resolution step. As a result, the
-resolution refutation can be obtained from the learnt clauses in linear time and
-space on the number of learnt clauses. 
+Moreover, for unsatisfiable subformulae, the clauses learnt by a CDCL SAT
+solver, as formalised in Definition~\ref{def:clauselearning}, encode a
+resolution refutation of the original formula. Given the way clauses are learnt
+in this solvers, each learnt clause can be explained by a number of resolution
+steps, each of which is a trivial resolution step. As a result, the resolution
+refutation can be obtained from the learnt clauses in linear time and space on
+the number of learnt clauses. 
 
 For unsatisfiable formulae, the resolution refutations obtained from the clauses
 learnt by a SAT solver serve as certificate for validating the correctness of
-the SAT solver. Moreover, resolution refutations based on clause learning find
-practical applications~\cite{cdclchapter}.
-
-Besides allowing the production of a resolution refutation, learnt clauses also
-allow identifying a subset of clauses that is also unsatisfiable. For example, a
-\emph{minimally unsatisfiable subformula} can be derived by iteratively removing
-a single clause and checking unsatisfiability. Unnecessary clauses are
-discarded, and eventually a minimally unsatisfiable subformula is obtained.
+the SAT solver~\cite{cdclchapter}. Besides, resolution refutations based on
+clause learning find practical applications, including hardware model
+checking~\cite{mcmillan2003interpolation}.
 
 \section{Modern SAT Solvers}%
 

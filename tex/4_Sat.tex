@@ -1,16 +1,16 @@
 %\section{}
 The problem of determining whether a formula in classical propositional logic is
 satisfiable has the historical honor of being the first problem ever shown to be
-NP-Complete~\cite{Cook}. Great theoretical and practical efforts have been
-directed in improving the efficiency of solvers for this problem, known as
-\emph{Boolean Satisfiability Solvers}, or just \emph{SAT solvers}. Despite the
-worst-case deterministic exponential run time of all the algorithms known,
-satisfiability solvers are increasingly leaving their mark as a general purpose
-tool in the most diverse areas~\cite{satchapter}. In essence, SAT solvers
-provide a generic combinatorial reasoning and search platform for such problems.
-Beyond that, the source code of many implementations of such solvers is freely
-available and can be used as a basis for the development of decision procedures
-for more expressive logics~\cite{giunchiglia2002sat}.
+NP-Complete~\cite{Cook}. Great efforts have been directed in improving the
+efficiency of solvers for this problem, known as \emph{Boolean Satisfiability
+Solvers}, or just \emph{SAT solvers}. Despite the worst-case deterministic
+exponential run time of all the algorithms known, satisfiability solvers are
+increasingly leaving their mark as a general purpose tool in the most diverse
+areas~\cite{satchapter}. In essence, SAT solvers provide a generic combinatorial
+reasoning and search platform for such problems.  Beyond that, the source code
+of many implementations of such solvers is freely available and can be used as a
+basis for the development of decision procedures for more expressive
+logics~\cite{giunchiglia2002sat}.
 
 In the context of SAT solvers for propositional provers, the underlying
 representation formalism is propositional logic~\cite{satchapter}. We are
@@ -160,7 +160,7 @@ unassigned.
 
 A variable $p$ that is assigned a value as the result of unit propagation is
 said to be \emph{implied}.  The unit clause $\clause$ used for implying this
-value is said to be the antecedent of $p$, and it's denoted by $\alpha(p) =
+value is said to be the antecedent of $p$, and it is denoted by $\alpha(p) =
 \clause$. For variables that are decision variables or are unassigned, the
 antecedent is $nil$. Hence, antecedents are only defined for variables whose
 value is implied by other assignments. 
@@ -545,15 +545,16 @@ analysis, modern solvers include techniques like lazy data structures, search
 restarts, conflict-driven branching heuristics and clause deletion
 strategies~\cite{cdclchapter}.  
 
-In 2001, researches at Princeton University designed a complete solver, named
-Chaff~\cite{moskewicz2001chaff}, that, as most solvers, is an instance of the
-DPLL search procedure with a number of enhancements aiming in efficient applications.
-Their algorithm was later used as base for numerous well-succeed
-implementations. Chaff achieved significant performance gains through careful
-engineering of all aspects of the search --- especially a particularly efficient
-implementation of unit propagation and a novel low overhead decision strategy.
-It was able to obtain, at the time, one to two orders of magnitude performance
-improvement on difficult SAT benchmarks~\cite{moskewicz2001chaff}.
+In 2001, researches at Princeton University designed a complete solver, which
+they named Chaff~\cite{moskewicz2001chaff}, that, as most solvers, is an
+instance of the DPLL search procedure with a number of enhancements aiming in
+efficient applications.  Their algorithm was later used as base for numerous
+well-succeed implementations. Chaff achieved significant performance gains
+through careful engineering of all aspects of the search --- especially a
+particularly efficient implementation of unit propagation and a novel low
+overhead decision strategy.  It was able to obtain, at the time, one to two
+orders of magnitude performance improvement on difficult SAT
+benchmarks~\cite{moskewicz2001chaff}.
 
 Alongside the optimized unit propagation, Chaff also designed a decision
 heuristic, which they called \emph{Variable State Independent Decaying Sum
@@ -562,10 +563,10 @@ variable should be assigned a value in each decision level. There are several
 strategies in the literature to try and solve this problem, but by that far,
 there was a lack of clear statistical evidence supporting one strategy over
 others, making difficult to determine what differs a good decision from a bad
-one. With that in mind, and also after some testing with a few available
-strategies, Chaff's designers thought they could come up with a considerably
-better heuristic for the range of problems on which Chaff was being tested. The
-VSIDS strategy is described as follows:
+one~\cite{moskewicz2001chaff}. With that in mind, and also after some testing
+with a few available strategies, Chaff's designers thought they could come up
+with a considerably better heuristic for the range of problems on which Chaff
+was being tested. The VSIDS strategy is described as follows:
 
 \begin{enumerate}
     \item Each literal has a counter, initialized to 0.
@@ -587,17 +588,22 @@ crucially depend on the VSIDS decision heuristic for their
 performance~\cite{vsidsincdcl}. 
 
 A few years later, S\"orensson and Een developed a SAT solver with conflict
-clause minimization, named \emph{MiniSat}, that stayed for a while as the
-state-of-the-art solver. MiniSat is a popular high-performance satisfiability
-solver that implements many well-known performance heuristics in a concise
-manner. It has won several prizes in the SAT 2005 competition, and has the
-advantage of being open-source. MiniSat is a minimalistic implementation of a
-Chaff-like SAT solver based on clause learning by conflict analysis. A number of
-small improvements has been made with respect to the original Chaff. Two
-important features are the incremental SAT interface, and the support for user
-defined boolean constrains. Although none of these improvements are really
-relevant for the SAT competition, they are important when using MiniSat as an
-integrated part of a bigger system. 
+clause minimization, named \emph{MiniSat}~\cite{minisat}, that stayed for a
+while as the state-of-the-art solver. MiniSat is a popular high-performance
+satisfiability solver that implements many well-known performance heuristics in
+a concise manner. It has won several prizes in the SAT 2005 competition, and has
+the advantage of being open-source. 
+
+MiniSat is the implementation of the solver described
+in~\cite{een2003extensible}. It corresponds to a minimalistic Chaff-like SAT
+solver based on clause learning by conflict analysis. A number of small
+improvements has been made with respect to the original Chaff. Two important
+features are the incremental SAT interface, and the support for user defined
+boolean constrains. Although none of these improvements are really relevant for
+the SAT competition, they are important when using MiniSat as an integrated part
+of a bigger system~\cite{minisat}. In this sense, a user application can specify
+and solve SAT-problems, through MiniSat's external interface, sending its own
+previously known boolean constraints.
 
 MiniSat's version of VSIDS makes some simple changes to the original one, as
 follows:
@@ -607,51 +613,62 @@ follows:
     \item Instead of a decay factor, variable counters are ``bumped'' with
         larger and larger values in a floating point representation. When very
         large values are encountered, all counters are scaled down.
-    \item 2\% of the time, a random decision is made instead. This factor is set
-        at run-time.
+    \item At every certain rate, a random decision is made instead.
+        This factor is set at run-time.
 \end{enumerate}
 In addition, MiniSat's implementation of VSIDS always keeps the variables in
 order by placing them in an array-based priority queue.
 
 In 2009, a MiniSat based solver appeared claiming to predict the quality of
-learn clauses. \emph{Glucose} is based on a scoring scheme introduced earlier on
-the same year by Audemard and Simon. The name of the solver is a contraction of
-the concept of ``glue clauses'', a particular kind of clauses that Glucose
-detects and preserves during search.
+learn clauses. \emph{Glucose}~\cite{glucose} is based on a scoring scheme
+introduced earlier on the same year by Audemard and Simon. The name of the
+solver is a contraction of the concept of ``glue clauses'', a particular kind of
+clauses that Glucose detects and preserves during the search.
 
-Detecting what is a good learnt clause in advance is a challenge, and from first
-importance: deleting useful clauses can be dramatic in practice~\cite{glucose}.
-To prevent this, solvers have to let the maximum number of clauses grow
-exponentially. On very hard benchmarks, CDCL solvers face memory problems and,
-even if they don't, their greedy learning scheme deteriorates the performance.
-In~\cite{audemard2009predicting}, Audemard and Simon showed that a very simple
-static measure on clauses can dramatically improves the performance of the
-publicly available version of MiniSat of that time.
+Detecting what is a good learnt clause in advance is a challenge, and of first
+importance: deleting useful clauses can be time dramatically, in
+practice~\cite{glucose}. To prevent this, solvers have to let the maximum
+number of clauses grow exponentially. On very hard benchmarks, CDCL solvers face
+memory problems and, even if they do not, their greedy learning scheme
+deteriorates the performance.  In~\cite{audemard2009predicting}, Audemard and
+Simon showed that a very simple static measure on clauses can dramatically
+improves the performance of the publicly available version of MiniSat of that
+time.
 
-During search, each decision is often followed by a large number of unit
+During the search, each decision is often followed by a large number of unit
 propagations. For Audemard and Simon, all literals from the same level are
 called ``blocks'' of literals in the later. Intuitively, at the semantic level,
 there is a chance that they are linked with each other by direct dependencies.
 The idea is that a good learning schema should add explicit links between
 independent blocks of decision literals. If the solver stays in the same search
 space, such a clause will probably help reducing the number of next decision
-levels in the remaining computation.
+levels in the remaining computation~\cite{audemard2009predicting}.
 
 In Glucose, literals in a clause are partitioned with respect to their decision
 level. The \emph{Literals Blocks Distance (LBD)} of a clause is exactly the
 number of subsets of its literals, divided accordingly to the current
 assignment. From a practical point of view, the LBD score of each learnt clause
 is computed and stored when it is produced. This measure is static, even if
-updated during search (LBD score of a clause can be re-computed when the clause
+updated during the search (LBD score of a clause can be re-computed when the clause
 is used in unit-propagation). For instance, it is easy to understand the
 importance of learnt clauses of LBD 2: they only contain one variable of the
 last decision level, and, later, this variable will be ``glued'' with the block
 of literals propagated above, no matter the size of the clause. These clauses
-are very important during search, and they receive a special name: ``glue
+are very important during the search, and they receive a special name: ``glue
 clauses''.
 
-We can notice that these last decades showed an enormous progress in the
-performance of SAT solvers. We've seen these modern solvers increasingly leaving
+One can notice that these last decades showed an enormous progress in the
+performance of SAT solvers. We have seen these modern solvers increasingly leaving
 their mark as a general-purpose tool, which provides a ``black-box'' procedure
 that can often solve hard structured problems with over a million variables and
 several million constrains. 
+
+We believe that we can take advantage of the theoretical and practical efforts
+that have been directed in improving the efficiency of such solvers. As
+mentioned in Chapter~\ref{3_Resolution}, the \ksp\ prover loses in performance
+when there is a high number of propositional symbols in just one particular
+level. We already know that these sets are satisfiable, as the specific normal
+form used always generates satisfiable sets of propositional clauses. If we
+feed a SAT solver, like MiniSat or Glucose, with these satisfiable sets, each
+time a conflict is identified, we think that the learnt clauses may help \ksp\
+to reduce the time spend during saturation.

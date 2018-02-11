@@ -100,7 +100,7 @@ formula is unsatisfiable~\cite{satchapter}.
     Consider the set of clauses $\Clauses = \{(\neg p \lor q), (\neg p \lor r),
     (\neg r \lor q), (\neg q \lor r), \neg r, p\}$. Table~\ref{tab:res} shows an
     example of derivation of the empty clause for $\Clauses$, proving that this
-    set is unsatisfiable.
+    set is unsatisfiable. 
 
     \begin{table}%
     \caption{Derivation of $\Clauses$ in Example~\ref{ex:res}}
@@ -124,26 +124,25 @@ formula is unsatisfiable~\cite{satchapter}.
         \end{tabular}%
     \label{tab:res}
     \end{table}
+
+    Despite its simplicity, unrestricted resolution is hard to implement
+    efficiently due to the difficulty of finding good choices of clauses to
+    resolve~\cite{satchapter}. As one can see in this example, natural choices
+    typically imply huge storage requirements. Even with such a short set of
+    clauses (only 6 initially), the application of the resolution rule, without
+    any restriction, yields the generation of tautologies, Clauses 9 and 10, and
+    repeated clauses, Clauses 7 and 8. That is, useless information is generated
+    and stored until the contradiction can be found. 
 \end{example}
 
-Despite its simplicity, unrestricted resolution is hard to implement efficiently
-due to the difficulty of finding good choices of clauses to
-resolve~\cite{satchapter}. As one can see in Example~\ref{ex:res}, natural
-choices typically imply huge storage requirements. Even with such a short
-example (only 6 initial clauses), the application of the resolution rule,
-without any restriction, yields the generation of constants, Clauses 9 and 10, and repeated
-clauses, Clauses 7 and 8. That is, useless information is generated and stored
-until the contradiction can be found. 
-
-In this sense, Robinson established two principles, namely \emph{purity
-principle} and \emph{subsumption principle}, to discuss the question of
-developing efficient resolution systems. A refutation system based on resolution
-incorporating the first principle tends to derive a smaller number of clauses.
-On the other hand, the incorporation of the second principle helps to increase
-the rate of which a contradiction is derived~\cite{Robinson65}. Such principles
-are called \emph{search principles}.  A third search principle is presented in
-terms of replacement using the subsumption principle, named,
-\emph{self-subsumption}. 
+Robinson established two principles, namely \emph{purity principle} and
+\emph{subsumption principle}, to discuss the question of developing efficient
+resolution systems. A refutation system based on resolution incorporating the
+first principle tends to derive a smaller number of clauses.  On the other hand,
+the incorporation of the second principle helps to increase the rate of which a
+contradiction is derived~\cite{Robinson65}. Such principles are called
+\emph{search principles}.  A third search principle is presented in terms of
+replacement using the subsumption principle, named, \emph{self-subsumption}. 
 
 \begin{definition}
     If $\Clauses$ is any finite set of clauses, $\clause$ is a clause in
@@ -326,7 +325,7 @@ Clauses in \snf{$ml$} are defined as follows.
         \item Negative $a$-clause $\qquad ml : l' \then \pos{a} l$
     \end{enumerate}
     where $r, b \in \Nat, ml \in \Nat \cup \{*\}$, $l, l', l_b \in
-    \Literals$ and $\agent \in \Agents$.
+    \Literals$ and $\agent \in \Agents = \{1, \ldots, n\}$.
 \end{definition}
 
 Positive and negative $a$-clauses are together known as \emph{modal
@@ -369,8 +368,51 @@ disjunction of literals $D$, as \emph{initial clauses}.
 As the conjunction operator is commutative, associative and idempotent, we will
 commonly refer to a formula in \snf{$ml$} as a set of clauses.
 
-The next lemma, taken from~\cite{nalon2015modal}, shows that the transformation
-into \snf{$ml$} preserves satisfiability.
+\begin{example}%
+    \label{ex:snf}
+    Let $\formula$ be the formula $\nec{}(a \then b) \then (\nec{}a \then \nec{} b)$.
+    We show how to translate $\formula$ into its normal form, considering the local
+    satisfiability problem.
+
+    First, we anchor the NNF of $\formula$ to the initial state:
+    \begin{equation}
+        \label{eq:initial}
+        0 : t_0 \land \rho(0 : t_0 \then \pos{} (a \land \neg b) \lor \pos{} \neg a \lor \nec{} b)
+    \end{equation}
+
+    The Equation~\ref{eq:initial} is used to anchor the meaning of $\formula$ to
+    the initial state, where the formula is evaluated. The function $\rho$
+    proceeds with the translation, replacing complex formulae inside the
+    scope of the $\nec{}$ and $\pos{}$ operators, by means of renaming. 
+
+    So the translation proceeds as follows:
+    \begin{align*}
+        &\rho(0 : t_0 \then \pos{} (a \land \neg b) \lor \pos{} \neg a \lor \nec{} b) \\
+        &= \rho(0: t_0 \then \pos{} (a \land \neg b) \lor t_1) \land \rho(0: t_1 \then \pos{} \neg a \lor \nec{} b) \\
+        &= \rho(0: t_0 \then t_2 \lor t_1) \land \rho(0 : t_2 \then \pos {}(a \land \neg b)) \land \rho(0: t_1 \then \pos{} \neg a \lor t_3) \land \rho(0: t_3 \then \nec{} b) \\
+        &= (0: \neg t_0 \lor t_2 \lor t_1) \land (0 : t_2 \then \pos {}t_4) \land \rho(1 : t_4 \then a \land \neg b) \land \rho(0: t_1 \then t_5 \lor t_3) \land \\
+        &\ (0 : t_5 \then \pos{} \neg a) \land (0: t_3 \then \nec{} b) \\
+        &= (0: \neg t_0 \lor t_2 \lor t_1) \land (0 : t_2 \then \pos {}t_4)
+        \land \rho(1 : t_4 \then a) \land \rho(1 : t_4 \then \neg b) \land \\ 
+        &\ (0: \neg t_1 \lor t_5 \lor t_3) \land (0 : t_5 \then \pos{} \neg a) \land (0: t_3 \then \nec{} b) \\
+        &= (0: \neg t_0 \lor t_2 \lor t_1) \land (0 : t_2 \then \pos {}t_4)
+        \land (1 : \neg t_4 \lor a) \land (1 : \neg t_4 \lor \neg b) \land \\ 
+        &\ (0: \neg t_1 \lor t_5 \lor t_3) \land (0 : t_5 \then \pos{} \neg a) \land (0: t_3 \then \nec{} b) \\
+    \end{align*}
+
+    The translation leads us with seven clauses, two of them at the subsequent
+    modal level ($1 : \neg t_4 \lor a$ and $1 : \neg t_4 \lor \neg b$). Note
+    that, from the five clauses at the initial modal level, we have two literal
+    clauses ($0: \neg t_0 \lor t_2 \lor t_1$ and $0: \neg t_1 \lor t_5 \lor
+    t_3$), two negative ($0 : t_2 \then \pos {}t_4$ and $0 : t_5 \then \pos{}
+    \neg a$) and one positive clause ($0: t_3 \then \nec{} b$).
+\end{example}
+
+The set of clauses obtained by translating the formula $\formula$ into
+\snf{$ml$}, from Example~\ref{ex:snf}, must be locally satisfiable if, and only
+if, $\formula$ is locally satisfiable. The next lemma, taken
+from~\cite{nalon2015modal}, shows that the transformation into \snf{$ml$}
+preserves satisfiability.
 
 \begin{lemma}
     Let $\formula \in \wff$ be a formula and let $t$ be a propositional symbol
@@ -381,10 +423,6 @@ into \snf{$ml$} preserves satisfiability.
     \end{enumerate}
 \end{lemma}
 
-\begin{example}
-    
-\end{example}
-
 \subsection{Calculus}
 
 The motivation for the use of this labelled clausal normal form in a calculus is
@@ -393,7 +431,7 @@ labels and applied to smaller sets of clauses, reducing the number of
 unnecessary applications, and therefore improving the efficiency of the proof
 procedure~\cite{Nalon2016}. 
 
-The modal-layered resolution calculus, proposed by Nalon, Hustadt and Dixon
+The modal-layered resolution calculus, proposed by Nalon et.\ al.\
 in~\cite{nalon2015modal}, comprises a set of inference rules, given in
 Table~\ref{rules}, for dealing with propositional and modal reasoning. In the
 following, we denote by $\sigma$ the result of unifying the labels in the
@@ -414,23 +452,25 @@ clause occurs at the next modal level, $ml + 1$.
     that $D$ is in simplified form, $D \notin \Clauses_i$ and that $D$ is not a
     tautology. A \emph{local refutation} for $\Clauses$ is a finite derivation
     that contains the empty clause at the initial modal level, or $0:
-    false$~\cite{nalon2015modal}. Meanwhile, a \emph{global refutation} for
+    false$. Meanwhile, a \emph{global refutation} for
     $\Clauses$ is a finite derivation that contains the empty clause at any
-    modal level.
+    modal level~\cite{nalon2015modal}.
 \end{definition}
-
-The proofs for termination, soundness and completeness of this calculus can be
-found in~\cite{nalon2015modal}.
 
 \input{tex/rules}
 
 \begin{example}
-    
+    Consider the set of clauses in \snf{$ml$} of Example~\ref{ex:snf}, generated for
+    $\formula = \nec{}(a \then b) \then (\nec{} a \then \nec{}b)$. 
+
 \end{example}
 
 \begin{example}
     
 \end{example}
+
+The proofs for termination, soundness and completeness of this calculus can be
+found in~\cite{nalon2015modal}.
 
 \subsection{\ksp}
 In this section, we briefly introduce \ksp, the theorem prover presented
@@ -454,3 +494,11 @@ that provide a variety of strategies and optimizations, to get the best
 performance for a particular formula or class or formulae, it is important to
 choose the right strategy and optimizations. \ksp\ leaves this choice to the
 user. The same applies to the transformation to the layered normal form.
+
+\ksp\ performs well if the set of propositional symbols are uniformly distributed
+over the modal levels. However, when there is a high number of propositional
+symbols in just one particular level, the performance deteriorates. One reason
+is that the specific normal form we use always generates satisfiable sets of
+propositional clauses (clauses without modal operators). As resolution relies on
+saturation, this can be very time consuming. We are currently investigating the
+use of other tools in order to speed up the saturation process.

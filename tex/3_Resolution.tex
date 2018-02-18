@@ -400,7 +400,7 @@ commonly refer to a formula in \snf{$ml$} as a set of clauses.
         &\ (0: \neg t_1 \lor t_5 \lor t_3) \land (0 : t_5 \then \pos{} \neg a) \land (0: t_3 \then \nec{} b) \\
     \end{align*}
 
-    The translation leads us with eigth clauses, two of them at the subsequent
+    The translation leads us with eight clauses, two of them at the subsequent
     modal level ($1 : \neg t_4 \lor a$ and $1 : \neg t_4 \lor \neg b$). Note
     that, from the six clauses at the initial modal level, we have three literal
     clauses ($0: t_0$, $0: \neg t_0 \lor t_2 \lor t_1$ and $0: \neg t_1 \lor t_5 \lor
@@ -461,23 +461,25 @@ clause occurs at the next modal level, $ml + 1$.
 
 \begin{example}%
     \label{ex:calcsat}
-    Consider the set of clauses in \snf{$ml$} of Example~\ref{ex:snf}, generated for
-    $\formula = \nec{}(a \then b) \then (\nec{} a \then \nec{}b)$.
-    Table~\ref{tab:calcsat}.
+    Consider the set of clauses in \snf{$ml$} of Example~\ref{ex:snf}, generated
+    for $\formula = \nec{}(a \then b) \then (\nec{} a \then \nec{}b)$.
+
+    Table~\ref{tab:calcsat} shows a satisfiable derivation from the eight
+    clauses obtained by the transformation, once that no other rule can be
+    applied and no refutation is generated. Thus, proving that, indeed,
+    $\formula$ is a satisfiable formula, as expected.
 
     \begin{table}[h!]%
-        \caption{OI}
+        \caption{Satisfiability proof of the formula $\formula$ from Example~\ref{ex:snf}}
         \centering%
-        \begin{tabular}{rll}
-            1. & $0 : t_0$ & \\
-            2. & $0 : \neg t_0 \lor t_2 \lor t_1$ & \\ 
-            3. & $0 : \neg t_1 \lor t_5 \lor t_3$ & \\
-            4. & $0 : t_2 \then \pos {}t_4$       & \\
-            5. & $0 : t_5 \then \pos{} \neg a$    & \\
-            6. & $0 : t_3 \then \nec{} b$         & \\
-            7. & $1 : \neg t_4 \lor a$            & \\
-            8. & $1 : \neg t_4 \lor \neg b$       & \\
-            %9. & $0 : \neg t_0 \lor t_2 \lor t_5 \lor t_3$ & \\ 
+        \begin{tabular}{rlrll}
+            1. & $0 : t_0$                        & 8. & $1 : \neg t_4 \lor \neg b$   & \\
+            2. & $0 : \neg t_0 \lor t_2 \lor t_1$ & 9.  & $0 : t_2 \lor t_1$          & [LRES, 1, 2, $t_0$]\\ 
+            3. & $0 : \neg t_1 \lor t_5 \lor t_3$ & 10. & $0 : t_2 \lor t_5 \lor t_3$ & [LRES, 9, 3, $t_1$]\\ 
+            4. & $0 : t_2 \then \pos {}t_4$       & 11. & $0 : \neg t_2$              & [GEN1, 4, 7, 8, $t_4$]\\
+            5. & $0 : t_5 \then \pos{} \neg a$    & 12. & $0 : t_5 \lor t_3$          & [LRES, 10, 11, $t_2$]\\ 
+            6. & $0 : t_3 \then \nec{} b$         & 13. & $0 : \neg t_3$              & [GEN3, 6, 5, 8, $b, a$]\\
+            7. & $1 : \neg t_4 \lor a$            & 14. & $0 : t_5$                   & [LRES, 13, 14, $t_3$] \\
        \end{tabular}%
         \label{tab:calcsat}
     \end{table}

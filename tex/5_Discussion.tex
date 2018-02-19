@@ -88,36 +88,104 @@ a SAT solver to feed it with sets we already know are satisfiable.
 %% Comment on minisat and glucose
 \section{MiniSat vs Glucose}
 In the Section~\ref{sec:modern}, we gave an overview of two of the most
-efficient sat solvers known to this date: MiniSat and Glucose. Both solvers are
+efficient SAT solvers known to this date: MiniSat and Glucose. Both solvers are
 great candidates to be combined with \ksp. This section discuss these two
 implementations. 
 
 As we have seen, MiniSat is a minimalistic solver, that implements a variation
 of Chaff's Variable State Independent Decaying Sum. MiniSat stayed for a long as
-the state-of-the-art solver. Nevertheless, to these days, this solver keeps its
-importance as a tool used as an integrated part of a bigger system. In this
+the state-of-the-art solver. To these days, this solver keeps its
+importance as a tool used as an integrated part of a different system. In this
 sense, MiniSat's public interface and support for user defined constrains are
 key features.
 
-\begin{lstlisting}[frame=single, language=C++,morekeywords={var,Solver,Vec,lit},escapechar=\%,commentstyle=\color{gray}]
-class Solver _ Public interface
-var newVar()
-bool addClause(Vec%$\langle$%lit%$\rangle$% literals)
-bool add%\ldots%(%\ldots%)
-bool solve(Vec%$\langle$%lit%$\rangle$% assumptions)
+It is through MiniSat's interface, illustrated below, that a user application
+can specify and solve SAT problems~\cite{een2003extensible}. 
 
-Vec%$\langle$%bool%$\rangle$% model //If found, this vector has the model
+\begin{lstlisting}[frame=single, language=C++,morekeywords={var,Solver,Vec,lit},escapechar=\%,
+commentstyle=\color{gray}]
+class Solver _ Public interface
+%\indent%var %\textit{newVar}%()
+%\indent%bool %\textit{addClause}%(Vec%$\langle$%lit%$\rangle$% literals)
+%\indent%bool %\textit{add}\ldots(\ldots)%
+%\indent%bool %\textit{solve}%(Vec%$\langle$%lit%$\rangle$% assumptions)
+
+%\indent%Vec%$\langle$%bool%$\rangle$% model //If found, this vector has the model
 \end{lstlisting}
 
+The ``\textit{add}\ldots'' method should be understood as a place-holder for
+additional constraints implemented in an extension of MiniSat. For a standard
+SAT problem, the interface is used in the following way: Variables are
+introduced by calling ``\textit{newVar}''. From these variables, clauses are
+built and added by ``\textit{addClause}''.  Trivial conflicts, such as two unit
+clauses $\{p\}$ and $\{\neg p\}$ being added, can be detected by this method, in
+which case it returns $\cfalse$. If no such trivial conflict is detected during
+the clause insertion phase, ``\textit{solve}'' is called with an empty list of
+assumptions. It returns $\cfalse$ if the set of clauses added is unsatisfiable,
+and $\ctrue$ if it is satisfiable, in which case the model can be read from the
+public vector ``model''.  If the solver returns satisfiable, new constrains can
+be added repeatedly to the existing database and ``\textit{solve}'' may execute again. 
+
+The search procedure of a modern solver is usually the most complex part to
+implement~\cite{een2003extensible}. Heuristically, variables are picked and
+assigned values until the propagation detects a conflict. At this point, a
+conflict clause is construct and added to the clauses database. Variables are
+then unassigned by backtracking until the conflict clause becomes unit, from
+which point this unit clause is propagated and the search process continues.
+
+The learning procedure of MiniSat starts when a constraint becomes impossible to
+satisfy under the current assignment. The conflicting constraint is then asked
+for a set of variable assignments that make it contradictory. For a clause, this
+would be all the literals of the conflict clause. Each of the variable
+assignments returned must be either a decision or a implied variable. The
+propagation constraints are in turn asked for the set of variable assignments
+that forced the propagation to occur, continuing the analysis backwards. The
+procedure is repeated until some termination condition is fulfilled, resulting
+in a set of variable assignments that implies the conflict. A clause prohibiting
+that particular assignment is added to the clause database. This learnt clause
+must always, by construction, be implied by the original problem constraints.
+
+Learnt clauses serve two purposes: they drive the backtracking (as showed in
+Section~\ref{sec:cdcl}) and they speed up future conflicts by caching the reason
+for the conflict. 
+
+The main mechanism in which MiniSat runs is illustrated bellow.
+
+\begin{lstlisting}[frame=single, language=C++,morekeywords={var,loop,then,lit},escapechar=\%,
+commentstyle=\color{gray},deletekeywords={not}]
+loop
+%\indent%%\textit{propagate()}% /*propagate unit clauses*/
+%\indent%if not conflict then
+%\indent%%\indent%if all variables assigned then
+%\indent%%\indent%%\indent%return %\texttt{satisfiable}%
+%\indent%%\indent%else
+%\indent%%\indent%%\indent%%\textit{decide()}% /*pick a new variable to assign a value*/ 
+%\indent%else
+%\indent%%\indent\textit{analyze()}% /*analyze conflict and add a conflict clause*/
+%\indent\indent%if top-level conflict found then
+%\indent\indent\indent%return %\texttt{unsatisfiable}%
+%\indent\indent%else
+%\indent\indent\indent\textit{backtrack()}% /*undo assignments*/
+\end{lstlisting}
+
+To use this prover in our work, we would have to interact with the public
+interface of an instance of MiniSat, feed it with the clauses at a specific
+modal level, and capture the learnt clause (or clauses) returned by the
+procedure \textit{analyze\.()}, when a conflict is identified. Finally, we would
+add this clause to the set of propositional clauses of \ksp, at the
+corresponding modal level, hoping this new clause reduces the time \ksp~spends
+dealing with propositional logic. We believe that only a few changes on the
+source code of MiniSat would be necessary.
+
 On the other hand, we have Glucose, which dramatically improved the performance
-of the solver it was based on: MiniSat~\cite{glucose}, claiming to predict the
-quality of learn clauses. As we are interested in the clauses a solver will
-learn from the set we feed it, this may highlight Glucose from the other SAT
-solvers. However, even if we believe in this claim, we still have to
-investigate if the metrics in which they judge this so called quality, really
-apply to our problem. If Glucose speeds up the rate in which the satisfiability
-assignment of satisfiable sets of clauses is generated, this solver is a poor
-choice to us, once we already know that the set we will feed it, is satisfiable.
+of the solver that it was based on: MiniSat~\cite{glucose}, claiming to predict
+the quality of learn clauses. As we are interested in the clauses a solver will
+learn from the set we feed it, this may highlight Glucose from other SAT
+solvers. However, we still have to investigate if the metrics they use to judge
+this so called quality, really apply to our problem. If Glucose speeds up the
+rate in which the satisfiability assignment of satisfiable sets of clauses is
+generated, this solver may be a poor choice to us, once we already know that
+our set is satisfiable.
 
 The question we face is to go with the simplicity of MiniSat, or to believe in
 the Glucose developers' claim to predict the quality of learn clauses.

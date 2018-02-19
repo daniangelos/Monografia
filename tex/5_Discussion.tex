@@ -1,19 +1,68 @@
 %\section{}
-In Chapter~\ref{3_Resolution}, we've mentioned \ksp, the theorem prover
-presented in~\cite{Nalon2016}. \ksp~performs well if the set of propositional
-symbols are uniformly distributed over the modal levels. However, when there is
-a high number of propositional symbols in just one particular level, the
-performance deteriorates. One reason is that the specific normal form we use
-always generates satisfiable sets of propositional clauses (clauses
-without modal operators). As resolution relies on saturation, this can be very
-time consuming. We are currently investigating the use of other tools in order
-to speed up the saturation process. 
+Chapter~\ref{2_Language} introduced the propositional modal language which is
+the main focus of this work: \system{K}{n}{}. We have seen that modal logics
+extend classical logic by adding operators to express one or more of different
+modes of truth.  The key goal behind these operators is to allow the reasoning
+over relations among the abstractions we call possible worlds. Thus, the
+information holding at worlds accessible from the current one --- via an
+accessibility relation --- is available to examination.  
 
-As we saw in Chapter~\ref{4_Sat}, SAT solvers can often solve hard structured
+\system{K}{n}{} is the extension of the classical propositional logic plus the
+unary operators $\nec{a}$ and $\pos{a}$, whose reading are ``is necessary from
+the point of view of an agent $a$'' and ``is possible from the point of view of
+an agent $a$'', respectively. \system{K}{n}{}' syntax follow directly from the
+syntax of classical propositional language, also considering constructions with
+the modal operators as well-formed formulae.
+
+On the other hand, the semantics of \system{K}{n}{} is presented in terms of
+Kripke models. A set of worlds, their binary accessibility relations, labelled
+by an agent, and a valuation function define a structure known as a Kripke
+model. The satisfiability and validity of a formula depend on this
+structure.
+
+Finally, Chapter~\ref{2_Language} also presented what proof systems and normal
+forms are. Recall that we are interested in sound and complete calculus for
+\system{K}{n}{}, as well as normal form translations that preserve
+satisfiability of formulae.
+
+In Chapter~\ref{3_Resolution}, we mentioned \ksp, the theorem prover presented
+in~\cite{Nalon2016}. Earlier in the same chapter, we briefly introduced clausal
+resolution, the base of the modal-layered calculus behind \ksp. As we have seen,
+resolution is a simple and adaptable proof system for propositional classical
+logic, as it has only one inference rule that is thoroughly applied. This rule
+entails the well known resolution principle.
+
+The calculus presented for \system{K}{n}{} adds a few more rules, as it also has
+to handle with modal reasoning. This calculus makes use of labelled resolution
+in order to avoid unnecessary application of such rules. Thus, it requires a
+translation of formulae into a more expressive language, where labels are used
+to express semantic properties. Formulae in \system{K}{n}{} is, then, translated
+into a layered normal form called \snf{$ml$}. We showed that a formula in
+\snf{$ml$} is a conjunction of clauses where the modal level in which they occur
+is made explicit in the syntax. We referred the reader to where one can find the
+proofs of correctness of such calculus and translation.
+
+\ksp~implements this modal labelled resolution calculus. It was designed to
+support experimentation with different combinations of refinements.
+\ksp~performs well if the set of propositional symbols are uniformly distributed
+over the modal levels. However, when there is a high number of propositional
+symbols in just one particular level, the performance deteriorates. One reason
+is that the specific normal form used always generates satisfiable sets of
+propositional clauses (clauses without modal operators). As resolution relies on
+saturation, this can be very time consuming. 
+
+We saw in Chapter~\ref{4_Sat} that SAT solvers can often solve hard structured
 problems with over a million variables and several million
 constraints~\cite{satchapter}. We believe that we can take advantage of the
 theoretical and practical efforts that have been directed in improving the
 efficiency of such solvers. 
+
+Also in Chapter~\ref{4_Sat}, we discussed the role of clause learning in the
+successful widespread use of SAT\. We saw that the main idea behind
+Conflict-Driven Clause Learning solvers is to cache ``clauses of conflict'' as
+learned clauses, and to use this information to prune the search in a different
+part of the search space. The conflict analysis procedure consists of analyzing
+the most recent conflict and learning a new clause from it.
 
 Our implementation, which is work in progress, uses a SAT solver based on clause
 learning by conflict analysis. We feed this solver with the satisfiable sets of
@@ -27,14 +76,55 @@ SAT solver, but we believe that by carefully choosing the set of clauses and
 making use of the learnt clauses generated by the solver, we may be able to
 reduce the time \ksp~spends during saturation. 
 
-%% Comment on minisat and glucose
+%example of workflow
 
-\section{Related Work}
+%\section{Related Work}
 In~\cite{giunchiglia2002sat}, Giunchiglia et.\ al.\ present a set of SAT-based
 decision procedures for various classical modal logics. These procedures are
 built on top of a SAT solver. This differ from our work in the sense that we are
 not developing a system from an existing solver. Our implementation instantiates
 a SAT solver to feed it with sets we already know are satisfiable.
 
+%% Comment on minisat and glucose
+\section{MiniSat vs Glucose}
+In the Section~\ref{sec:modern}, we gave an overview of two of the most
+efficient sat solvers known to this date: MiniSat and Glucose. Both solvers are
+great candidates to be combined with \ksp. This section discuss these two
+implementations. 
+
+As we have seen, MiniSat is a minimalistic solver, that implements a variation
+of Chaff's Variable State Independent Decaying Sum. MiniSat stayed for a long as
+the state-of-the-art solver. Nevertheless, to these days, this solver keeps its
+importance as a tool used as an integrated part of a bigger system. In this
+sense, MiniSat's public interface and support for user defined constrains are
+key features.
+
+\begin{lstlisting}[frame=single, language=C++,morekeywords={var,Solver,Vec,lit},escapechar=\%,commentstyle=\color{gray}]
+class Solver _ Public interface
+var newVar()
+bool addClause(Vec%$\langle$%lit%$\rangle$% literals)
+bool add%\ldots%(%\ldots%)
+bool solve(Vec%$\langle$%lit%$\rangle$% assumptions)
+
+Vec%$\langle$%bool%$\rangle$% model //If found, this vector has the model
+\end{lstlisting}
+
+On the other hand, we have Glucose, which dramatically improved the performance
+of the solver it was based on: MiniSat~\cite{glucose}, claiming to predict the
+quality of learn clauses. As we are interested in the clauses a solver will
+learn from the set we feed it, this may highlight Glucose from the other SAT
+solvers. However, even if we believe in this claim, we still have to
+investigate if the metrics in which they judge this so called quality, really
+apply to our problem. If Glucose speeds up the rate in which the satisfiability
+assignment of satisfiable sets of clauses is generated, this solver is a poor
+choice to us, once we already know that the set we will feed it, is satisfiable.
+
+The question we face is to go with the simplicity of MiniSat, or to believe in
+the Glucose developers' claim to predict the quality of learn clauses.
+
 \section{Future Work}
 %%comment on evaluating the tests and the choices
+%automated integration
+%set option on ksp
+%selecting benchmarks
+%exhaustively testing

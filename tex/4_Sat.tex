@@ -648,10 +648,9 @@ levels in the remaining computation~\cite{audemard2009predicting}.
 In Glucose, literals in a clause are partitioned with respect to their decision
 level. The \emph{Literals Blocks Distance (LBD)} of a clause is exactly the
 number of subsets of its literals, divided accordingly to the current
-assignment. From a practical point of view, the LBD score of each learnt clause
-is computed and stored when it is produced. This measure is static, even if
-updated during the search (LBD score of a clause can be re-computed when the clause
-is used in unit-propagation). For instance, it is easy to understand the
+assignment. This measure is static, even if
+updated during the search (LBD score of a clause can be re-computed when the
+clause is used in unit-propagation). For instance, it is easy to understand the
 importance of learnt clauses of LBD 2: they only contain one variable of the
 last decision level, and, later, this variable will be ``glued'' with the block
 of literals propagated above, no matter the size of the clause. These clauses
@@ -659,10 +658,10 @@ are very important during the search, and they receive a special name: ``glue
 clauses''.
 
 One can notice that these last decades showed an enormous progress in the
-performance of SAT solvers. We have seen these modern solvers increasingly leaving
-their mark as a general-purpose tool, which provides a ``black-box'' procedure
-that can often solve hard structured problems with over a million variables and
-several million constrains. 
+performance of SAT solvers. We have seen these modern solvers increasingly
+leaving their mark as a general-purpose tool, which provides a ``black-box''
+procedure that can often solve hard structured problems with over a million
+variables and several million constrains. 
 
 We believe that we can take advantage of the theoretical and practical efforts
 that have been directed in improving the efficiency of such solvers. As

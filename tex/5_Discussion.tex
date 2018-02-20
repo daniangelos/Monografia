@@ -99,8 +99,9 @@ importance as a tool used as an integrated part of a different system. In this
 sense, MiniSat's public interface and support for user defined constrains are
 key features.
 
-It is through MiniSat's interface, illustrated below, that a user application
-can specify and solve SAT problems~\cite{een2003extensible}. 
+It is through MiniSat's interface, taken from~\cite{een2003extensible} and
+illustrated below, that a user application can specify and solve SAT
+problems~\cite{een2003extensible}. 
 
 \begin{lstlisting}[frame=single, language=C++,morekeywords={var,Solver,Vec,lit},escapechar=\%,
 commentstyle=\color{gray}]
@@ -149,7 +150,8 @@ Learnt clauses serve two purposes: they drive the backtracking (as showed in
 Section~\ref{sec:cdcl}) and they speed up future conflicts by caching the reason
 for the conflict. 
 
-The main mechanism in which MiniSat runs is illustrated bellow.
+The main mechanism in which MiniSat runs, taken from~\cite{een2003extensible},
+is illustrated bellow.
 
 \begin{lstlisting}[frame=single, language=C++,morekeywords={var,loop,then,lit},escapechar=\%,
 commentstyle=\color{gray},deletekeywords={not}]
@@ -174,7 +176,7 @@ modal level, and capture the learnt clause (or clauses) returned by the
 procedure \textit{analyze\.()}, when a conflict is identified. Finally, we would
 add this clause to the set of propositional clauses of \ksp, at the
 corresponding modal level, hoping this new clause reduces the time \ksp~spends
-dealing with propositional logic. We believe that only a few changes on the
+dealing with propositional logic. We believe that only a few changes in the
 source code of MiniSat would be necessary.
 
 On the other hand, we have Glucose, which dramatically improved the performance
@@ -182,10 +184,43 @@ of the solver that it was based on: MiniSat~\cite{glucose}, claiming to predict
 the quality of learn clauses. As we are interested in the clauses a solver will
 learn from the set we feed it, this may highlight Glucose from other SAT
 solvers. However, we still have to investigate if the metrics they use to judge
-this so called quality, really apply to our problem. If Glucose speeds up the
-rate in which the satisfiability assignment of satisfiable sets of clauses is
-generated, this solver may be a poor choice to us, once we already know that
-our set is satisfiable.
+this so called quality, really apply to our problem. 
+
+Most CDCL solvers present a decreasing of decision level on most industrial
+benchmarks~\cite{audemard2009predicting}. In their studies, Audemard and Simon
+observed a strong relationship between this overall decreasing and the
+performance of the solver~\cite{audemard2009predicting}. They refer as
+\emph{look-back justification} the estimated number of conflicts before reaching
+the first decision level, which concludes the search. One curious thing they
+noticed was that the look-back justification is also strong when the solver
+finds a solution, i.e., a satisfying assignment. This suggested that, on
+satisfiable instances of problems, the solver does not correctly guess a value
+for a literal, but learns that the opposite value directly leads to a
+contradiction. In this sense, they thought that finding the part of the learning
+schema that enforces the decreasing rate of decision levels, would lead to
+identifying good learnt clauses in advance.
+
+As we saw in Section~\ref{sec:modern}, during the search, each decision is often
+followed by a large number of unit propagations. All literals from the same
+level are called ``blocks'' of literals in the later, meaning that there is a
+chance that they are linked with each other by direct dependencies. The idea is
+that a good learning schema should add explicit links between independent blocks
+of decision literals. If the solver stays in the same search space, such a
+clause will probably help reducing the decision levels in the remaining
+computation.
+
+We also saw that Glucose partitions the literals in a clause with respect to
+their decision level. The LBD of a clause is exactly the number of subsets of
+its literals, divided accordingly to the current assignment. The LBD score of
+each learnt clause is computed and stored when it is produced. This measure is
+static, even if updated during the search (LBD score of a clause can be
+re-computed when the clause is used in unit-propagation). 
+
+For instance, it is easy to understand the importance of learnt clauses of LBD
+2: they only contain one variable of the last decision level, and, later, this
+variable will be ``glued'' with the block of literals propagated above, no
+matter the size of the clause. These clauses are very important during the
+search, and they receive a special name: ``glue clauses''.
 
 The question we face is to go with the simplicity of MiniSat, or to believe in
 the Glucose developers' claim to predict the quality of learn clauses.

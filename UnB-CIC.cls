@@ -885,7 +885,7 @@
     \postextual%
 	%\bibliographystyle{babunsrt}%
 	\bibliographystyle{abbrv}%
-    \bibliography{bib/logic,bib/algorithms,bib/preliminaries,bib/proof,bib/provers,bib/complexity}%
+    \bibliography{bib/logic,bib/algorithms,bib/preliminaries,bib/proof,bib/provers,bib/complexity,bib/knowledge}%
 }%
 
 

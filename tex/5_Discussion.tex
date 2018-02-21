@@ -1,4 +1,11 @@
 %\section{}
+%\section{Related Work}
+In~\cite{giunchiglia2002sat}, Giunchiglia et.\ al.\ present a set of SAT-based
+decision procedures for various classical modal logics. These procedures are
+built on top of a SAT solver. This differ from our work in the sense that we are
+not developing a system from an existing solver. Our implementation instantiates
+a SAT solver to feed it with sets we already know are satisfiable.
+
 Chapter~\ref{2_Language} introduced the propositional modal language which is
 the main focus of this work: \system{K}{n}{}. We have seen that modal logics
 extend classical logic by adding operators to express one or more of different
@@ -78,14 +85,6 @@ reduce the time \ksp~spends during saturation.
 
 %example of workflow
 
-%\section{Related Work}
-In~\cite{giunchiglia2002sat}, Giunchiglia et.\ al.\ present a set of SAT-based
-decision procedures for various classical modal logics. These procedures are
-built on top of a SAT solver. This differ from our work in the sense that we are
-not developing a system from an existing solver. Our implementation instantiates
-a SAT solver to feed it with sets we already know are satisfiable.
-
-%% Comment on minisat and glucose
 \section{MiniSat vs Glucose}
 In the Section~\ref{sec:modern}, we gave an overview of two of the most
 efficient SAT solvers known to this date: MiniSat and Glucose. Both solvers are
@@ -222,12 +221,23 @@ variable will be ``glued'' with the block of literals propagated above, no
 matter the size of the clause. These clauses are very important during the
 search, and they receive the special name ``glue clauses''.
 
-Experiment results lead Audemard and Simon to conclude that this strattegy
+Experiment results lead Audemard and Simon to conclude that this strategy
 works in practice. In most of the cases, the decreasing rate of decision
 levels was indeed accelarated.
 
-The question we face is to go with the simplicity of MiniSat, or to believe in
-the Glucose developers' claim to predict the quality of learn clauses.
+The question we face is to either go with the minimalism of MiniSat, or to
+bet on Glucose's robust search for a good learnt clause.
+
+We believe that the amount of work to combine \ksp~with either provers would be
+quite close. Since Glucose is based on MiniSat, they share a similar user
+interface. Other than that, both provers are written in C++, with a comparable
+amount of documentation. MiniSat has an experimental version in C, a language we
+are more familiar with, although, it is a distant version from the last public
+release of MiniSat, in 2010. Glucose's last release, on the other hand, is from
+2016. 
+
+Since it has a newer release, and as all the effort it makes to produce the
+so called good clauses seems to be worth it, Glucose is the chosen prover.
 
 \section{Future Work}
 %%comment on evaluating the tests and the choices

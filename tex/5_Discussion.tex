@@ -239,7 +239,39 @@ release of MiniSat, in 2010. Glucose's last release, on the other hand, is from
 Since it has a newer release, and as all the effort it makes to produce the
 so called good clauses seems to be worth it, Glucose is the chosen prover.
 
-\section{Future Work}
+\section{Future Work}%
+\label{sec:future}
+
+Our choice of going with Glucose is decisive, but flexible. Our studies, the
+overview of the solvers' code and modest tests lead us to it, so we are
+confident. However, if in practice we suspect that MiniSat (or any other
+solver), would actually work better for our purpose, we intend to revisit this
+decision. In the meantime, we will be moderately changing Glucose to best fit
+our necessities.
+
+Then, we will focus on integrating Glucose with \ksp. During the main
+loop of \ksp, numerous system calls may be made to execute an instance of our
+own slightly different version of Glucose, passing as parameters, propositional
+clauses at the specific modal level. This integration will be implemented as a
+choice to the user, as most strategies of \ksp, to maintain the experimentation
+support.
+
+When the implementation is working well, is time to define our hypothesis, the
+metrics for testing, and choose the benchmarks.
+
+Finally, we will put \ksp~through a large amount of test. Then all the results
+will be collected and critically analysed, aiming to evaluate the impact of
+combining Glucose with \ksp.
+
+Summing up:
+\begin{itemize}
+    \item Fit Glucose to our necessities while evaluating the choice of the solver,
+    \item Automated integration with \ksp,
+    \item Define metrics for tests and select benchmarks,
+    \item Exhaustively testing,
+    \item Collect and analyse data.
+\end{itemize}
+
 %%comment on evaluating the tests and the choices
 %automated integration
 %set option on ksp

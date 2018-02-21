@@ -484,7 +484,6 @@ $|\Prop_\formula|$.
     at decision levels less than the current decision level 5, i.e. $t = \false
     @3$ and $y = \false @ 2$, and by selecting the current decision assignment
     $p = \false @5$.
-\end{example}
 
 \begin{table}%
 \centering
@@ -497,22 +496,68 @@ $|\Prop_\formula|$.
         $\clause^{5,3} = \{ q, r, y\}$ & Resolve with $\alpha(s) = \clause_3$ \\
         $\clause^{5,4} = \{ p, t, r, y\}$ & Resolve with $\alpha(q) = \clause_1$ \\
         $\clause^{5,5} = \{ p, t, y\}$ & Resolve with $\alpha(r) = \clause_2$ \\
-        $\clause^{5,6} = \{ p, t, y\}$ & No more resolution operations given \\
+        $\clause^{5,6} = \clause_L = \{ p, t, y\}$ & No more resolution operations given \\
         \toprule
     \end{tabular}%   
 \label{tab:cl}
 \end{table}
+\end{example}
 
 Modern SAT solvers implement an additional refinement of
 Definition~\ref{def:clauselearning}, by further exploiting the structure of
 implied assignments induced by unit propagation, which is a key aspect of the
-clause learning procedure~\cite{silva1997grasp}. The idea of exploiting the
-structure induced by unit propagation was further exploited with \emph{Unit
-Implication Points} (UIPs). A UIP is a vertex $u$ in the implication graph, such
-that every path from the decision vertex $p$ to the conflict vertex $\contradiction$
-contains $u$, and it represents an alternative decision assignment at the
-current decision level that results in the same conflict. The main motivation
-for identifying UIPs is to reduce the size of learnt clauses. 
+clause learning procedure~\cite{silva1997grasp}. This aspect was further
+meticolously explored with \emph{Unit Implication Points} (UIPs). A UIP is a
+vertex $u$ in the implication graph, such that every path from a decision vertex
+$p$ to the conflict vertex $\contradiction$ contains $u$. It represents an
+alternative decision assignment at the current decision level that results in
+the same conflict. The main motivation for identifying UIPs is to reduce the
+size of learnt clauses. 
+
+In the implication graph, there is a UIP at decision level $d$ when the number
+of literals in $\clause_L$ assigned at decision level $d$ is
+1~\cite{cdclchapter}. 
+
+\begin{definition}
+    Let $\phi(\clause,d)$ be the number of literals in $\clause$ assigned at
+    decision level $d$:
+    \begin{equation}
+        \phi(\clause,d) = |\{l \in \clause\;|\;\delta(l) = d\}|
+    \end{equation}
+    As a result, the clause learning procedure with UIPs is given by:
+    \begin{equation}%
+        \label{eq:newclause_uip}
+        \clause^{d,i} = 
+        \left\{
+            \begin{array}{ll}
+                \alpha(\contradiction) & \text{if $i=0$}\\
+                \clause^{d,i-1} \res \alpha(l) & \text{if $i \neq 0 \land \xi(\clause^{d,i-1}, l, d) = 1$}\\
+                \clause^{d, i-1} & \text{if $i \neq 0 \land \phi(\clause^{d,i-1}, d) = 1$}
+            \end{array}
+        \right.
+    \end{equation}
+\end{definition}
+
+Equation~\ref{eq:newclause_uip} allows creating a clause containing literals
+from the learnt clause until the first UIP is identified. It is simple to
+develop equations for learning clauses for each additional UIP\@. However, this
+is unnecessary in practice, since the most effective CDCL SAT solvers stop
+clause learning when the first one is reached. Moreover, clause learning could
+potentially stop at any UIP\@. But, considering the largest decision level of the
+literals of the clause learnt at each UIP, the clause learnt at the first UIP is
+guaranteed to contain the smallest one. What follows from this is that choosing
+the clause learnt at the first UIP implies the highest backtrack jump in the
+search tree~\cite{cdclchapter}. 
+
+\begin{example}
+    Consider again Example~\ref{ex:graph2}. The default clause learning
+    procedure would learn the clause $(p \lor t \lor y)$ (see
+    Example~\ref{ex:cl}). However, by taking into consideration that $s =
+    \true @5$ is a UIP, applying the clause learning of
+    Equation~\ref{eq:newclause_uip} yields the resulting clause $(\neg s \lor
+    y)$. One advantage of this new clause is that it has a smaller size than the
+    clause learnt in the previous example.
+\end{example}
 
 Clause learning finds other applications besides the key efficiency improvements
 to CDCL SAT solvers. One example is \emph{clause reuse}. In a large number of
@@ -636,26 +681,36 @@ Simon showed that a very simple static measure on clauses can dramatically
 improves the performance of the publicly available version of MiniSat of that
 time.
 
+In their studies, Audemard and Simon observed a strong relationship between the
+overall decreasing of decision levels, presented by most solvers running on a
+industrial set of benchmarks, and the performance of
+them~\cite{audemard2009predicting}.  In this sense, they thought that finding
+the part of the learning schema that enforces this decreasing rate, could lead
+to identifying good learnt clauses in advance.
+
 During the search, each decision is often followed by a large number of unit
-propagations. For Audemard and Simon, all literals from the same level are
-called ``blocks'' of literals in the later. Intuitively, at the semantic level,
-there is a chance that they are linked with each other by direct dependencies.
-The idea is that a good learning schema should add explicit links between
-independent blocks of decision literals. If the solver stays in the same search
-space, such a clause will probably help reducing the number of next decision
-levels in the remaining computation~\cite{audemard2009predicting}.
+propagations. All literals from the same level are called ``blocks'' of literals
+in the later. Intuitively, at the semantic level, there is a chance that they
+are linked with each other by direct dependencies. The idea is that a good
+learning schema should add explicit links between independent blocks of decision
+literals. If the solver stays in the same search space, such a clause will
+probably help reducing the number of next decision levels in the remaining
+computation~\cite{audemard2009predicting}.
 
 In Glucose, literals in a clause are partitioned with respect to their decision
 level. The \emph{Literals Blocks Distance (LBD)} of a clause is exactly the
 number of subsets of its literals, divided accordingly to the current
-assignment. This measure is static, even if
-updated during the search (LBD score of a clause can be re-computed when the
-clause is used in unit-propagation). For instance, it is easy to understand the
-importance of learnt clauses of LBD 2: they only contain one variable of the
-last decision level, and, later, this variable will be ``glued'' with the block
-of literals propagated above, no matter the size of the clause. These clauses
-are very important during the search, and they receive a special name: ``glue
-clauses''.
+assignment. This measure is static, even if updated during the search (LBD score
+of a clause can be re-computed when the clause is used in unit-propagation). For
+instance, it is easy to understand the importance of learnt clauses of LBD 2:
+they only contain one variable of a previous decision level, and, later, this
+variable will be ``glued'' with the block of literals propagated above, no
+matter the size of the clause. These clauses are very important during the
+search, and they receive a special name: ``glue clauses''.
+
+Experiment results lead Audemard and Simon to conclude that this strattegy
+works in practice. In most of the cases, the decreasing rate of decision
+levels was indeed accelarated.
 
 One can notice that these last decades showed an enormous progress in the
 performance of SAT solvers. We have seen these modern solvers increasingly

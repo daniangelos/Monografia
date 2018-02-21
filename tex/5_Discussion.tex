@@ -217,10 +217,14 @@ static, even if updated during the search (LBD score of a clause can be
 re-computed when the clause is used in unit-propagation). 
 
 For instance, it is easy to understand the importance of learnt clauses of LBD
-2: they only contain one variable of the last decision level, and, later, this
+2: they only contain one variable of a previous decision level, and, later, this
 variable will be ``glued'' with the block of literals propagated above, no
 matter the size of the clause. These clauses are very important during the
-search, and they receive a special name: ``glue clauses''.
+search, and they receive the special name ``glue clauses''.
+
+Experiment results lead Audemard and Simon to conclude that this strattegy
+works in practice. In most of the cases, the decreasing rate of decision
+levels was indeed accelarated.
 
 The question we face is to go with the simplicity of MiniSat, or to believe in
 the Glucose developers' claim to predict the quality of learn clauses.

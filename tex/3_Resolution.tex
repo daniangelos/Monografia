@@ -37,10 +37,10 @@ literals. In this work we might abuse of set notation, writing $l \in \clause$,
 when $l$ is a literal of $\clause$, and $\clause_i \subseteq \clause_j$, when
 all literals in $\clause_i$ are also literals in $\clause_j$.
 
-A clause set is said to be \emph{saturated} when relevant information can not be
-generated, regardless of the rule that is applied~\cite{dershowitz2003abstract}.
-Saturation, up to redundancy, of the initial clause set is a quite useful
-criteria when we are thinking in terms of
+A clause set is said to be \emph{saturated} when relevant information can no
+longer be generated, regardless of the rule (or set of rules) that is
+applied~\cite{dershowitz2003abstract}. Saturation, up to redundancy, of the
+initial clause set is a quite useful criteria when we are thinking in terms of
 % cite reference to termination 
 termination proof and completeness proof~\cite{fitting} of a calculus.
 
@@ -127,12 +127,12 @@ formula is unsatisfiable~\cite{satchapter}.
 
     Despite its simplicity, unrestricted resolution is hard to implement
     efficiently due to the difficulty of finding good choices of clauses to
-    resolve~\cite{satchapter}. As one can see in this example, natural choices
-    typically imply huge storage requirements. Even with such a short set of
-    clauses (only 6 initially), the application of the resolution rule, without
-    any restriction, yields the generation of tautologies, Clauses 9 and 10, and
-    repeated clauses, Clauses 7 and 8. That is, useless information is generated
-    and stored until the contradiction can be found. 
+    resolve~\cite{satchapter}. As one can infer from this example, natural
+    choices typically imply huge storage requirements. Even with such a short
+    set of clauses (only 6 initially), the application of the resolution rule,
+    without any restriction, yields the generation of tautologies, Clauses 9 and
+    10, and repeated clauses, Clauses 7 and 8. That is, useless information is
+    generated and stored until the contradiction can be found. 
 \end{example}
 
 Robinson established two principles, namely \emph{purity principle} and
@@ -278,12 +278,11 @@ Details can be found in~\cite{Robinson65}.
 \label{sec:calculus}
 
 The calculus presented in this section requires a translation into a more
-expressive modal language, where labels are used to express semantic properties
-of a formula. This transformation is presented in Section~\ref{sec:snf}.
-Furthermore, this calculus makes use of labelled resolution in order to avoid
-unnecessary applications of the inference rules~\cite{nalon2015modal}. For
-instance, we do not apply resolution to clauses at different modal levels, since
-they are not, in fact, contradictory.
+expressive modal language, presented in Section~\ref{sec:snf}, where labels are
+used to express semantic properties of a formula. This calculus uses 
+labelled resolution in order to avoid unnecessary applications of the inference
+rules~\cite{nalon2015modal}. For instance, we do not apply resolution to clauses
+at different modal levels, since they are not, in fact, contradictory.
 
 \subsection{Separated Normal Form with Modal Levels}%
 \label{sec:snf}
@@ -345,8 +344,8 @@ Let $\formula$ be a formula and $t$ a propositional symbol not occurring in
 $\formula$. The translation of $\formula$ is given by $0 : t \land \rho(0 : t
 \then \formula)$ --- for global satisfiability, the translation is given by $* :
 t \land \rho(* : t \then \formula)$ --- where $\rho$ is the \emph{translation
-function} defined below. We refer to clauses of the form $0 : D$, for a
-disjunction of literals $D$, as \emph{initial clauses}. 
+function} defined below. We refer as \emph{initial clauses} the literals clauses
+at the modal level 0. 
 
 \begin{definition}
     The translation function $\rho : \wffml \longrightarrow \wffml$ is defined
@@ -403,15 +402,16 @@ commonly refer to a formula in \snf{$ml$} as a set of clauses.
     The translation leads us with eight clauses, two of them at the subsequent
     modal level ($1 : \neg t_4 \lor a$ and $1 : \neg t_4 \lor \neg b$). Note
     that, from the six clauses at the initial modal level, we have three literal
-    clauses ($0: t_0$, $0: \neg t_0 \lor t_2 \lor t_1$ and $0: \neg t_1 \lor t_5 \lor
-    t_3$), two negative ($0 : t_2 \then \pos {}t_4$ and $0 : t_5 \then \pos{}
-    \neg a$) and one positive clause ($0: t_3 \then \nec{} b$).
+    clauses ($0: t_0$, $0: \neg t_0 \lor t_2 \lor t_1$ and $0: \neg t_1 \lor t_5
+    \lor t_3$), known as the initial clauses, two negative ($0 : t_2 \then \pos
+    {}t_4$ and $0 : t_5 \then \pos{} \neg a$) and one positive clause ($0: t_3
+    \then \nec{} b$).
 \end{example}
 
 The set of clauses obtained by translating the formula $\formula$ into
 \snf{$ml$}, from Example~\ref{ex:snf}, must be locally satisfiable if, and only
 if, $\formula$ is locally satisfiable. The next lemma, taken
-from~\cite{nalon2015modal}, shows that the transformation into \snf{$ml$}
+from~\cite{nalon2015modal}, states that the transformation into \snf{$ml$}
 preserves satisfiability.
 
 \begin{lemma}
@@ -487,27 +487,27 @@ clause occurs at the next modal level, $ml + 1$.
 
 \begin{example}
     Adapted from~\cite{Areces:1999:PRR,nalon2015modal}. Consider the clauses in
-    Table~\ref{tab:calcunsat}. Clauses 1 and 2 state that a person likes either
-    dogs or cats. Clauses 3 and 4, only serving the purpose of illustration,
-    say that tall people have friends with blond hair. The particular situation
-    of Tom, denoted here by $t_0$, is given in the following clauses. Clauses
-    5, 6 and 7 say that Tom's friends are all dog people and tall. Clauses 8 and 9
-    say that a friend of one of Tom's friend is not blond. We want to prove that Tom
-    has a friend who is a cat person, which appears negated in Clause 10. The
-    refutation is given by Table~\ref{tab:calcunsat}. 
+    Table~\ref{tab:calcunsat}. Clauses 1 and 2 state that a dog is either
+    male or female. Clauses 3 and 4, only serving the purpose of illustration,
+    say that big dogs have puppies with brown fur. The particular situation
+    of Toto, denoted here by $t_0$, is given in the following clauses: Clauses
+    5, 6 and 7 say that Toto's puppies are all female and big. Clauses 8 and 9
+    say that a grandpuppy of Toto doesn't have brown fur. We want to prove that
+    Toto has a male puppy, which appears negated in Clause 10. The refutation is
+    given by Table~\ref{tab:calcunsat}. 
 
     \begin{table}[h!]%
         \caption{An example of refutation}
         \centering%
         \begin{tabular}{rlrll}
-            1.&$* : \mathit{dog} \lor \mathit{cat}$           & 9. &$1 : t_3 \then \pos{\f} \neg \mathit{blond}$        & \\
-            2.&$* : \neg \mathit{dog} \lor \neg \mathit{cat}$ & 10.&$0 : t_0 \then \nec{\f} \neg \mathit{cat}$          & \\ 
-            3.&$* : \neg \mathit{tall} \lor t_1$              & 11.&$1 : \neg t_1 \lor \neg t_3$                        & [MRES, 9, 4, $\mathit{blond}$]\\
-            4.&$* : t_1 \then \nec{\f} \mathit{blond}$        & 12.&$1 : \neg \mathit{tall} \lor \neg t_3$              & [LRES, 11, 3, $t_1$]\\
-            5.&$0 : t_0$                                      & 13.&$1 : \neg t_3 \lor \neg t_2 \lor \neg \mathit{dog}$ & [LRES, 7, 12, $\mathit{tall}$]\\
-            6.&$0 : t_0 \then \nec{\f} t_2$                   & 14.&$1 : \mathit{cat} \lor \neg t_2 \lor \neg t_3$      & [LRES, 13, 1, $\mathit{tall}$]\\
-            7.&$1 : \neg t_2 \lor \neg \mathit{dog} \lor \mathit{tall}$ & 15.&$0 : \neg t_0$ & [GEN1, 10, 6, 8, 14, $\mathit{cat},t_2,t_3$]\\
-            8.&$0 : t_0 \then \pos{\f} t_3$                   & 16.&$0 : \cfalse$ & [LRES, 15, 5, $t_0$]\\
+            1.&$* : \mathit{female} \lor \mathit{male}$           & 9. &$1 : t_3 \then \pos{p} \neg \mathit{brown}$            & \\
+            2.&$* : \neg \mathit{female} \lor \neg \mathit{male}$ & 10.&$0 : t_0 \then \nec{p} \neg \mathit{male}$             & \\ 
+            3.&$* : \neg \mathit{big} \lor t_1$                   & 11.&$1 : \neg t_1 \lor \neg t_3$                           & [MRES, 9, 4, $\mathit{brown}$]\\
+            4.&$* : t_1 \then \nec{p} \mathit{brown}$             & 12.&$1 : \neg \mathit{big} \lor \neg t_3$                  & [LRES, 11, 3, $t_1$]\\
+            5.&$0 : t_0$                                          & 13.&$1 : \neg t_3 \lor \neg t_2 \lor \neg \mathit{female}$ & [LRES, 7, 12, $\mathit{big}$]\\
+            6.&$0 : t_0 \then \nec{p} t_2$                        & 14.&$1 : \mathit{male} \lor \neg t_3 \lor \neg t_2$        & [LRES, 13, 1, $\mathit{big}$]\\
+            7.&$1 : \neg t_2 \lor \neg \mathit{female} \lor \mathit{big}$ & 15.&$0 : \neg t_0$ & [GEN1, 10, 6, 8, 14, $\mathit{male},t_2,t_3$]\\
+            8.&$0 : t_0 \then \pos{p} t_3$                        & 16.&$0 : \cfalse$ & [LRES, 15, 5, $t_0$]\\
        \end{tabular}%
         \label{tab:calcunsat}
     \end{table}
@@ -539,10 +539,10 @@ performance for a particular formula or class or formulae, it is important to
 choose the right strategy and optimizations. \ksp\ leaves this choice to the
 user. The same applies to the transformation to the layered normal form.
 
-\ksp\ performs well if the set of propositional symbols are uniformly distributed
-over the modal levels. However, when there is a high number of propositional
-symbols in just one particular level, the performance deteriorates. One reason
-is that the specific normal form we use always generates satisfiable sets of
-propositional clauses (clauses without modal operators). As resolution relies on
+\ksp\ performs well if the set of propositional symbols are uniformly
+distributed over the modal levels. However, when there is a high number of
+propositional symbols in just one particular level, the performance
+deteriorates. One reason is that the specific normal form we use always
+generates satisfiable sets of propositional clauses. As resolution relies on
 saturation, this can be very time consuming. We are currently investigating the
 use of other tools in order to speed up the saturation process.

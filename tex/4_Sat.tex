@@ -74,9 +74,9 @@ $\formula|_l$ and $\formula|_{\neg l}$. The step where such an $l$ is chosen is
 called a \emph{branching step} and $l$ is referred as a \emph{decision
 variable}. Setting the decision variable to $\true$ or $\false$ when making a
 recursive call is referred to as a \emph{decision}, which is associated with a
-\emph{decision level} which equals the recursion depth at that stage of the
-procedure. The end of each recursive call, which takes $\formula$ back to fewer
-assigned literals, is called the \emph{backtracking step}.
+\emph{decision level} and it is equal to the recursion depth at that stage of
+the procedure. The end of each recursive call, which takes $\formula$ back to
+fewer assigned literals, is called the \emph{backtracking step}.
 
 \begin{algorithm}[htp]%
     \SetAlgoLined\DontPrintSemicolon%
@@ -161,9 +161,9 @@ unassigned.
 A variable $p$ that is assigned a value as the result of unit propagation is
 said to be \emph{implied}.  The unit clause $\clause$ used for implying this
 value is said to be the antecedent of $p$, and it is denoted by $\alpha(p) =
-\clause$. For variables that are decision variables or are unassigned, the
-antecedent is $nil$. Hence, antecedents are only defined for variables whose
-value is implied by other assignments. 
+\clause$. For decision variables or unassigned variables, the antecedent is
+$nil$. Ergo, antecedents are only defined for variables whose value is implied
+by other assignments. 
 
 The decision level of a variable $p$, written $\delta(p)$, denotes the depth of
 the decision tree at which the variables is assigned a value in $\{\false,
@@ -199,8 +199,8 @@ of its variable, that is, $\delta(l) = \delta(p)$ if $l = p$ or $l = \neg p$.
     \clause_3$.
 \end{example}
 
-During the execution of a DPLL based SAT solver, assigned variables as well as
-their antecedents define a directed acyclic graph $I = (V_I, E_I)$ referred to
+During the execution of a DPLL based SAT solver, assigned variables, as well as
+their antecedents, define a directed acyclic graph $I = (V_I, E_I)$ referred to
 as the \emph{implication graph}~\cite{silva1997grasp}. The vertices of this
 graph are assigned variables or the special node $\contradiction$, which
 represents a contradiction, then $V_I \subseteq \Prop \cup \{\contradiction\}$.
@@ -211,13 +211,13 @@ If unit propagation yields an unsatisfied clause $\clause_i$, then the special
 vertex $\contradiction$ is used to represent it. In this case, the antecedent of
 $\contradiction$ is defined by $\alpha(\contradiction) = \clause_i$.
 
-The edges of $I$ are formally defined below. Let $z, z_1, z_2 \in V_I$ be
-vertices in $I$, in order to derive the conditions for existence of edges in
-$I$, a number of predicates need to be defined first. 
+The edges of $I$ are formally defined below.  
 
 \begin{definition}
-    The predicate $\gamma(z, \clause)$ takes value 1 if, and only if, $z$
-    is a literal in $\clause$, and is defined as follows:
+    Let $z, z_1, z_2 \in V_I$ be vertices in $I$, in order to derive the
+    conditions for existence of edges in $I$, a number of predicates need to be
+    defined first.  The predicate $\gamma(z, \clause)$ takes value 1 if, and
+    only if, $z$ is a literal in $\clause$, and is defined as follows:
     \begin{equation}
         \gamma(z, \clause) = 
         \left\{
@@ -267,15 +267,14 @@ $I$, a number of predicates need to be defined first.
             \end{array}
         \right.
     \end{equation}
+    Consequently, the set of edges $E_I$ of the implication graph $I$ is given by:
+    \begin{equation}
+        E_I = \{ (z_1, z_2) \mid \epsilon(z_1, z_2) = 1\}
+    \end{equation}
 \end{definition}
 
-Consequently, the set of edges $E_I$ of the implication graph $I$ is given by:
-\begin{equation}
-    E_I = \{ (z_1, z_2) \mid \epsilon(z_1, z_2) = 1\}
-\end{equation}
-
-Finally, observe that a labeling function for associating a clause with each
-edge can also be defined. 
+Observe that a labelling function for associating a clause with each edge can
+also be defined. 
 
 \begin{definition}
     Let $\iota : V_I \times V_I \longrightarrow \formula$ be a labeling
@@ -398,12 +397,12 @@ learnt clause.
 The decision levels associated with assigned variables define a partial order of
 the variables. Starting from a given unsatisfied clause (represented in the
 implication graph as the vertex $\contradiction$), the conflict analysis
-procedure visits variables implied at the most recent decision level, i.e., it
-visits the graph vertex which represents the variables assigned at the current
-largest decision level. Then, this procedure identifies the antecedents of these
-variables and keeps from the antecedents the literals assigned at decision
-levels less than the one being considered. This process is repeated until the
-most recent decision variable is visited.
+procedure visits variables implied at the most recent decision level. This means
+that this procedure will visit the graph vertex which represents the variables
+assigned at the current largest decision level. Then, it identifies the
+antecedents of these variables and keeps from the antecedents the literals
+assigned at decision levels less than the one being considered. This process is
+repeated until the most recent decision variable is visited.
 
 Let $d$ be the current decision level and $p$ the current decision variable such that
 $\delta(p) = d$. Let $\nu(p) = v$ be the decision assignment and let $\clause$
@@ -415,7 +414,7 @@ $\clause_i$ and $\clause_j$ containing contradictory literals, $\clause_i \res
 \clause_j$ denotes the application of the resolution rule as defined
 by~Equation~\ref{eq:res}. For instance, if $l$ and $\neg l$ are literals of
 $\clause_i$ and $\clause_j$, respectively, $\clause_i \res \clause_j$ contains
-all the literals of both clauses with the exception of $l$ and $\neg l$.
+all the literals of both clauses with the exception of the contradictory pair.
 
 The clause learning procedure used in SAT solvers can be defined by a sequence
 of selective resolution operations~\cite{journals/corr/abs-1107-0044,DAC00*675},
@@ -423,7 +422,6 @@ that at each step yields a \emph{new temporary clause}.
 
 \begin{definition}%
 \label{def:clauselearning}
-
     Let $l$ be a literal of a clause $\clause$, and $d$ the current decision
     level. Then, consider the following predicate:
 
@@ -461,11 +459,12 @@ is assigned a value at the current decision level $d$.
 
 Equation~\ref{eq:newclause} can be used for formalizing the clause learning
 procedure. The first condition, $i = 0$, denotes the initialization step given
-in $\contradiction$ in $I$, where all literals in the unsatisfied clause are added to
-the first intermediate clause. Afterwards, at each step $i$, a literal $l$
-assigned at the current decision level $d$ is selected and the intermediate
-clause $\clause^{d, i-1}$ is resolved with the antecedent of $l$. Therefore,
-$\clause^{d,i}$ denotes the clause obtained after $i$ resolution operations.
+after $\contradiction$ is generated in $I$, where all literals in the unsatisfied
+clause are added to the first intermediate clause. Afterwards, at each step $i$,
+a literal $l$ assigned at the current decision level $d$ is selected and the
+intermediate clause $\clause^{d, i-1}$ is resolved with the antecedent of $l$.
+Therefore, $\clause^{d,i}$ denotes the clause obtained after $i$ resolution
+operations.
 
 An iteration $i$ such that $\clause^{d, i} = \clause^{d, i-1}$ represents a
 reached \emph{fixed point}, and $\clause_L \stackrel{def} \clause^{d, i}$
@@ -507,12 +506,12 @@ Modern SAT solvers implement an additional refinement of
 Definition~\ref{def:clauselearning}, by further exploiting the structure of
 implied assignments induced by unit propagation, which is a key aspect of the
 clause learning procedure~\cite{silva1997grasp}. This aspect was further
-meticolously explored with \emph{Unit Implication Points} (UIPs). A UIP is a
-vertex $u$ in the implication graph, such that every path from a decision vertex
-$p$ to the conflict vertex $\contradiction$ contains $u$. It represents an
-alternative decision assignment at the current decision level that results in
-the same conflict. The main motivation for identifying UIPs is to reduce the
-size of learnt clauses. 
+explored with \emph{Unit Implication Points} (UIPs). A UIP is a vertex $u$ in
+the implication graph, such that every path from a decision vertex $p$ to the
+conflict vertex $\contradiction$ contains $u$. It represents an alternative
+decision assignment at the current decision level that results in the same
+conflict. The main motivation for identifying UIPs is to reduce the size of
+learnt clauses. 
 
 In the implication graph, there is a UIP at decision level $d$ when the number
 of literals in $\clause_L$ assigned at decision level $d$ is
@@ -541,7 +540,7 @@ of literals in $\clause_L$ assigned at decision level $d$ is
 Equation~\ref{eq:newclause_uip} allows creating a clause containing literals
 from the learnt clause until the first UIP is identified. It is simple to
 develop equations for learning clauses for each additional UIP\@. However, this
-is unnecessary in practice, since the most effective CDCL SAT solvers stop
+is unnecessary in practice, the most effective CDCL SAT solvers stop
 clause learning when the first one is reached. Moreover, clause learning could
 potentially stop at any UIP\@. But, considering the largest decision level of the
 literals of the clause learnt at each UIP, the clause learnt at the first UIP is
@@ -605,7 +604,7 @@ benchmarks~\cite{moskewicz2001chaff}.
 Alongside the optimized unit propagation, Chaff also designed a decision
 heuristic, which they called \emph{Variable State Independent Decaying Sum
 (VSIDS)}. Decision assignment consists of the determination of which new
-variable should be assigned a value in each decision level. There are several
+variable should be assigned a value, in each decision level. There are several
 strategies in the literature to try and solve this problem, but by that far,
 there was a lack of clear statistical evidence supporting one strategy over
 others, making difficult to determine what differs a good decision from a bad
@@ -666,7 +665,7 @@ In addition, MiniSat's implementation of VSIDS always keeps the variables in
 order by placing them in an array-based priority queue.
 
 In 2009, a MiniSat based solver appeared claiming to predict the quality of
-learn clauses. \emph{Glucose}~\cite{glucose} is based on a scoring scheme
+learnt clauses. \emph{Glucose}~\cite{glucose} is based on a scoring scheme
 introduced earlier on the same year by Audemard and Simon. The name of the
 solver is a contraction of the concept of ``glue clauses'', a particular kind of
 clauses that Glucose detects and preserves during the search.

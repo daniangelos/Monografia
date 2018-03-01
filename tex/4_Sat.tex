@@ -25,7 +25,7 @@ referred to as a \emph{unit clause}, and a clause with two literals, as a
 A propositional formula $\formula$ takes a value in the set $\{\false, \true\}$. In
 algorithms for SAT, variables can be \emph{assigned} a logical value in this same
 set and, alternatively, variables may also be \emph{unassigned}. A \emph{truth
-assignment} (or just an assignment) to a set of variables $\Prop$, is the valuation
+assignment} (or just an assignment) to the set of variables $\Prop$, is the valuation
 function $\pi$ as defined in Definition~\ref{def:semantics}. As in propositional
 logic we have a unit set as the set of possible worlds $\St$, we can omit this
 set from the function signature and just write $\pi : \Prop \longrightarrow
@@ -111,16 +111,16 @@ fewer assigned literals, is called the \emph{backtracking step}.
     \label{alg:dpll}
 \end{algorithm} 
 
-A partial assignment $\passignment$ is maintained during the search and output if the
-formula turns out to be satisfiable.  To increase efficiency, a key procedure in SAT
-solvers is the \emph{unit propagation}~\cite{cdclchapter}, where unit clauses
-are immediately set to $\true$ as outlined in Algorithm~\ref{alg:dpll}. In most
-implementations of DPLL, logical inferences can be derived with unit propagation.
-Thus, this procedure is used for identifying variables which must be assigned
-a specific value. If $\formula |_\passignment$ contains the empty clause, a
-\emph{conflict} condition is declared, the corresponding clause of $\formula$
-from which it came is said to be \emph{violated} by $\passignment$, and the algorithm
-backtracks. 
+A partial assignment $\passignment$ is maintained during the search and it is
+output if the formula turns out to be satisfiable.  To increase efficiency, a
+key procedure in SAT solvers is the \emph{unit propagation
+procesure}~\cite{cdclchapter}, where unit clauses are immediately set to $\true$
+as outlined in Algorithm~\ref{alg:dpll}. In most implementations of DPLL,
+logical inferences can be derived with unit propagation.  Thus, this procedure
+is used for identifying variables which must be assigned a specific value. If
+$\formula |_\passignment$ contains the empty clause, a \emph{conflict} condition
+is declared, the corresponding clause of $\formula$ from which it came is said
+to be \emph{violated} by $\passignment$, and the algorithm backtracks. 
 
 The literals whose negation do not appear in the formula, called
 \emph{pure literals}, are also set to $\true$ as a preprocessing step and, in
@@ -128,7 +128,7 @@ some implementations, during the simplification process after every branching.
 We mentioned pure literal elimination in Chapter~\ref{3_Resolution} as the
 purity principle proposed by Robinson.
 
-Variants of this algorithm form the most widely used family of complete
+Variants of the DPLL algorithm form the most widely used family of complete
 algorithms for the SAT problem. They are frequently implemented in an iterative
 manner, instead of using recursion, resulting in significantly reduced memory
 usage. The efficiency of state-of-the-art SAT solvers relies heavily on various
@@ -167,14 +167,14 @@ by other assignments.
 
 The decision level of a variable $p$, written $\delta(p)$, denotes the depth of
 the decision tree at which the variables is assigned a value in $\{\false,
-\true\}$ or $\delta(p) = -1$ if $p$ is still unassigned, therefore, $\delta(p)
-\in \{-1, 0, 1, \ldots, |\Prop_\formula|\}$, where $\Prop_\formula$ denotes the
-set of all variables that appear on the initial formula $\formula$. The decision
-level associated with variables used for branching steps is specified by the
-search process, and denotes the current depth of the \emph{decision stack}.
-Hence, a variable $p$ associated with a decision assignment is characterized by
-having $\alpha(p) = nil$ and $\delta(p) > 0$. More formally, the decision level
-of $p$ with antecedent $\clause$ is given by: 
+\true\}$ or $\delta(p) = -1$ if the value of $p$ is still unassigned, therefore,
+$\delta(p) \in \{-1, 0, 1, \ldots, |\Prop_\formula|\}$, where $\Prop_\formula$
+denotes the set of all variables that appear on the initial formula $\formula$.
+The decision level associated with variables used for branching steps is
+specified by the search process, and denotes the current depth of the
+\emph{decision stack}.  Hence, a variable $p$ associated with a decision
+assignment is characterized by having $\alpha(p) = nil$ and $\delta(p) > 0$.
+More formally, the decision level of $p$ with antecedent $\clause$ is given by: 
 \begin{equation}
     \delta(p) = \max(\{0\} \cup \{\delta(p') \mid p' \in \clause \land p' \neq p\})
 \end{equation}
@@ -207,9 +207,10 @@ represents a contradiction, then $V_I \subseteq \Prop \cup \{\contradiction\}$.
 The edges in the implication graph are obtained from the antecedent of each
 implied variable: if $\alpha(p) = \clause$ then there is a directed edge,
 labelled by $\clause$, from each variable in $\clause$, other than $p$, to $p$.
-If unit propagation yields an unsatisfied clause $\clause_i$, then the special
-vertex $\contradiction$ is used to represent it. In this case, the antecedent of
-$\contradiction$ is defined by $\alpha(\contradiction) = \clause_i$.
+If unit propagation yields an unsatisfiable clause $\clause_i$, then the special
+vertex $\contradiction$, for the empty clause, is used to represent it. In this
+case, the antecedent of $\contradiction$ is defined by $\alpha(\contradiction) =
+\clause_i$.
 
 The edges of $I$ are formally defined below.  
 
@@ -310,8 +311,8 @@ also be defined.
     Moreover, assume the current decision assignment $p = \false @5$.  Unit
     propagation yields the implied assignments $q = \false @2$, $r = \false @2$,
     $s = \true @2$, $u = \false @5$ and $x = false @5$. These last two
-    assignments generate a conflict once the clause $\clause_6$ becomes
-    unsatisfied. Therefore, the resulting implication graph has the conflict
+    assignments generate a conflict because the clause $\clause_6$ can not be
+    satisfied. Therefore, the resulting implication graph has the conflict
     vertex, as shown in Figure~\ref{fig:graph2}, with $\alpha(\contradiction) =
     \clause_6$.  Hence, this set of decision assignments does not satisfy
     $\psi$.
@@ -360,7 +361,7 @@ used:
 \begin{itemize}
     \item \texttt{UnitPropagate}:
         same as in DPLL, consists of the iterated application of the unit
-        propagation procedure. If an unsatisfied clause is identified, then a
+        propagation procedure. If an unsatisfiable clause is identified, then a
         conflict indication is returned.
     \item \texttt{AllVariablesAssigned}:
         tests whether all variables have been assigned, in which case the
@@ -379,11 +380,13 @@ Arguments to the auxiliary functions are assumed to be passed by reference.
 Hence, $\formula$ and $\passignment$ are supposed to be modified during execution
 of these functions.
 
-The typical CDCL algorithm shown does not account for a few often used
-techniques, as for instance, search restarts and deletion policies. Search
-restarts cause the algorithm to restart itself, but keeping the learnt clauses.
-Clause deletion policies are used to decide learnt clauses that can be deleted,
-which allows the memory usage of the SAT solver to be kept under control.
+The typical CDCL algorithm, shown in Algorithm~\ref{alg:cdcl}, does not account
+for a few often used techniques, as for instance, search restarts and deletion
+policies. Search restarts cause the algorithm to restart itself, but keeping the
+learnt clauses.  Clause deletion policies are used to decide learnt clauses that
+can be deleted, which allows the memory usage of the SAT solver to be kept under
+control. If interested, the reader can refer to~\cite{cdclchapter}
+and~\cite{satchapter} for more information about these techniques.
 
 \subsection{Conflict Analysis}%
 \label{sec:conflictanalysis}
@@ -394,9 +397,9 @@ learnt, and a backtracking decision level is computed. This procedure analyses
 the structure of unit propagation and decides which literals to include in the
 learnt clause.
 
-The decision levels associated with assigned variables define a partial order of
-the variables. Starting from a given unsatisfied clause (represented in the
-implication graph as the vertex $\contradiction$), the conflict analysis
+The decision levels associated with assigned variables define a partial order
+over the variables. Starting from a given unsatisfiable clause (represented in
+the implication graph as the vertex $\contradiction$), the conflict analysis
 procedure visits variables implied at the most recent decision level. This means
 that this procedure will visit the graph vertex which represents the variables
 assigned at the current largest decision level. Then, it identifies the
@@ -406,7 +409,7 @@ repeated until the most recent decision variable is visited.
 
 Let $d$ be the current decision level and $p$ the current decision variable such that
 $\delta(p) = d$. Let $\nu(p) = v$ be the decision assignment and let $\clause$
-be an unsatisfied clause identified with unit propagation. In terms of the
+be an unsatisfiable clause identified with unit propagation. In terms of the
 implication graph, the conflict vertex $\contradiction$ is such that
 $\alpha(\contradiction) = \clause$. Moreover, take $\res$ to represent the
 process of applying the resolution principle, that is, for two clauses
@@ -459,7 +462,8 @@ is assigned a value at the current decision level $d$.
 
 Equation~\ref{eq:newclause} can be used for formalizing the clause learning
 procedure. The first condition, $i = 0$, denotes the initialization step given
-after $\contradiction$ is generated in $I$, where all literals in the unsatisfied
+after $\contradiction$ is generated in $I$, where all literals in the
+unsatisfiable
 clause are added to the first intermediate clause. Afterwards, at each step $i$,
 a literal $l$ assigned at the current decision level $d$ is selected and the
 intermediate clause $\clause^{d, i-1}$ is resolved with the antecedent of $l$.
@@ -506,12 +510,12 @@ Modern SAT solvers implement an additional refinement of
 Definition~\ref{def:clauselearning}, by further exploiting the structure of
 implied assignments induced by unit propagation, which is a key aspect of the
 clause learning procedure~\cite{silva1997grasp}. This aspect was further
-explored with \emph{Unit Implication Points} (UIPs). A UIP is a vertex $u$ in
-the implication graph, such that every path from a decision vertex $p$ to the
-conflict vertex $\contradiction$ contains $u$. It represents an alternative
-decision assignment at the current decision level that results in the same
-conflict. The main motivation for identifying UIPs is to reduce the size of
-learnt clauses. 
+explored with \emph{Unit Implication Points} (UIPs)~\cite{silva1997grasp}. A UIP
+is a vertex $u$ in the implication graph, such that every path from a decision
+vertex $p$ to the conflict vertex $\contradiction$ contains $u$. It represents
+an alternative decision assignment at the current decision level that results in
+the same conflict. The main motivation for identifying UIPs is to reduce the
+size of learnt clauses. 
 
 In the implication graph, there is a UIP at decision level $d$ when the number
 of literals in $\clause_L$ assigned at decision level $d$ is
@@ -554,14 +558,14 @@ search tree~\cite{cdclchapter}.
     Example~\ref{ex:cl}). However, by taking into consideration that $s =
     \true @5$ is a UIP, applying the clause learning of
     Equation~\ref{eq:newclause_uip} yields the resulting clause $(\neg s \lor
-    y)$. One advantage of this new clause is that it has a smaller size than the
-    clause learnt in the previous example.
+    y)$. One advantage of this new clause is that it has one less literal than
+    the learnt clause from Example~\ref{ex:graph2}.
 \end{example}
 
 Clause learning finds other applications besides the key efficiency improvements
 to CDCL SAT solvers. One example is \emph{clause reuse}. In a large number of
 applications, clauses learnt from a given CNF formula can often be reused for
-related CNF formulae. The basic concept is to reuse constrains on the search
+related CNF formulae. The basic concept is to reuse constraints on the search
 space which are deduced while checking a previous instance, for speeding up the
 SAT checking of the current one~\cite{shtrichman2001pruning}.
 
@@ -594,12 +598,12 @@ In 2001, researches at Princeton University designed a complete solver, which
 they named Chaff~\cite{moskewicz2001chaff}, that, as most solvers, is an
 instance of the DPLL search procedure with a number of enhancements aiming in
 efficient applications.  Their algorithm was later used as base for numerous
-well-succeed implementations. Chaff achieved significant performance gains
-through careful engineering of all aspects of the search --- especially a
-particularly efficient implementation of unit propagation and a novel low
-overhead decision strategy.  It was able to obtain, at the time, one to two
-orders of magnitude performance improvement on difficult SAT
-benchmarks~\cite{moskewicz2001chaff}.
+well-succeed implementations (as~\cite{chrabakh2003gridsat} and~\cite{minisat},
+for instance). Chaff achieved significant performance gains through careful
+engineering of all aspects of the search --- especially a particularly efficient
+implementation of unit propagation and a novel low overhead decision strategy.
+It was able to obtain, at the time, one to two orders of magnitude performance
+improvement on difficult SAT benchmarks~\cite{moskewicz2001chaff}.
 
 Alongside the optimized unit propagation, Chaff also designed a decision
 heuristic, which they called \emph{Variable State Independent Decaying Sum
@@ -666,9 +670,10 @@ order by placing them in an array-based priority queue.
 
 In 2009, a MiniSat based solver appeared claiming to predict the quality of
 learnt clauses. \emph{Glucose}~\cite{glucose} is based on a scoring scheme
-introduced earlier on the same year by Audemard and Simon. The name of the
-solver is a contraction of the concept of ``glue clauses'', a particular kind of
-clauses that Glucose detects and preserves during the search.
+introduced earlier on the same year by Audemard and Simon
+in~\cite{audemard2009predicting}. The name of the solver is a contraction of the
+concept of ``glue clauses'', a particular kind of clauses that Glucose detects
+and preserves during the search.
 
 Detecting what is a good learnt clause in advance is a challenge, and of first
 importance: deleting useful clauses can be time dramatically, in
@@ -699,13 +704,13 @@ computation~\cite{audemard2009predicting}.
 In Glucose, literals in a clause are partitioned with respect to their decision
 level. The \emph{Literals Blocks Distance (LBD)} of a clause is exactly the
 number of subsets of its literals, divided accordingly to the current
-assignment. This measure is static, even if updated during the search (LBD score
-of a clause can be re-computed when the clause is used in unit-propagation). For
-instance, it is easy to understand the importance of learnt clauses of LBD 2:
-they only contain one variable of a previous decision level, and, later, this
-variable will be ``glued'' with the block of literals propagated above, no
-matter the size of the clause. These clauses are very important during the
-search, and they receive a special name: ``glue clauses''.
+assignment. This measure is static, even if updated during the search (the LBD
+score of a clause can be re-computed when the clause is used in
+unit-propagation). For instance, it is easy to understand the importance of
+learnt clauses of LBD 2: they only contain one variable of a previous decision
+level, and, later, this variable will be ``glued'' with the block of literals
+propagated above, no matter the size of the clause. These clauses are very
+important during the search, and they receive a special name: ``glue clauses''.
 
 Experiment results lead Audemard and Simon to conclude that this strattegy
 works in practice. In most of the cases, the decreasing rate of decision

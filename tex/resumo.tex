@@ -1,0 +1,26 @@
+Lógicas modais têm sido estudadas na Ciência da Computação por permitirem a
+caracterização de sistemas complexos, envolvendo noções tais como
+conhecimento e crença, por exemplo. Neste trabalho, focamos no provador dej
+teoremas para a lógica multimodal básica \system{K}{n}{}: \ksp, que implementa
+um método baseado em resolução clausal. Cláusulas são rotuladas pelo nível modal
+em que ocorrem, auxiliando a restringir aplicações desnecessárias das regras de
+inferência.
+\ksp\ apresenta uma boa performance se o conjunto de símbolos proposicionais
+estão bem distribuídos entre os níveis modais. Entretanto, quando há um grande
+número de variáveis em um nível específico, o tempo de execução aumenta. Uma das
+razões é que a transformação para a forma normal utilizada sempre gera conjuntos
+satisfatíveis de cláusulas proposicionais. Isto pode acarretar em uma
+significativa perda de performance, uma vez que resolução é baseada em
+saturação. Atualmente, estamos investigando o uso de provadores para o problema
+de Satisfatibilidade Booleana, ou SAT \emph{solvers}, uma vez que já se
+mostraram capazes de resolver eficientemente problemas difíceis. Acreditamos
+poder utilizar as técnicas desenvolvidas depois de décadas de esforços práticos
+e teóricos direcionados a estes provadores.
+Nossa implementação, que é um trabalho em andamento, utiliza um SAT
+\emph{solver} baseado em aprendizado de cláusula através de análise de conflito.
+Damos como entrada a este solver, o conjunto satisfatível de cláusulas gerado
+pela transformação e, toda vez que um conflito é identificado, uma ou mais
+cláusulas são aprendidas pelo procedimento de análise de conflito. Acreditamos
+que, cuidadosamente escolhendo o conjunto de cláusulas e usando as cláusulas
+aprendidas geradas pelo \emph{solver}, podemos reduzir o tempo que \ksp\ gasta
+durante a saturação.

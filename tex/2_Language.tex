@@ -216,9 +216,9 @@ $\Model = (\St, \st_0, R_1, \ldots, R_n, \pi)$ is said to \emph{globally satisfy
 a formula $\formula$, denoted $\Model \models_G \formula$, if for all $\st \in
 \St$, we have $\sat{\Model}{\st}{\formula}$. A formula $\formula$ is said to be
 \emph{globally satisfiable} if there is a model $\Model$ such that $\Model$
-globally satisfies $\formula$.  We say that a set $\mathcal{F}$ of formulae is
-locally satisfiable if there is a model that locally satisfies every $\formula
-\in \mathcal{F}$. Global satisfiability of sets is defined analogously. A
+globally satisfies $\formula$. We say that a set $\mathcal{F}$ of formulae is
+locally satisfiable if the conjunction of every $\formula \in \mathcal{F}$ is
+locally satisfiable. Global satisfiability of sets is defined analogously. A
 formula is said to be \emph{valid} if it is locally satisfiable in all models.
 
 \begin{example}
@@ -329,7 +329,7 @@ determining the existence of a model in which a formula is locally satisfied,
 while the \emph{global satisfiability problem} corresponds to determining the
 existence of a model in which a formula is globally satisfied. These problems
 are proven to be PSPACE-complete~\cite{Spaan:coml}, for local satisfiability,
-and EXPTIME, for global satisfiability\cite{Spaan:coml}.
+and EXPTIME, for global satisfiability~\cite{Spaan:coml}.
 
 The global satisfiability problem for a modal logic is equivalent to the local
 satisfiability problem of the logic obtained by adding the universal modality,
@@ -350,14 +350,15 @@ and only if, $\Model^* \models_L \nec{*} \formula$.
 %% LOGICAL CONSEQUENCE %%
 
 The \emph{proof} of theorems, or the \emph{deduction} of consequences from
-assumptions, in mathematics, typically proceeds by putting sentences in a
-list~\cite{kleene2002mathematical}. The assumptions are called \emph{axioms}.
+assumptions, in mathematics, typically is characterized by an argument that
+follows from a (possibly empty) set of premises~\cite{kleene2002mathematical}.
+These premises can be derived from a specific theory.
 
-Formally, a proof is a finite object constructed according to a fixed set of syntactic
-rules that refer only to the structure of formulae and not to their intended
-meaning~\cite{fitting}. The set of syntactic rules that define proofs are said
-to specify a \emph{proof system} or \emph{calculus}. These rules allow the
-derivation of formulae from sets of formulae through strict symbol
+Formally, a proof is a finite object constructed according to a fixed set of
+syntactic rules that refer only to the structure of formulae and not to their
+intended meaning~\cite{fitting}. The set of syntactic rules that define proofs
+are said to specify a \emph{proof system} or \emph{calculus}. These rules allow
+the derivation of formulae from sets of formulae through strict symbol
 manipulation~\cite{resolutionbased}. A proof system is \emph{sound} for a
 particular logic if any formula that has a proof is a valid formula of the
 logic, and it is \emph{complete} for a particular logic if any valid formula has
@@ -366,18 +367,16 @@ produce proofs that formulae are valid.
 
 A sound and complete calculus for \system{K}{n}{} finds a proof for a formula of
 this logic if, and only if, this formula is valid. A proof for this
-logic is defined below.
-
-\begin{definition}%
-\label{def:kproof}
-    A \emph{\system{K}{n}{}-proof}, or a \emph{proof for \system{K}{n}{}}, is a
-    finite sequence of formulae, each of which is an axiom, or follows from one
-    or more earlier items in the sequence by applying a syntactic rule. The
-    axioms for \system{K}{n}{} are all instances of propositional tautologies
-    plus the axiom  \system{K}{}{}: $\nec{a}(\varphi \then \psi) \then (\nec{a}
-    \varphi \then \nec{a} \psi)$~\cite{blackburn2002modal}.
-\end{definition}
-
+logic is defined in Section~\ref{sec:calc}.
+%\begin{definition}%
+%\label{def:kproof}
+    %A \emph{\system{K}{n}{}-proof}, or a \emph{proof for \system{K}{n}{}}, is a
+    %finite sequence of formulae, each of which is an axiom, or follows from one
+    %or more earlier items in the sequence by applying a syntactic rule. The
+    %axioms for \system{K}{n}{} are all instances of propositional tautologies
+    %plus the axiom  \system{K}{}{}: $\nec{a}(\varphi \then \psi) \then (\nec{a}
+    %\varphi \then \nec{a} \psi)$~\cite{blackburn2002modal}.
+%\end{definition}
 Propositional tautologies may contain modalities, for example, $\pos{}p \lor
 \neg \pos{} q$ is a tautology. As tautologies are valid, they are a safe
 starting point for modal reasoning. 
@@ -385,21 +384,21 @@ starting point for modal reasoning.
 There are many kinds of proof systems. They can be loosely divide into two broad
 categories: \emph{synthetic} and \emph{analytic}~\cite{fitting}. An analytic
 proof system decomposes the formula being proved into simpler and simpler parts.
-A synthetic proof system, on the other hand, builds its way up to the formula being
-proved. Analytic proof systems tend to be easier to use, since the field of
-play is sharply limited to the formula being proved~\cite{fitting}. 
+A synthetic proof system, on the other hand, builds its way up to the formula
+being proved. Analytic proof systems tend to be easier to use, since the field
+of play is sharply limited to the formula being proved~\cite{fitting}. 
 
-The most common example of synthetic calculus is an \emph{axiomatic system}. Certain
-formulae are taken as axioms. A proof starts with these axioms and, using
-inference rules that produce new formulae, builds up a sequence that finally
-ends with the formula being proved.
+The most common example of synthetic calculus is an \emph{axiomatic system}.
+Certain formulae are taken as axioms. A proof starts with these axioms and,
+using inference rules that produce new formulae, builds up a sequence that
+finally ends with the formula being proved.
 
-\emph{Tableau systems} are one of the more common analytic proof systems.
-These are \emph{refutational systems}, i.e., to prove a formula, we begin by
-negating it, then analysing the entailment of doing so. If it is the case that
-the consequences turn out to be impossible, we conclude that the original
-formula has been proved~\cite{fitting}. There are many varieties of tableaux,
-and the interesting thing about these systems is that, usually, proofs can be
+\emph{Tableau systems} are one of the more common analytic proof systems.  These
+are \emph{refutational systems}, i.e., to prove a formula, we begin by negating
+it, then analysing the entailment of doing so. If it is the case that the
+consequences turn out to be impossible, we conclude that the original formula
+has been proved~\cite{fitting}. There are many varieties of tableaux, and the
+interesting thing about these systems is that, usually, proofs can be
 represented by trees of formulae, instead of sequences as mentioned above.
 
 Another way of categorizing proof systems involves the chaining in which the
@@ -438,10 +437,6 @@ also is. Therefore, the transformation rules defined for a specific normal form
 used in a proof system for a logic must preserve satisfiability, that is, the
 formula obtained by applying a transformation rule is satisfiable if, and only
 if, the original one also is. 
-
-Normal forms may help calculi to provide constructive proofs of many standard
-results~\cite{fine1975}, that is, a proof that demonstrates the existence of a
-mathematical object by providing a method for creating this object. 
 
 Formulae translated into a normal form have a specific, normalized structure,
 possibly resulting in less operators to handle with, which may implicate into a

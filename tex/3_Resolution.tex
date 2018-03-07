@@ -3,16 +3,17 @@ Resolution appeared in the early 1960's through investigations on performance
 improvements of refutational systems based on the \emph{Herbrand's Theorem}, which
 allows a kind of reduction of first-order logic to propositional
 logic~\cite{casanova}. In particular, Prawitz' studies of such systems brought
-back the concept of unification. J.\ A.\ Robinson incorporated this concept on a
+back the concept of unification. J.\@ A.\@ Robinson incorporated this concept on a
 refutational system, creating what was later known as
 resolution~\cite{Robinson65}. 
 
 Resolution relies on saturation. A saturation-based theorem proving is usually
 characterized by a process in which new formulae are derived from given ones by
-thorough application of specified inference rules. This process keeps producing
-information until no new information can be generated. In addition, the current
-set of formulae is analyzed to identify the most promising inference rules to be
-applied next and to eliminate redundancies~\cite{bachmair2001resolution}.
+thorough application of specified inference rules. The key aspect behind this
+process is the generation of information, until no new information can be
+produced. In addition, the current set of formulae is analysed to identify the
+most promising inference rules to be applied next and to eliminate
+redundancies~\cite{bachmair2001resolution}.
 
 Numerous resolution systems for propositional logic have been proposed in the
 literature~\cite{bachmair2001resolution}. The standard system has only one
@@ -59,16 +60,18 @@ set~\cite{bachmair2001resolution}. The contradiction implies that $\neg
 
 Resolution-based provers are widely implemented and
 tested~\cite{bachmair2001resolution}. Besides reliable implementations, we can
-also profit from several complete strategies, as, for instance, \emph{tree-like
-resolution}~\cite{satchapter}, \emph{ordered resolution} and
-\emph{selection-based resolution}~\cite{de2000resolution}, which can be
-extended to deal with modal formulae~\cite{journals/jal/NalonD07}. Such provers
-for multimodal logics require pruning of the search space for a proof in order
-to deal with the inherent intractability of the satisfiability problem for such
-logics.  In~\cite{nalon2015modal}, Nalon et.\ al.\ present a clausal
-modal-layered resolution calculus for \system{K}{n}{}, which divides the clause
-set according to the modal layer at which each clause occurs. This calculus is
-introduced in Section~\ref{sec:calculus}.
+also profit from several complete strategies, as, for instance, \emph{linear
+resolution}~\cite{casanova}, \emph{set of support
+strategy}~\cite{wos1965efficiency}, \emph{ordered resolution} and
+\emph{selection-based resolution}~\cite{de2000resolution}, or \emph{tree-like
+resolution}~\cite{satchapter}. Complete strategies can be extended to deal with
+modal formulae~\cite{journals/jal/NalonD07}. Provers for multimodal logics
+require pruning of the search space for a proof in order to deal with the
+inherent intractability of the satisfiability problem for such logics.
+In~\cite{nalon2015modal}, Nalon et.\ al.\ present a clausal modal-layered
+resolution calculus for \system{K}{n}{}, which divides the clause set according
+to the modal layer at which each clause occurs. This calculus is introduced in
+Section~\ref{sec:calculus}.
 
 \section{Clausal Resolution}
 
@@ -87,12 +90,13 @@ Equation~\ref{eq:res}, entails the \emph{resolution principle}, namely:
 contain a complementary pair of literals, one may infer a resolvent of}
 $\clause_i$ \emph{and} $\clause_j$~\cite{Robinson65}.   
 
-In his paper, Robinson presents a formalization of first-order logic, designed to
-be used as the basic theoretical instrument of the proposed computer
-theorem-proving program. For the purpose of this work, we are only interested in
-the calculus for propositional logic. Therefore, we will neither discuss the theory
-behind the Herbrand's Theorem nor the definition of the unification procedure,
-but, if curious, the reader can refer to~\cite{Robinson65} for more details.
+In his paper, Robinson presents a formalization of the calculus for first-order
+logic, designed to be used as the basic theoretical instrument of the proposed
+computer theorem-proving program. For the purpose of this work, we are only
+interested in the calculus for propositional logic. Therefore, we will neither
+discuss the theory behind the Herbrand's Theorem nor the definition of the
+unification procedure, but, if curious, the reader can refer
+to~\cite{Robinson65} for more details.
 
 In the sense of this last remark, the only representational formalism needed is
 propositional logic. As resolution has only the RES rule, shown in
@@ -276,10 +280,13 @@ longer applicable.
 \label{ex:principles}
 \end{example}
 
-There are further principles of the same general sort, possibly less simple than
-the ones presented earlier, which Robinson considers to be merely a brief view
-of the possible approaches to the efficiency problem of resolution systems.
-Details can be found in~\cite{Robinson65}.
+Further on this work, we see a practical application of these principles, but we
+refer as pure literal elimination and unit propagation, the purity principle and
+the replacement principle, respectively. There are further principles of the
+same general sort, possibly less simple than the ones presented earlier, which
+Robinson considers to be merely a brief view of the possible approaches to the
+efficiency problem of resolution systems. Details can be found
+in~\cite{Robinson65}.
 
 \section{Modal-Layered Resolution Calculus for \system{K}{n}{}}%
 \label{sec:calculus}
@@ -430,7 +437,8 @@ preserves satisfiability.
     \end{enumerate}
 \end{lemma}
 
-\subsection{Calculus}
+\subsection{Calculus}%
+\label{sec:calc}
 
 The motivation for the use of this labelled clausal normal form in a calculus is
 that inference rules can then be guided by the semantic information given by the
@@ -450,7 +458,8 @@ unification of their labels is defined (where $* - 1 = *$). Note that for GEN1
 and GEN3, if the modal clauses occur at the modal level $ml$, then the literal
 clause occurs at the next modal level, $ml + 1$.
 
-\begin{definition}
+\begin{definition}%
+    \label{def:proof}
     Let $\Clauses$ be a set of clauses in \snf{$ml$}. A \emph{derivation} from
     $\Clauses$ is a sequence of sets $\Clauses_0, \Clauses_1, \ldots$ where
     $\Clauses_0 = \Clauses$ and, for each $i > 0$, $\Clauses_{i+1} = \Clauses_i
@@ -554,4 +563,8 @@ always generates satisfiable sets of propositional clauses. As resolution relies
 on saturation, this can be very time consuming. We are currently investigating
 the use of other tools in order to speed up the saturation process.
 
-Next chapter presents 
+In the next chapter we present some clever techniques proposed to deal with
+propositional reasoning. These techniques lead to efficient implementations of
+SAT solvers, which determine whether a propositional formula is satisfiable or
+not. We believe that this kind of solver may be useful to speed up the time
+\ksp\ spends dealing with propositional logic.

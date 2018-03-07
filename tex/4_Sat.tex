@@ -144,13 +144,14 @@ the reader to~\cite{satchapter} for more details about other search strategies.
 
 One of the main reasons for the widespread use of SAT in many applications is
 that solvers based on clause learning are effective in
-practice~\cite{satchapter}. The main idea behind CDCL is to cache ``causes of
-conflict'' as learned clauses, and utilize this information to prune the search
-in a different part of the search space encountered later. Since their inception
-in the mid-90s, \emph{Conflict-Driven Clause Learning} (CDCL) SAT solvers have
-been applied, in many cases with remarkable success, to a number of practical
-applications~\cite{cdclchapter}. The organization of CDCL SAT solvers is
-primarily inspired by the DPLL procedure.
+practice~\cite{satchapter}. The main idea behind \emph{Conflict-Driven Clause
+Learning} (CDCL) is to cache ``causes of conflict'' as learned clauses, and
+utilize this information to prune the search in a different part of the search
+space encountered later. Since their inception in the mid-90s, CDCL SAT solvers
+have been applied, in many cases with remarkable success, to a number of
+practical applications~\cite{cdclchapter}. The organization of CDCL SAT solvers
+is primarily inspired by the DPLL procedure. The notation used in this section
+is based on the one in~\cite{cdclchapter}.
 
 In CDCL SAT solvers, each variable $p$ is characterized by a number of
 properties. Mainly, we need to maintain its \emph{value}, its \emph{antecedent}
@@ -369,7 +370,7 @@ used:
     \item \texttt{PickBranckingVariable}:
         consists of selecting a variable to assign and deciding its value.
     \item \texttt{ConflictAnalysis}:
-        consists of analyzing the most recent conflict and learning a new clause
+        consists of analysing the most recent conflict and learning a new clause
         from the conflict. The organization of this procedure is described in
         Section~\ref{sec:conflictanalysis}.
     \item \texttt{Backtrack}:
@@ -676,7 +677,7 @@ concept of ``glue clauses'', a particular kind of clauses that Glucose detects
 and preserves during the search.
 
 Detecting what is a good learnt clause in advance is a challenge, and of first
-importance: deleting useful clauses can be time dramatically, in
+importance: deleting useful clauses can increase time dramatically, in
 practice~\cite{glucose}. To prevent this, solvers have to let the maximum
 number of clauses grow exponentially. On very hard benchmarks, CDCL solvers face
 memory problems and, even if they do not, their greedy learning scheme

@@ -1,0 +1,433 @@
+\documentclass[10pt]{beamer}
+%
+% Choose how your presentation looks.
+%
+% For more themes, color themes and font themes, see:
+% http://deic.uab.es/~iblanes/beamer_gallery/index_by_theme.html
+%
+\mode<presentation>
+{%
+  \usetheme{metropolis}      % or try Darmstadt, Madrid, Warsaw, ...
+  \usecolortheme{rose} % or try albatross, beaver, crane, ...
+  \usefonttheme[onlymath]{serif}
+  \setbeamertemplate{navigation symbols}{}
+  \setbeamertemplate{caption}[numbered]
+} 
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[linesnumbered,ruled]{algorithm2e}
+\usepackage{amsmath, amssymb}
+\usepackage{amsthm}
+\usepackage{subcaption}
+\usepackage{listings}
+
+%tikz packages
+\usepackage{tikz}
+\usetikzlibrary{trees,er,matrix,mindmap,backgrounds}
+\usetikzlibrary{shadings,intersections,calc}
+\usetikzlibrary{shapes,arrows,patterns,snakes}
+\usetikzlibrary{automata,shadows,fit,fadings,matrix,positioning,trees}
+\usepackage{pgfplots}
+\usepackage{pgfkeys}
+\usepackage{mathrsfs}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepgfplotslibrary{units}
+\pgfdeclarelayer{nodelayer}
+\pgfdeclarelayer{edgelayer}
+\pgfsetlayers{edgelayer,nodelayer,main}
+
+\title[Combined Proof Methods for \system{K}{n}{}]{\large Combined Proof Methods for Multimodal Logic}
+\author{Daniella Angelos}
+\institute{Cl\'audia Nalon --- University of Brasilia}
+\date{March 20, 2018}
+
+\input{symbols}
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% Uncomment these lines for an automatically generated outline.
+%\begin{frame}{Outline}
+%  \tableofcontents
+%\end{frame}
+
+\section{Introduction}
+
+\begin{frame}{Logic}
+    \begin{block}{in Computer Science:}
+        Develop languages to model situations
+    \end{block}
+\end{frame}
+
+%\begin{frame}{Languages}
+%\end{frame}
+
+\begin{frame}
+    \frametitle{Languages}   
+    \begin{center}
+        \begin{tikzpicture}[->,circle,draw,node distance=3cm]
+            \node[circle,draw,thick,minimum width=2cm,text depth =
+            5cm](w0){\small Multimodal Logic};
+            \node[circle,draw,thick,minimum width=1.5cm,text depth =
+            4cm](w1) at ([yshift=7.5em]w0.south) {\small Modal Logic};
+            \node[circle,draw,thick,minimum width=0.3cm](w2) at
+            ([yshift=6.5em]w1.south) {\small Propositional Logic};
+            %\path[thick] (w0) edge [above] node {1} (w1)
+            %(w1) edge [above,loop] node {2} (w1)
+            %(w1) edge [above] node {2} (w2)
+            %(w0) edge [above] node {1} (w3);
+        \end{tikzpicture} 
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Multimodal Logic (\system{K}{n}{})}
+        \begin{itemize}
+            \item Propositional Symbols $(\mathcal{P} = \{p, q, r \ldots\})$
+            \item Operators $(\neg,\lor, {\color{red} \nec{a}})$
+                with ${\color{red}\agent \in \Agents =
+                \{1,\ldots,n\}}$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Multimodal Logic (\system{K}{n}{})}
+    \begin{block}{Well Formed Formulae (WFF)}
+            \begin{itemize}
+                \item Propositional Symbols $\cal{P}$
+                \item If $\varphi$ and $\psi$ are each a WFF then also are:
+                    \begin{enumerate}%[<+- | visible@+(1)->]
+                        \item $\neg \formula$
+                        \item $\formula \lor \psi$
+                        \item $\nec{a} \formula$
+                    \end{enumerate}
+            \end{itemize}
+        \end{block}
+\end{frame}
+
+\begin{frame}{Semantics}
+    Let $W$ be a set of possible worlds and $R_a$ a binary relation over these
+    worlds for some $\agent \in \Agents$:
+
+  \begin{itemize}
+      \visible<1->{\item[] {\color{red}Possibility:} $\pos{a} \formula$ is true
+              at $\st \in W$ iff \formula~is true at
+          some $\st' \in W$ such that $\st R_a \st'$}
+      \visible<2->{\item[] {\color{red}Necessity:} $\nec{a} \formula$ is true
+              at $\st \in W$ iff \formula~is true at
+          all $\st' \in W$ such that $\st R_a \st'$}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Example}
+    \begin{columns}[T] % align columns
+        \begin{column}{.63\textwidth}
+            \begin{center}
+                \begin{tikzpicture}[->,circle,draw,node distance=3cm]
+                    \node[circle,draw,thick,label=90:$\st$](w0){$
+                        \begin{array}{c}
+                            p \quad q\\
+                            \neg r
+                        \end{array}
+                    $};
+                    \node[circle,draw,thick, label=90:$\rho$,right of=w0](w1){$
+                        \begin{array}{c}
+                            p \quad \neg q
+                        \end{array}
+                    $};
+                    \node[circle,draw,thick, label=90:$\delta$,below of=w0](w2){$
+                        \begin{array}{c}
+                            r
+                        \end{array}
+                    $};
+                    \path[thick] (w0) edge [above,loop left] node {1} (w0)
+                    %(w1) edge [above,loop right] node {2} (w1)
+                    (w0) edge [->,above] node {2} (w1)
+                    (w1) edge [->,above] node {1} (w2);
+                \end{tikzpicture}
+            \end{center}
+        \end{column}%
+        \hfill%
+        \visible<2->{\
+            \begin{column}{.48\textwidth}
+                Formulae true in $\st$:
+                \begin{itemize}
+                    \item[] $\nec{1} p$ \onslide<3->{: modal level of $p$ = 1}
+                    \item[] $\nec{1} q \wedge \nec{2} \neg q$
+                    \item[]  $\pos{2} \pos{1} r$ \onslide<4->{: modal level of
+                        $r$ = 2}
+                \end{itemize}
+            \end{column}%
+        }
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Model - Kripke Structure} 
+    \begin{center}
+        {\Large
+            $\Model = (W,\st_0,R_1, \ldots, R_n, \pi )$
+        }
+    \end{center}
+
+    \begin{itemize}[<+- | visible@+(1)->]
+       \item Set of possible worlds $W$
+       \item Root of model $\st_0 \in W$
+       \item A finite number of binary relations $R_a$ over the worlds in $W$,
+           $R_a \subseteq W \times W$, with $\agent \in \Agents$
+       \item Valuation function to propositional symbols $\pi : W \times \mathcal{P}
+           \rightarrow \{true, false\}$
+   \end{itemize} 
+\end{frame}
+
+\begin{frame}{Satisfiability Relation}
+    Let \formula~be a WFF and \tuple~a model in \system{K}{n}{}:
+
+    \visible<2->{\sat{\Model}{\st}{\formula}}
+    \begin{itemize}[<+- | visible@+(2)->]
+        \item \sat{\Model}{\st}{p} iff $\pi(\st, p) = true$
+        \item \sat{\Model}{\st}{\neg \psi} iff $\langle \Model , \st \rangle
+            \not \models \psi$
+        \item \sat{\Model}{\st}{\psi \lor \delta} iff \sat{\Model}{\st}{\psi} or
+            \sat{\Model}{\st}{\delta}
+        \item \sat{\Model}{\st}{\nec{a} \psi} iff for all $\st' \in W$ such that
+        $\st R_a \st'$, with $\agent \in \Agents$, we have that
+    \sat{\Model}{\st'}{\psi}
+    \end{itemize}
+    
+\end{frame}
+
+\begin{frame}{Satisfiability}
+    A formula $\formula \in $ WFF is said to be \emph{locally satisfiable} in
+    \system{K}{n}{} if exists a model \Model~such that
+    \sat{\Model}{\st_0}{\formula}.
+
+    \visible<2->{{\color{red}$\Model \models_L \formula$}}
+
+    \vspace{0.6cm}
+    \visible<3->{A formula $\formula \in $ WFF is said to be \emph{globally
+    satisfiable} in \system{K}{n}{} if exists a model \Model~such that
+    \sat{\Model}{\st}{\formula} for all $\st$.}
+
+    \visible<4->{{\color{red}$\Model \models_G \formula$}}
+
+    \vspace{0.6cm}
+    \visible<5->{A set $\Formulae$ of WFF is said to be (locally of globally)
+    satisfiable, if the conjunction of each $\formula \in \Formulae$ is
+    satisfiable.}
+\end{frame}
+
+\begin{frame}{Problem}
+    Given any set $\Phi$ of well formed formulae, to determine if $\Phi$ is
+    (locally or globally) satisfiable in \system{K}{n}{}.
+
+    \begin{itemize}[<+- | visible@+(1)->]
+        \item Local satisfiability: PSPACE-Complete (Halpern and Moses -- 1992),
+        \item Global satisfiability: EXPTIME-Complete (E. Spaan -- 1993).
+    \end{itemize} 
+    
+\end{frame}
+
+\section{Layered Resolution}
+\begin{frame}
+    \frametitle{Clauses in \snf{\system{K}{n}{}}} 
+    {\Large
+        \begin{center}
+        \begin{equation*} \bigwedge_i ml: C_i \end{equation*}
+        \end{center}
+    }
+    \begin{itemize} 
+        \onslide<2->{\item literal clause:
+        \begin{center} $ml: \bigvee^r_{b=1} l_b$ \end{center}}
+        \onslide<3->{\item $\agent$-positive clause:
+        \begin{center} $ml: l' \Rightarrow \nec{\agent} l$ \end{center}}
+        \onslide<4->{\item $\agent$-negative clause:
+        \begin{center} $ml: l' \Rightarrow \pos{\agent} l$ \end{center}}
+    \end{itemize} 
+    \visible<5->{where $l$ is a propositional symbol or its negation}
+
+\end{frame}
+
+\begin{frame}{Calculus}
+\begin{center}
+$
+\begin{array}{lrl}
+\mbox{[LRES]} &ml: & D \lor l\\
+ &ml: & D' \lor \neg l\\  \cline{2-3}
+    &ml: & D \lor D'
+\end{array}
+$
+\end{center}
+\end{frame}
+
+\begin{frame}{Calculus}
+    \scriptsize
+\begin{minipage}[t]{0.48\linewidth}
+    $
+    \begin{array}{lrl}
+        \mbox{[GEN1]} & ml: & {l'}_1  \then  \nec{a}\neg l_1 \\
+                  & \qquad \vdots  \\
+                  & ml: & {l'}_m  \then  \nec{a}\neg l_m \\
+                  & ml: & l'  \then  \pos{a}\neg  l \\
+                  & ml + 1:  & l_1 \lor \ldots \lor l_m \lor l \\  \cline{2-3}
+                  & ml:  & \neg {l'}_1 \lor \ldots \lor \neg {l'}_m \lor \neg l'
+    \end{array} 
+    $
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\linewidth}
+    $
+    \begin{array}{lrl}
+       \mbox{[GEN3]} & ml : & {l'}_1 \then  \nec{a}\neg l_1 \\
+                & \qquad \vdots  \\
+                & ml : & {l'}_m  \then  \nec{a}\neg l_m \\
+                & ml : & l'  \then \pos{a}  l \\
+                & ml + 1 : & l_1 \lor \ldots \lor l_m  \\  \cline{2-3}
+                & ml : & \neg {l'}_1 \lor \ldots \lor \neg {l'}_m \lor \neg l'
+    \end{array}
+    $
+\end{minipage}
+\end{frame}
+
+\begin{frame}{\ksp}
+    \begin{itemize}
+        \item A theorem prover that implements this modal resolution-based calculus
+        \item It also implements several refinements and simplification techniques
+        \item \ksp performs pretty well!
+        \item But not so well when there is a large number of variables in one particular level
+    \end{itemize}
+
+    \visible<2->{%
+    \begin{block}{Problem}
+        As resolution relies on saturation, the performance of \ksp for such entries deteriorates. 
+    \end{block}}
+\end{frame}
+
+\begin{frame}{Hypotheses}
+        We take advantage of the great theoretical and practical efforts that
+        have been directed in improving the efficiency of CDCL SAT solvers, to
+        reduce the time \ksp spends during saturation.
+\end{frame}
+
+\section{CDCL SAT Solvers}
+\begin{frame}{SAT Problem}
+    \begin{center}
+    Given a formula in classical propositional logic, does this formula have a
+    satisfying assignment?
+    \end{center}
+\end{frame}
+
+\begin{frame}{SAT Solvers}
+    \begin{itemize}[<+- | visible@+(1)->]
+        \item Generic combinatorial tool and search platform %for such problems
+        \item DPLL Procedure
+        \item Watched literals, restart strategies, deletion mechanisms,
+            branching heuristics, learning mechanisms etc
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Example}
+    \begin{center}
+    \begin{align*}
+        \formula = &(p \lor t \lor \neg q) \land (p \lor \neg r) \land (q \lor r \lor s) \visible<7->{\land (\neg s \lor \neg u) \land (y \lor x) \land (y \lor u \lor \neg x)}
+    \end{align*}
+    \input{graph}
+    %\land (\neg s \lor \neg u) \land (y \lor \neg s \lor \neg x) \land (u \lor x)$
+    \end{center}
+\end{frame}
+
+\begin{frame}{Implication Graph}
+    \begin{itemize}[<+- | visible@+(1)->]
+        \item Vertices are assigned variables
+        \item Edges are antecedent clauses 
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Conflict analysis}
+    \begin{center}
+        Analyses the conflict and learns a new clause
+    \end{center}
+\end{frame}
+
+\begin{frame}{Conflict analysis}
+    \begin{align*}
+        \formula = &(p \lor t \lor \neg q) \land (p \lor \neg r) \land (q \lor r \lor s) \land (\neg s \lor \neg u) \land (y \lor x) \land (y \lor u \lor \neg x)
+    \end{align*}
+    \visible<2->{{\color{red}new clause: $(p \lor t \lor y)$}}
+
+    \input{graph_}
+\end{frame}
+
+\section{Combination}
+\begin{frame}{\ksp + CDCL}
+    During the main loop of \ksp, we will feed the SAT solver with the
+    propositional clauses at a particular modal level.
+
+    \begin{itemize}[<+- | visible@+(1)->]
+        \item The SAT solver finds a model for the set of clauses
+        \item The SAT solver returns one or more new clauses
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Example}
+    \begin{minipage}[t]{0.48\linewidth}
+    \begin{table}
+        \begin{tabular}{l}
+            $1: l_1 \then \nec{} \neg p$ \\
+            $1: l_2 \then \nec{} \neg t$ \\
+            $1: l_3 \then \pos{} \neg y$ \\
+            $2: \{p, t, \neg q\}$ \\
+            $2: \{p, \neg r\}$ \\
+            $2: \{q, r, s\}$ \\
+            $2: \{\neg s, \neg u\}$ \\
+            $2: \{y, x\}$ \\
+            $2: \{y, u, \neg x\}$ \\
+            \visible<3->{{\color{red} $2: \{p,t,y\}$}} \\
+            \visible<4->{{\color{red} $1: \{\neg l_1, \neg l_2, \neg l_3\}$}} \\
+        \end{tabular}
+    \end{table}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\linewidth}
+        \scriptsize
+        \visible<2->{%
+    $
+    \begin{array}{lrl}
+        \mbox{[GEN1]} & ml: & {l'}_1  \then  \nec{a}\neg l_1 \\
+                  & \qquad \vdots  \\
+                  & ml: & {l'}_m  \then  \nec{a}\neg l_m \\
+                  & ml: & l'  \then  \pos{a}\neg  l \\
+                  & ml + 1:  & l_1 \lor \ldots \lor l_m \lor l \\  \cline{2-3}
+                  & ml:  & \neg {l'}_1 \lor \ldots \lor \neg {l'}_m \lor \neg l'
+    \end{array} 
+    $
+}
+    \end{minipage}
+\end{frame}
+
+\section{Conclusion}
+\begin{frame}{Conclusion}
+    We believe that calling the SAT solver from the main loop of \ksp will
+    significantly improve its performance.
+\end{frame}
+
+\begin{frame}{Future Work}
+    \begin{enumerate}[<+- | visible@+(1)->]
+        \item Choose a SAT solver and evaluate this choice
+        \item Automated integration with \ksp
+        \item Define metrics for tests and select benchmarks
+        \item Exhaustively testing
+        \item Collect and analyse data
+        \item Write the dissertation
+    \end{enumerate}
+
+    \visible<8->{\input{cronograma}}
+\end{frame}
+
+\section{Thank you!}
+\begin{frame}
+    \titlepage
+\end{frame}
+\end{document}

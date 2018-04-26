@@ -1,8 +1,8 @@
 Lógicas modais têm sido estudadas na Ciência da Computação por permitirem a
 caracterização de sistemas complexos, envolvendo noções tais como
-conhecimento e crença, por exemplo. Neste trabalho, focamos no provador dej
+conhecimento e crença, por exemplo. Neste trabalho, focamos no provador de
 teoremas para a lógica multimodal básica \system{K}{n}{}: \ksp, que implementa
-um método baseado em resolução clausal. Cláusulas são rotuladas pelo nível modal
+um método de provas baseado em resolução clausal. Cláusulas são rotuladas pelo nível modal
 em que ocorrem, auxiliando a restringir aplicações desnecessárias das regras de
 inferência.
 \ksp\ apresenta uma boa performance se o conjunto de símbolos proposicionais
@@ -17,8 +17,8 @@ mostraram capazes de resolver eficientemente problemas difíceis. Acreditamos
 poder utilizar as técnicas desenvolvidas depois de décadas de esforços práticos
 e teóricos direcionados a estes provadores.
 Nossa implementação, que é um trabalho em andamento, utiliza um SAT
-\emph{solver} baseado em aprendizado de cláusula através de análise de conflito.
-Damos como entrada a este solver, o conjunto satisfatível de cláusulas gerado
+\emph{solver} baseado em aprendizado de cláusulas através de análise de conflito.
+Damos como entrada a este \emph{solver}, o conjunto satisfatível de cláusulas gerado
 pela transformação e, toda vez que um conflito é identificado, uma ou mais
 cláusulas são aprendidas pelo procedimento de análise de conflito. Acreditamos
 que, cuidadosamente escolhendo o conjunto de cláusulas e usando as cláusulas

@@ -1,0 +1,44 @@
+\begin{figure}
+          \centering
+          \footnotesize 
+\begin{tikzpicture}[->]
+    \node[](w0){$
+        \visible<0->{t = false}
+    $};
+    \node[below right=0.7cm and 1.3cm of w0](w1){$
+        \visible<0->{q = false}
+    $};
+    \node[below left=0.7cm and 1.3cm of w1](w2){$
+        \visible<0->{p = false}
+    $};
+    \node[below right=0.7cm and 1.3cm of w1](w3){$
+        \visible<0->{s = true}
+    $};
+    \node[below right=0.7cm and 1.3cm of w2](w4){$
+        \visible<0->{r = false}
+    $};
+    \node[above right=0.7cm and 1.3cm of w3](w5){$
+        \visible<0->{u = false}
+    $};
+    \node[below right=0.7cm and 1.3cm of w3](w7){$
+        \visible<0->{x = true}
+    $};
+    \node[above right=0.7cm and 1.3cm of w7](w6){$
+        \visible<0->{\contradiction}
+    $};
+    \node[below left=0.7cm and 1.3cm of w7](w8){$
+        \visible<0->{y = false}
+    $};
+    \path[thick] (w0) edge (w1);
+    \path[thick] (w1) edge (w3);
+    \path[thick] (w2) edge (w1);
+    \path[thick] (w4) edge (w3);
+    \path[thick] (w8) edge (w7);
+    \path[thick] (w7) edge (w6);
+    \path[thick] (w5) edge (w6);
+    \path[thick] (w0) edge (w1);
+    \path[thick] (w2) edge (w4);
+    \path[thick] (w3) edge (w5);
+\end{tikzpicture}%
+    \label{fig:graph2}
+\end{figure}

@@ -2,10 +2,10 @@
 Several aspects of complex computational systems can be modelled by means of
 logic languages, allowing for the characterization of notions such as
 probabilities, possibilities, time, knowledge and
-belief~\cite{FHMV95,Hai82,HMM83,rao:91c}. Modal logics, more specifically, have
+beliefs~\cite{FHMV95,Hai82,HMM83,rao:91c}. Modal logics, more specifically, have
 been widely studied in Computer Science as they can naturally model, for
 instance, notions of knowledge and belief in multiagent
-systems~\cite{bratman1987intention,FHMV95,rao:91c}, temporal aspects in the
+systems~\cite{bratman1987intention,FHMV95,rao:91c}, and temporal aspects in the
 formal verification of problems related to concurrent and distributed
 systems~\cite{Hai82,HMM83}. Modal languages are simple yet expressive languages
 for reasoning over relations between different contexts or
@@ -15,22 +15,24 @@ Once a system has been specified in a logic language, it is possible to use
 proof methods to verify properties of such system. In general, if $\mathcal{I}$
 is the formulae set representing the implementation, and $\Formulae$ is the set
 that characterizes the specification, the verification process consists in
-showing that is possible to \emph{derive} the specified aspects in $\Formulae$
+showing that it is possible to \emph{derive} the specified aspects in $\Formulae$
 from $\mathcal{I}$. Each proof system defines a particular approach to deal with
 formulae. Furthermore, it is possible to combine proof methods with the ultimate
 goal to benefit from each method's advantages. 
 
-In the literature, we find several successful combinations of proof systems
+% below, we are giving examples of combined languages, not combined systems.
+
+In the literature, we find several successful combinations of logical systems
 (e.g.~\cite{hylores, ghilardi2017interpolation,
-Goetzmann+Kaminski+Smolka@ENTCS2010, gutierrez2016metric}). It is crucial to
-make sure that sufficient information is shared between the combined methods.
-Furthermore, combination of logic languages may increase the computational
+Goetzmann+Kaminski+Smolka@ENTCS2010, gutierrez2016metric}). %It is crucial to make sure that sufficient information is shared between the combined methods.
+%Furthermore,
+Combination of logic languages may increase the computational
 complexity of the problem, or even lead to the undecidability of the resultant
 logic satisfiability~\cite{mdml}. Therefore, it is essential to develop
-reliable techniques that allow the uniform implementation of combined systems
+reliable techniques that allow the uniform implementation of combined proof systems
 for such combination of logic languages.
 
-The satisfiability problem for the basic multimomodal logic is proven to be
+The satisfiability problem for the basic multimomodal logic \system{K}{n}{} is proven to be
 PSPACE-complete~\cite{Spaan:coml}, for local satisfiability, and EXPTIME, for
 global satisfiability~\cite{Spaan:coml}. In~\cite{nalon2015modal}, a complete
 calculus based on modal levels, for both local and global reasoning for the
@@ -46,8 +48,8 @@ logics~\cite{hylores,eprover,spass,Vampire}. In this work, we focus on
 \system{K}{n}{}, which implements the clausal resolution method proposed
 in~\cite{nalon2015modal}. Clauses are labelled by the modal level at which they
 occur, helping to restrict unnecessary applications of the resolution inference
-rules. Several refinements and simplification techniques in order to reduce the
-search space for a proof are implemented. To get the best performance for a
+rules. In order to reduce the
+search space for a proof, several refinements and simplification techniques are implemented as part of \ksp. To get the best performance for a
 particular formula, or class of formulae, it is important to choose the right
 strategy and optimizations. 
 
@@ -64,30 +66,31 @@ Boolean Satisfiability Solvers (SAT solvers), for instance, can often solve hard
 structured problems with over a million variables and several million
 constraints~\cite{satchapter}. We believe that we can take advantage of the
 theoretical and practical efforts that have been directed in improving the
-efficiency of such solvers. 
+efficiency of such solvers for helping to speed the saturation process within the procedures already implemented in \ksp.
 
 %clause learning
 One of the main reasons for the widespread use of SAT in many applications is
 that solvers based on clause learning are very effective in
 practice~\cite{satchapter}. The main idea behind Conflict-Driven Clause Learning
-(CDCL) is to cache ``causes of conflict'' as learned clauses, and utilize this
+(CDCL) is to cache ``causes of conflict'' as learned clauses, and to utilize this
 information to prune the search in a different part of the search space
 encountered later. Since their inception in the mid-90s, CDCL SAT solvers have
 been applied, in many cases with remarkable success, to a number of practical
 applications~\cite{cdclchapter}. 
 
 Our implementation, which is work in progress, uses a SAT solver based on clause
-learning by conflict analysis. We feed this solver with the satisfiable sets of
-clauses generated by the translation procedure. Each time it identifies a
-conflict in these sets due to unit propagation from some variable assignment,
-one or more new clauses are learnt from the conflict analysis procedure, which
-analyses the structure of unit propagation and decides which literals to include
-in the new clauses~\cite{cdclchapter}. As mentioned before, as we already know
-that these sets are satisfiable, we are not particularly interested in the model
-generated by the SAT solver. 
+learning by conflict analysis. We intend to feed such a solver with the
+satisfiable set of clauses generated at each modal level by the translation
+procedure used by \ksp.  Each time the SAT solver identifies a conflict in these
+sets due to unit propagation from some variable assignment, one or more new
+clauses are learnt from the conflict analysis procedure, which analyses the
+structure of unit propagation and decides which literals to include in the new
+clauses~\cite{cdclchapter}. As mentioned before, as we already know that these
+sets are satisfiable, we are not particularly interested in the model generated
+by the SAT solver. 
 
-We feed \ksp\ back the new clauses, hoping it can find more applications of
-inference rules that deal with modal reasoning using these clauses. We believe
+We will then feed \ksp\ back the new learnt clauses, hoping it can find more
+applications of the inference rules which deal with modal reasoning. We believe
 that by carefully choosing the set of clauses we feed the SAT solver, and
 appropriately using the learnt clauses generated, we may be able to reduce the
 time \ksp~spends during saturation. 
@@ -95,8 +98,8 @@ time \ksp~spends during saturation.
 %organization of work
 The rest of this work is organized as follows: Chapter~\ref{2_Language}
 introduces the propositional modal language which is the main focus of this
-work: \system{K}{n}{}, as well as its syntax and semantics;
-Chapter~\ref{3_Resolution} and Chapter~\ref{4_Sat}, presents, respectively, a
-brief overview of resolution based systems and modern SAT solvers. Finally,
-in Chapter~\ref{5_Discussion} we discuss how we pretend to combine \ksp\ with a
-SAT solver, and what we expect from this combination.
+work, \system{K}{n}{}, as well as its syntax and semantics;
+Chapter~\ref{3_Resolution} and Chapter~\ref{4_Sat}, present a brief overview of
+resolution based systems and modern SAT solvers, respectively. Finally, in
+Chapter~\ref{5_Discussion} we discuss how we pretend to combine \ksp\ with a SAT
+solver, and what we expect from this combination.
